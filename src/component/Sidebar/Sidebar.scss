@@ -1,0 +1,60 @@
+@import "../../../scss/helpers/color";
+@import "../../../scss/helpers/text";
+@import "../../../scss/helpers/shadow";
+
+$tooltip-triangle-border: 8px;
+
+
+.sidebar-container {
+    position: fixed;
+    width: 300px;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    overflow-y: auto;
+    border-right: 1px solid $light-gray;
+    z-index: 500;
+    background: white;
+    padding-top: 40px;
+}
+
+
+.sidebar-item {
+    z-index: 500;
+    background: white;
+    height: 66px;
+    position: relative;
+    font-family: $theme-font, sans-serif;
+    font-weight: $theme-font-weight;
+}
+
+
+.nav-link {
+    width: 100%;
+    position: relative;
+    color: black !important;
+    padding-left: 40px !important;
+}
+
+.nav-link.active {
+    color: $theme-color !important;
+
+    .selected-bar {
+        // display: block;
+        opacity: 1;
+    }
+}
+
+.selected-bar {
+    // display: none;
+    opacity: 0;
+    position: absolute;
+    top: 50%;
+    left: -6px;
+    transform: translateY(-50%);
+    height: 33px;
+    width: 11px;
+    border-radius: 20px;
+    background: $theme-color;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, opacity 0.15s ease-in-out;
+}
