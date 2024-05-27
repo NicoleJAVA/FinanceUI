@@ -1,61 +1,42 @@
 import "./Sidebar.scss";
-import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { useLocation } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
+import { Nav } from 'react-bootstrap';
 
-import { Navbar, Nav } from 'react-bootstrap';
 
-
-const DEMO = "demo";
-const GUIDE = "guide";
 
 export const Sidebar = () => {
-    const navigate = useNavigate();
-    const [currentTab, setCurrentTab] = useState(DEMO);
 
-    const location = useLocation();
 
-    useEffect(() => {
-        switch (location.pathname) {
+    const [activeKey, setActiveKey] = useState('#demo');
 
-            case '/demo':
-                setCurrentTab(DEMO);
-                break;
-
-            default:
-                break;
-        }
-
-    }, [location]);
-
-    const OnClickDemo = () => {
-        setCurrentTab(DEMO);
-        navigate("/demo");
+    const handleSelect = (selectedKey) => {
+        setActiveKey(selectedKey);
     };
-
 
 
 
     return (
         <div className="sidebar-container">
 
-            <Nav className="mr-auto flex-column" >
-                <Nav.Item className="sidebar-item" >
-                    <Nav.Link href="#demo" active>
-                        <div class="selected-bar"></div>
-
+            <Nav className="mr-auto flex-column" activeKey={activeKey} onSelect={handleSelect}>
+                <Nav.Item className="sidebar-item">
+                    <Nav.Link as={NavLink} to="/demo" isActive={() => activeKey === '/demo'} onClick={() => handleSelect('/demo')}>
+                        <div className="selected-bar"></div>
                         Demo
                     </Nav.Link>
                 </Nav.Item>
                 <Nav.Item className="sidebar-item">
-                    <Nav.Link href="#my-page">
-                        <div class="selected-bar"></div>
-                        My Page</Nav.Link>
+                    <Nav.Link as={NavLink} to="/my-page" isActive={() => activeKey === '/my-page'} onClick={() => handleSelect('/my-page')}>
+                        <div className="selected-bar"></div>
+                        My Page
+                    </Nav.Link>
                 </Nav.Item>
                 <Nav.Item className="sidebar-item">
-                    <Nav.Link href="#another-link">
-                        <div class="selected-bar"></div>
-                        Another Link</Nav.Link>
+                    <Nav.Link as={NavLink} to="/another-link" isActive={() => activeKey === '/another-link'} onClick={() => handleSelect('/another-link')}>
+                        <div className="selected-bar"></div>
+                        Another Link
+                    </Nav.Link>
                 </Nav.Item>
             </Nav>
 
@@ -63,22 +44,3 @@ export const Sidebar = () => {
 
     );
 }
-
-
-// <Navbar expand="lg">
-// <Navbar.Brand href="#home">Navbar</Navbar.Brand>
-// <Navbar.Toggle aria-controls="basic-navbar-nav" />
-// <Navbar.Collapse id="basic-navbar-nav">
-//     <Nav className="mr-auto flex-column" >
-//         <Nav.Item>
-//             <Nav.Link href="#home">Home</Nav.Link>
-//         </Nav.Item>
-//         <Nav.Item>
-//             <Nav.Link href="#link">Link</Nav.Link>
-//         </Nav.Item>
-//         <Nav.Item>
-//             <Nav.Link href="#another-link">Another Link</Nav.Link>
-//         </Nav.Item>
-//     </Nav>
-// </Navbar.Collapse>
-// </Navbar>

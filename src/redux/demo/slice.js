@@ -2,8 +2,8 @@ import {
   createSlice,
   createAsyncThunk
 } from "@reduxjs/toolkit";
-
 import axios from "axios";
+import { BASE_URL } from '../helper/reduxHelper';
 
 const initialState = {
   debugMode: true,
@@ -14,6 +14,19 @@ const initialState = {
 
 export const fetchData = createAsyncThunk('demo/fetchData', async () => {
   const response = await axios.get('http://127.0.0.1:3001/users/list');
+  return response.data;
+});
+
+export const addUser = createAsyncThunk('demo/addUser', async (user, { dispatch }) => {
+  const response = await axios.create({
+    baseURL: BASE_URL,
+    timeout: 8000,
+  })
+    .post("users/add", user)
+    .then((res) => {
+      dispatch(fetchData());
+      return res.data;
+    });
   return response.data;
 });
 

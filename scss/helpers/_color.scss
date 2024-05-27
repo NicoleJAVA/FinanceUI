@@ -1,5 +1,5 @@
 // red
-$theme-red: #f96981;
+$theme-red: #fd3061;
 
 // gray
 $dark-blue-gray: #525f7f;
@@ -10,6 +10,9 @@ $light-gray: #E9EBF2;
 
 // theme
 $theme-color: $theme-red;
+
+// bootstrap
+$primary: $theme-color;
 
 // input
 $input-placeholder-color: $dark-blue-gray;

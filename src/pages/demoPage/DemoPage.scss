@@ -13,5 +13,22 @@
 .demo-title {
     font-family: $theme-font;
     font-weight: $theme-font-weight;
-    font-size: 18px;
+    font-size: 22px;
+    margin-bottom: 40px;
+}
+
+.demo-table {
+    min-width: 500px;
+}
+
+.table-th {
+    font-family: $theme-font;
+    font-weight: 500;
+    font-size: 16px;
+}
+
+.demo-table td {
+    font-family: $theme-font;
+    font-weight: $theme-font-weight;
+    font-size: 16px;
 }

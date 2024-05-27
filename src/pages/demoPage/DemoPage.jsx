@@ -1,7 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./DemoPage.scss";
 import { useSelector, useAppDispatch } from "../../redux/hooks";
-import { fetchData } from "../../redux/demo/slice";
+import { fetchData, addUser } from "../../redux/demo/slice";
+import { EditModal } from "../../component/EditModal";
+import { Modal } from "bootstrap";
+
 
 export const DemoPage = () => {
 
@@ -10,21 +13,44 @@ export const DemoPage = () => {
   const status = useSelector((state) => state.demo.status);
   const error = useSelector((state) => state.demo.error);
 
+  // const [showModal, setShowModal] = useState(true);
+  const [editModal, setEditModal] = useState(null);
+
   useEffect(() => {
+    setEditModal(new Modal(document.getElementById("editUserModal"), {}));
     dispatch(fetchData());
   }, [dispatch]);
 
+  const handleSaveUser = async (user) => {
+    console.log("\n\n save \n\n", user); // todo stday
+    // setShowModal(false);
+    dispatch(addUser(user));
+    editModal.hide();
+  };
+
+  const showModal = () => {
+    editModal.show();
+  }
 
   return (
     <div className="demo-root-container">
       <div className="demo-title">Demo</div>
-
       <div>
-        <table>
+        <button className="btn btn-primary btn-theme mb-4" onClick={() => showModal()}>Edit User</button>
+
+        <EditModal
+          id="editUserModal"
+          title="Edit User"
+          onClickSave={handleSaveUser}
+        />
+
+      </div>
+      <div>
+        <table className="demo-table">
           <thead>
             <tr>
-              <th>Firstname</th>
-              <th>Lastname</th>
+              <th className="table-th">Firstname</th>
+              <th className="table-th">Lastname</th>
             </tr>
           </thead>
           <tbody>
