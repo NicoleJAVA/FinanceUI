@@ -8,11 +8,29 @@ $extra-light-gray: #dbe1e6;
 $light-blue-gray: #8999ab;
 $light-gray: #E9EBF2;
 
+// black
+$app-black-bg: #101012; // app: meitu show show
+$app-black-bg-200: #3E3E40;
 // theme
 $theme-color: $theme-red;
+$theme-black-bg: $app-black-bg;
+
+// light theme
+$light-theme-bg: white;
+$light-theme-text: black;
+
+
+
+// dark theme
+$dark-theme-bg: $theme-black-bg;
+$dark-theme-bg-200: $app-black-bg-200;
+$dark-theme-text: #D7D7D5;
+
 
 // bootstrap
 $primary: $theme-color;
 
 // input
 $input-placeholder-color: $dark-blue-gray;
+
+

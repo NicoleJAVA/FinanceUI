@@ -2,8 +2,8 @@ import "./Sidebar.scss";
 import { useState, useEffect } from "react";
 import { NavLink } from 'react-router-dom';
 import { Nav } from 'react-bootstrap';
-
-
+import avatar from '../../../src/img/avatar.png';
+import ThemeToggle from "../ThemeToggle/ThemeToggle";
 
 export const Sidebar = () => {
 
@@ -18,8 +18,11 @@ export const Sidebar = () => {
 
     return (
         <div className="sidebar-container">
-
-            <Nav className="mr-auto flex-column" activeKey={activeKey} onSelect={handleSelect}>
+            <div class="avatar-container">
+                <img src={avatar} alt="Avatar" class="avatar" />
+            </div>
+            <ThemeToggle />
+            <Nav className="mr-auto flex-column mt-4" activeKey={activeKey} onSelect={handleSelect}>
                 <Nav.Item className="sidebar-item">
                     <Nav.Link as={NavLink} to="/demo" isActive={() => activeKey === '/demo'} onClick={() => handleSelect('/demo')}>
                         <div className="selected-bar"></div>
@@ -30,6 +33,18 @@ export const Sidebar = () => {
                     <Nav.Link as={NavLink} to="/my-page" isActive={() => activeKey === '/my-page'} onClick={() => handleSelect('/my-page')}>
                         <div className="selected-bar"></div>
                         My Page
+                    </Nav.Link>
+                </Nav.Item>
+                <Nav.Item className="sidebar-item">
+                    <Nav.Link as={NavLink} to="/transaction" isActive={() => activeKey === '/transaction'} onClick={() => handleSelect('/transaction')}>
+                        <div className="selected-bar"></div>
+                        Transaction
+                    </Nav.Link>
+                </Nav.Item>
+                <Nav.Item className="sidebar-item">
+                    <Nav.Link as={NavLink} to="/inventory" isActive={() => activeKey === '/inventory'} onClick={() => handleSelect('/inventory')}>
+                        <div className="selected-bar"></div>
+                        Inventory
                     </Nav.Link>
                 </Nav.Item>
                 <Nav.Item className="sidebar-item">

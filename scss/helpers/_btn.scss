@@ -6,8 +6,12 @@
   border: 1px solid transparent !important;
 }
 
+.btn {
+  font-size: 13px !important;
+}
+
 .btn-primary {
-  font-size: 16px !important;
+  font-size: 13px !important;
   display: flex !important;
   align-items: center;
   --bs-btn-color: white !important;
@@ -17,7 +21,7 @@
 }
 
 .btn-outline-primary {
-  font-size: 14px !important;
+  font-size: 13px !important;
   display: flex !important;
   align-items: center;
   --bs-btn-hover-color: white !important;

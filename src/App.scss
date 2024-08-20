@@ -2,8 +2,19 @@
 @import "../scss/helpers/text";
 // @import "../scss/helpers/dimension";
 @import "../scss/helpers/shadow";
+@import "../scss/helpers/table";
 @import "../scss/component/modal";
 
+:root {
+    --background-color: #{$light-theme-bg};
+    --text-color: #{$light-theme-text};
+  }
+  
+
+  [data-theme='dark'] {
+      --background-color:  #{$dark-theme-bg};
+      --text-color: #{$dark-theme-text};
+    }
 
 .app-fluid-container {
     position: relative;
@@ -13,6 +24,8 @@
     grid-template-columns: 300px auto;
     grid-template-rows: auto;
     grid-template-areas: "navigation content";
+    background-color: var(--background-color) !important;
+    color: var(--text-color) !important;
 }
 
 .sidebar {
@@ -21,5 +34,8 @@
 
 .app-content {
     grid-area: content;
-    background-color: #fff;
+    background-color: var(--background-color) !important;
+    color: var(--text-color) !important;
+    padding: 60px;
 }
+
