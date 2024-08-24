@@ -7,15 +7,19 @@ import { Provider } from "react-redux";
 import rootStore from "./redux/store";
 import "./Theme.scss";
 import { ThemeProvider } from "./context/ThemeContext";
+import { DateProvider } from "./context/DateContext";
 import "bootstrap";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
+
+  <DateProvider>
   <ThemeProvider>
     <Provider store={rootStore.store}>
       <App />
     </Provider>
   </ThemeProvider>
+  </DateProvider>
 
 );
 
