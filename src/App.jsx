@@ -5,7 +5,7 @@ import {
   Route,
 } from "react-router-dom";
 import { useSelector, useAppDispatch } from "./redux/hooks";
-import { DemoPage, MyPage, TransactionPage, InventoryPage } from "./pages";
+import { DemoPage, MyPage, TransactionPage, InventoryPage, HistoryPage } from "./pages";
 import { Sidebar } from "./component/Sidebar/Sidebar";
 import { ToastStack } from "./ToastStack/ToastStack";
 import "./App.scss";
@@ -35,6 +35,7 @@ function App() {
               <Route path="/my-page" element={<MyPage />} />
               <Route path="/transaction" element={<TransactionPage />} />
               <Route path="/inventory" element={<InventoryPage />} />
+              <Route path="/history" element={<HistoryPage />} />
 
 
               <Route path="*" element={<DemoPage />} />

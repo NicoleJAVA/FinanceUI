@@ -8,7 +8,7 @@
 
     --background-color: #{$light-theme-bg};
     [data-theme='dark'] & {
-        --background-color:  #{$dark-theme-bg-200};
+        --background-color:  #{$dark-theme-black-bg};
       }
     background-color: var(--background-color);
 }
@@ -19,7 +19,7 @@
     --background-color: #{$light-theme-bg};
     --text-color: #{$light-theme-text};
     [data-theme='dark'] & {
-        --background-color:  #{$dark-theme-bg-200};
+        --background-color:  #{$dark-theme-bg};
         --text-color: #{$dark-theme-text};
     }
 
@@ -28,3 +28,18 @@
     vertical-align: middle; 
 }
 
+
+.rdt_TableRow:hover {
+    
+    [data-theme='dark'] & {
+        background-color: $theme-dark-hover-bg !important;
+    }
+  }
+
+
+  .theme-table-footer {
+    [data-theme='dark'] & {
+        background-color: $dark-theme-bg;
+        color: $dark-theme-table-text;
+    }
+  }

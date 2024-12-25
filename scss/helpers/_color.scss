@@ -1,18 +1,34 @@
 // red
 $theme-red: #fd3061;
 
+
+// blue
+$theme-dark-blue-bg: #27303B;
+$theme-dark-blue-hover-bg:#2F3947;
+
+
+// purple
+$theme-purple: #8C75FF;
+
 // gray
 $dark-blue-gray: #525f7f;
 $extra-light-blue-gray: #f6f9fc;
 $extra-light-gray: #dbe1e6;
 $light-blue-gray: #8999ab;
 $light-gray: #E9EBF2;
+$link-default-gray: #667A8F;
 
 // black
 $app-black-bg: #101012; // app: meitu show show
 $app-black-bg-200: #3E3E40;
+$dark-theme-black-bg: #22282E;
+
+// white 
+$link-selected-white: #AFBECC;
+$link-default-white: #AFBECC;
+
 // theme
-$theme-color: $theme-red;
+$theme-color: $theme-purple;
 $theme-black-bg: $app-black-bg;
 
 // light theme
@@ -22,9 +38,11 @@ $light-theme-text: black;
 
 
 // dark theme
-$dark-theme-bg: $theme-black-bg;
+$dark-theme-bg: $dark-theme-black-bg; // $theme-black-bg;
 $dark-theme-bg-200: $app-black-bg-200;
 $dark-theme-text: #D7D7D5;
+$theme-dark-hover-bg: $theme-dark-blue-hover-bg;
+$dark-theme-table-text: #AFBECC;
 
 
 // bootstrap

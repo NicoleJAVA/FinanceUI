@@ -18,12 +18,11 @@ $tooltip-triangle-border: 8px;
         --text-color: #{$dark-theme-text};
       }
     position: fixed;
-    width: 300px;
+    width: 260px;
     top: 0;
     bottom: 0;
     left: 0;
     overflow-y: auto;
-    border-right: 1px solid $light-gray;
     z-index: 500;
     padding-top: 40px;
     background-color: var(--background-color);
@@ -33,10 +32,10 @@ $tooltip-triangle-border: 8px;
 
 .sidebar-item {
     z-index: 500;
-    height: 66px;
     position: relative;
     font-family: $theme-font, sans-serif;
     font-weight: $theme-font-weight;
+    margin-bottom: 34px;
 }
 
 
@@ -48,7 +47,7 @@ $tooltip-triangle-border: 8px;
     width: 100%;
     position: relative;
     color: var(--text-color) !important;
-    padding-left: 40px !important;
+    padding-left: 50px !important;
     font-size: 16px !important;
 }
 
@@ -61,18 +60,40 @@ $tooltip-triangle-border: 8px;
     }
 }
 
+.nav-link.active .sidebar-item-label-container {
+    color: $theme-color;
+}
+
+.sidebar-link {
+    display: flex !important;
+    align-items: center;
+}
+
 .selected-bar {
-    // display: none;
     opacity: 0;
-    position: absolute;
-    top: 50%;
-    left: -6px;
-    transform: translateY(-50%);
-    height: 33px;
-    width: 11px;
+    height: 52px;
+    width: 3px;
     border-radius: 20px;
     background: $theme-color;
     transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, opacity 0.15s ease-in-out;
+}
+
+.sidebar-link-right-container {
+    margin-left: 16px;
+}
+
+.sidebar-item-label-container {
+    color: $link-default-white;
+}
+
+
+.sidebar-item-subtitle {
+    color: $link-default-gray;
+    font-size: 10px;
+}
+
+.nav-link.active .sidebar-item-subtitle {
+    color: $link-selected-white;
 }
 
 .avatar-container {

@@ -21,7 +21,7 @@
     width: 100%;
     height: 100vh;
     display: grid;
-    grid-template-columns: 300px auto;
+    grid-template-columns: 260px auto;
     grid-template-rows: auto;
     grid-template-areas: "navigation content";
     background-color: var(--background-color) !important;
@@ -36,6 +36,6 @@
     grid-area: content;
     background-color: var(--background-color) !important;
     color: var(--text-color) !important;
-    padding: 60px;
+    padding: 60px 20px;
 }
 
