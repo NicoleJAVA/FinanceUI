@@ -4,7 +4,7 @@ $theme-red: #fd3061;
 
 // blue
 $theme-dark-blue-bg: #27303B;
-$theme-dark-blue-hover-bg:#2F3947;
+$theme-dark-blue-hover-bg: #2F3947;
 
 
 // purple
@@ -52,3 +52,54 @@ $primary: $theme-color;
 $input-placeholder-color: $dark-blue-gray;
 
 
+
+// ------------------- todo stday
+
+
+// blue
+$blue-green: #00a3c5;
+$new-car-blue: #1d4ed8;
+
+// green
+$lemon-lime: #90be20;
+$cultured-green: #f2f6f6;
+$cyan-turquoise: #189068;
+$deep-blue-green: #0f523c;
+$mint-cream: #f4fef8;
+
+// black
+$cloud-storm-black: #556565;
+$theme-black-dark: #414042;
+
+// gray
+$light-silver: #d9d9d9;
+$spanish-gray: #999999;
+$cadet-gray: #94a3b8;
+$cultured-middle-gray: #f5f5f5;
+$bright-gray: #e8f4f0;
+$extra-light-gray-bg: #f8f9fa;
+$secondary-gray: #556664;
+$light-gray: #e6eaee;
+$middle-light-gray: #afbecd;
+$platinum-gray: #e8e8e8;
+$mid-gray: #677489;
+$roman-silver: #848e9f;
+
+// override bootstrap
+$primary: $lemon-lime;
+$info: #00a3c5;
+$secondary: $secondary-gray;
+
+// theme
+$theme-black: $cloud-storm-black;
+$theme-light-bg: $cultured-green;
+$theme-link-blue: $blue-green;
+$main-title: $cyan-turquoise;
+$primary-divider: $deep-blue-green;
+$secondary-light: $spanish-gray;
+$minor: $cyan-turquoise;
+$main-dark: #1a8242;
+
+// form
+$theme-form-border: $cadet-gray;
+$dropdown-selected: $cadet-gray;

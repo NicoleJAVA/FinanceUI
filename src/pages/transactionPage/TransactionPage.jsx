@@ -89,7 +89,7 @@ export const TransactionPage = () => {
       secondary: '#AFBECC',
     },
     background: {
-      default: '#22282E',
+      default: 'white',// '#22282E', // todo stday
     },
     context: {
       background: '#27303B',
@@ -168,12 +168,10 @@ export const TransactionPage = () => {
 
   console.log("transactionData", transactionData);
 
-  // 管理 C 表格的狀態
   const [cTableData, setCTableData] = useState([]);
 
 
 
-  // 計算相關值
   useEffect(() => {
     if (aTableData && aTableData[0]) {
       setTransactionData(prevData => {
@@ -217,6 +215,7 @@ export const TransactionPage = () => {
 
   useEffect(() => {
     if (status === 'idle') {
+      console.log("IDLE");
       dispatch(getTransactions({ stockCode: "2330" }));
     }
   }, [status, dispatch]);

@@ -9,16 +9,21 @@ import "./Theme.scss";
 import { ThemeProvider } from "./context/ThemeContext";
 import { DateProvider } from "./context/DateContext";
 import "bootstrap";
+import '../src/locales/i18n'; // stday-這句一定要加
+
+
+
+
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
 
   <DateProvider>
-  <ThemeProvider>
-    <Provider store={rootStore.store}>
-      <App />
-    </Provider>
-  </ThemeProvider>
+    <ThemeProvider>
+      <Provider store={rootStore.store}>
+        <App />
+      </Provider>
+    </ThemeProvider>
   </DateProvider>
 
 );

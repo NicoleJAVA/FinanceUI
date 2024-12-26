@@ -12,6 +12,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Dela+Gothic+One&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=M+PLUS+1p:wght@100;300;400;500;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Maven+Pro:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Wix+Madefor+Display:wght@400..800&display=swap');
 
 $font-size-md: 14px;
 $font-noto: "Noto Sans", sans-serif;
@@ -24,8 +25,10 @@ $font-bungee: 'Bungee', sans-serif;
 $font-dela-gothic-one: 'Dela Gothic One', sans-serif;
 $font-m-plus: 'M PLUS 1p', sans-serif;
 $font-maven: 'Maven Pro', sans-serif;
+$font-wix-made-for-display: "Wix Madefor Display", serif; // madeForDisplay
+// $theme-font: $font-m-plus;
 
-$theme-font: $font-m-plus;
+$theme-font: $font-wix-made-for-display;
 $theme-font-weight: 300;
 $theme-font-size: 14px;
 

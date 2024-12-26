@@ -1,0 +1,63 @@
+$flash-color: red;
+
+.flash-border {
+    border-color: $flash-color;
+    border: 1px solid $flash-color;
+    animation: flash-border-animation 1s infinite;
+}
+
+@keyframes flash-border-animation {
+    0% {
+        border-color: $flash-color;
+        border: 1px solid $flash-color;
+    }
+
+    25% {
+        border-color: transparent;
+        border: 1px solid transparent;
+    }
+
+    50% {
+        border-color: $flash-color;
+        border: 1px solid $flash-color;
+    }
+
+
+    75% {
+        border-color: transparent;
+        border: 1px solid transparent;
+    }
+
+    100% {
+        border-color: $flash-color;
+        border: 1px solid $flash-color;
+    }
+}
+
+.flash-background {
+    background-color: yellow;
+    animation: flash-background-animation 3s infinite;
+}
+
+@keyframes flash-background-animation {
+    0% {
+        background-color: yellow;
+    }
+
+    25% {
+        background-color: transparent;
+    }
+
+    50% {
+        background-color: yellow;
+    }
+
+
+    75% {
+        background-color: transparent;
+    }
+
+    100% {
+        background-color: yellow;
+    }
+}

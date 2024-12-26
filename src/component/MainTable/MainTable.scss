@@ -1,0 +1,94 @@
+@import "../../../scss/all.scss";
+
+
+@mixin defaultTdStyle {
+    padding: .5rem .5rem;
+    font-size: 13px;
+    vertical-align: middle;
+}
+
+.summary-table {
+    min-width: 100%;
+
+    .main-table-td {
+        @include defaultTdStyle;
+    }
+}
+
+// .main-table, // todo dele
+// .main-table-td,
+// .main-table-th {
+//   border-collapse: collapse;
+// }
+
+.main-table-th {
+    height: 50px;
+    border-bottom: 1px solid $bright-gray !important;
+    padding: 0 !important;
+}
+
+.main-table-td {
+    padding: 0 !important;
+    height: 50px;
+    border-bottom: 0px solid $bright-gray !important;
+    vertical-align: top;
+    color: $theme-black;
+}
+
+.th-box {
+    cursor: pointer;
+    position: relative;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    line-height: 17px;
+    color: $theme-black;
+    font-family: $theme-font;
+    font-weight: $theme-font-weight;
+    font-size: 14px;
+}
+
+.align-center-cell {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.align-left-cell {
+    height: 100%;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    text-align: center;
+}
+
+.vertical-align-top-cell .th-box {
+    display: flex;
+    vertical-align: top;
+    align-items: start;
+}
+
+.status-th,
+.status-cell {
+    padding: 0 !important;
+    max-width: 64px;
+    width: 64px;
+}
+
+.fixed-width-cell {
+    width: var(--fixed-width);
+    max-width: var(--fixed-width);
+}
+
+.sort-arrow {
+    position: absolute;
+    right: 10px;
+    top: 17px;
+    // bottom: 50%;
+}
+
+
+
+// --------------

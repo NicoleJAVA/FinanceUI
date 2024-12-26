@@ -1,0 +1,14 @@
+{
+    "welcome": "歡迎",
+    "common": {
+        "uuid": "UUID",
+        "name": "名稱",
+        "detail": "明細",
+        "tel": "電話",
+        "address": "住址",
+        "email": "email",
+        "price": "價格",
+        "amount": "數量",
+        "total": "總價"
+    }
+}

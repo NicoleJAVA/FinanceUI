@@ -11,17 +11,20 @@ import { ToastStack } from "./ToastStack/ToastStack";
 import "./App.scss";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./helpers/fontawesome";
-// import TransactionPage from "./pages/transactionPage/TransactionPage";
-// import InventoryPage from "./pages/inventoryPage/InventoryPage";
+// import TransactionPage from "./pages/transactionPage/TransactionPage"; todo stday
+// import InventoryPage from "./pages/inventoryPage/InventoryPage"; todo stday
 
+// import { TranslationProvider, useTranslationContext } from '../src/locales/TranslationContext'; todo dele
 
+import { useTranslation } from 'react-i18next';
 function App() {
   const dispatch = useAppDispatch();
   const toastStackRef = useRef();
 
 
+  const { t } = useTranslation();
 
-
+  console.log('TTT', t); // todo dele
   return (
     <div>
       <HashRouter>
@@ -32,7 +35,7 @@ function App() {
           <div className="app-content">
             <Routes>
               <Route path="/demo" element={<DemoPage />} />
-              <Route path="/my-page" element={<MyPage />} />
+              <Route path="/my-page" element={<MyPage t={t} />} />
               <Route path="/transaction" element={<TransactionPage />} />
               <Route path="/inventory" element={<InventoryPage />} />
               <Route path="/history" element={<HistoryPage />} />

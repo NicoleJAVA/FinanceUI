@@ -38,7 +38,6 @@ export const Sidebar = () => {
                         <Nav.Link
                             as={NavLink}
                             to={item.path}
-                            isActive={() => activeKey === item.path}
                             onClick={() => handleSelect(item.path)}
                             className="sidebar-link"
                         >

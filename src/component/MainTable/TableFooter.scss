@@ -1,0 +1,62 @@
+@import "../../../scss/all.scss";
+
+
+
+.table-tfoot {
+    height: 40px;
+    padding-left: 28px;
+    padding-right: 18px;
+}
+
+.table-tfoot-td {}
+
+.table-tfoot-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.tfoot-left-container {
+    display: flex;
+    align-items: center;
+}
+
+.tfoot-right-container {
+    font-family: $theme-font;
+    font-weight: 300;
+    font-size: 12px;
+}
+
+.prev-link,
+.next-link {
+    font-family: $theme-font;
+    font-weight: 300;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.prev-link {
+    margin-right: 5px;
+}
+
+.next-link {
+    margin-left: 5px;
+}
+
+.page-arrow {
+    letter-spacing: 1px;
+}
+
+.next-link .page-arrow {
+    margin-left: 5px;
+}
+
+.page-input {
+    // border-color: $theme-table-border;
+    width: 22px;
+    height: 24px;
+    border-radius: 0px;
+    font-size: 12px;
+    padding: 3px !important;
+    text-align: center;
+}

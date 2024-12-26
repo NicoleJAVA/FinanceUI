@@ -7,39 +7,49 @@
     border-radius: 5px;
 
     --background-color: #{$light-theme-bg};
+
     [data-theme='dark'] & {
-        --background-color:  #{$dark-theme-black-bg};
-      }
+        --background-color: #{$dark-theme-black-bg};
+    }
+
     background-color: var(--background-color);
 }
 
 
-.table td, .table th {
+.table td,
+.table th {
     font-size: 13px !important;
     --background-color: #{$light-theme-bg};
     --text-color: #{$light-theme-text};
+
     [data-theme='dark'] & {
-        --background-color:  #{$dark-theme-bg};
+        --background-color: #{$dark-theme-bg};
         --text-color: #{$dark-theme-text};
     }
 
     background-color:var(--background-color) !important;
     color: var(--text-color) !important;
-    vertical-align: middle; 
+    vertical-align: middle;
 }
 
 
 .rdt_TableRow:hover {
-    
+
     [data-theme='dark'] & {
         background-color: $theme-dark-hover-bg !important;
     }
-  }
+
+    [data-theme='light'] & {
+        // background-color: $theme-dark-hover-bg !important;  // todo stday color
+        background-color: white !important; // todo stday color
+        color: black !important; // todo stday color
+    }
+}
 
 
-  .theme-table-footer {
+.theme-table-footer {
     [data-theme='dark'] & {
         background-color: $dark-theme-bg;
         color: $dark-theme-table-text;
     }
-  }
+}
