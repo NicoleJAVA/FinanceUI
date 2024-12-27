@@ -1,3 +1,28 @@
+// * * * * * * * * * * * * * * * * * * * * * * * *
+// *                                             *
+// *                                             *
+// *                                             *
+// *                                             *
+// *                                             *
+// *                                             *
+// *                                             *
+// *      此檔案並沒有實際用到，但需要備份提供參考                           
+// *      此檔邏輯改成實現在 TableInputCell.jsx 裏                       
+// *                                             *
+// *                                             *
+// *                                             *
+// *                                             *
+// *                                             *
+// *                                             *
+// *                                             *
+// *                                             *
+// *                                             *
+// *                                             *
+// *                                             *
+// * * * * * * * * * * * * * * * * * * * * * * * *
+
+
+
 export const handleInputChange = (columns, updatedData, setUpdatedData, uuid, columnKey, value) => {
     const updatedDataCopy = [...updatedData];
     const rowIndex = updatedDataCopy.findIndex((row) => row.uuid === uuid);
@@ -73,139 +98,3 @@ const triggerFlashAnimation = (rowUuid, columnKey) => {
         }
     }
 };
-
-// export const handleInputChange = (columns, updatedData, setUpdatedData, uuid, columnKey, value) => {
-//     const updatedDataCopy = [...updatedData];
-//     const rowIndex = updatedDataCopy.findIndex((row) => row.uuid === uuid);
-
-//     if (rowIndex !== -1) {
-//         updatedDataCopy[rowIndex] = {
-//             ...updatedDataCopy[rowIndex],
-//             [columnKey]: value,
-//             [`${columnKey}_updated`]: true,
-//         };
-//         setUpdatedData(updatedDataCopy);
-
-//         // 檢查該欄位是否有 affect 屬性
-//         const column = columns.find(col => col.key === columnKey);
-//         if (column && column.affect) {
-//             // 如果有 affect 屬性，對 affected 欄位觸發動畫
-//             column.affect.forEach((affectedColumnKey) => {
-//                 triggerFlashAnimation(uuid, affectedColumnKey);
-//             });
-//         }
-
-//         // 呼叫 triggerFlashAnimation，並傳遞 rowUuid 和 columnKey
-//         triggerFlashAnimation(uuid, columnKey); // 傳遞參數
-//     }
-// };
-
-
-
-
-// // ComputeTable.jsx
-
-// export const handleInputChange = (updatedData, setUpdatedData, uuid, columnKey, value) => {
-//     const updatedDataCopy = [...updatedData];
-//     const rowIndex = updatedDataCopy.findIndex((row) => row.uuid === uuid);
-
-//     if (rowIndex !== -1) {
-//         updatedDataCopy[rowIndex] = {
-//             ...updatedDataCopy[rowIndex],
-//             [columnKey]: value,
-//             [`${columnKey}_updated`]: true,
-//         };
-//         setUpdatedData(updatedDataCopy);
-
-//         // 呼叫 triggerFlashAnimation，並傳遞 rowUuid 和 columnKey
-//         triggerFlashAnimation(uuid, columnKey); // 傳遞參數
-//     }
-// };
-
-
-// // export const handleInputChange = (updatedData, setUpdatedData, uuid, columnKey, value) => {
-// //     const updatedDataCopy = [...updatedData]; // 複製 updatedData 陣列
-// //     const rowIndex = updatedDataCopy.findIndex((row) => row.uuid === uuid);
-
-// //     if (rowIndex !== -1) {
-// //         updatedDataCopy[rowIndex] = {
-// //             ...updatedDataCopy[rowIndex], // 保留其他欄位
-// //             [columnKey]: value, // 更新對應的欄位
-// //             [`${columnKey}_updated`]: true, // 標記為已更新
-// //         };
-// //         setUpdatedData(updatedDataCopy); // 更新狀態
-// //     }
-// // };
-// // export const handleInputChange = (e, rowUuid, columnKey, columns, setUpdatedData, updatedData) => {
-// //     const updatedRows = [...updatedData];
-// //     const rowIndex = updatedRows.findIndex((row) => row.uuid === rowUuid);
-// //     updatedRows[rowIndex][columnKey] = e.target.value;
-// //     setUpdatedData(updatedRows);
-
-// //     // 處理依賴關係的動畫
-// //     columns.forEach((column) => {
-// //         if (column.key === columnKey && column.affect) {
-// //             column.affect.forEach((affectedColumn) => {
-// //                 triggerFlashAnimation(updatedRows[rowIndex].uuid, affectedColumn);
-// //             });
-// //         }
-// //     });
-// // };
-
-// const triggerFlashAnimation = (rowId, columnKey) => {
-//     const element = document.getElementById(`row-${rowId}-${columnKey}`);
-//     if (element) {
-//         element.classList.add('flash-background');
-//         setTimeout(() => {
-//             element.classList.remove('flash-background');
-//         }, 1000); // 動畫持續 1 秒
-//     }
-// };
-
-
-// // // computeTable.js (tableLogic.js) todo dele
-// // export const handleInputChange = (updatedData, setUpdatedData, rowId, fieldKey, value) => {
-// //     const newData = updatedData.map((row) => {
-// //         if (row.uuid === rowId) {
-// //             row[fieldKey] = value;
-// //         }
-// //         return row;
-// //     });
-// //     setUpdatedData(newData);
-// //     recalculateDependencies(updatedData, setUpdatedData, rowId);
-// //     triggerFlashAnimation(rowId, 'total'); // 在數據更新後觸發閃爍框線動畫
-// // };
-
-// // export const recalculateDependencies = (updatedData, setUpdatedData, rowId) => {
-// //     const newData = updatedData.map((row) => {
-// //         if (row.uuid === rowId) {
-// //             if (row.price && row.amount) {
-// //                 const total = (parseFloat(row.price) * parseFloat(row.amount)).toFixed(2);
-// //                 row.total = total;
-// //                 row.total_updated = true;
-// //             }
-// //         }
-// //         return row;
-// //     });
-
-// //     setUpdatedData(newData);
-
-// //     setTimeout(() => {
-// //         const resetData = updatedData.map((row) => {
-// //             delete row.total_updated;
-// //             return row;
-// //         });
-// //         setUpdatedData(resetData);
-// //     }, 2000);
-// // };
-
-// // export const triggerFlashAnimation = (rowId, columnKey) => {
-// //     const element = document.getElementById(`row-${rowId}-${columnKey}`);
-// //     if (element) {
-// //         element.classList.add('flash-background');
-
-// //         setTimeout(() => {
-// //             element.classList.remove('flash-background');
-// //         }, 1000);
-// //     }
-// // };

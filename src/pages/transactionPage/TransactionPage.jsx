@@ -113,6 +113,7 @@ export const TransactionPage = () => {
   const [transactionData, setTransactionData] = useState(transactions);
 
   const columnsB = [
+    { name: 'UUID', selector: row => row.uuid, sortable: true },
     { name: '成交日期', selector: row => $date(row.date), sortable: true },
     { name: '股票代碼', selector: row => row.stock_code, sortable: true },
     { name: '買賣別', selector: row => row.transaction_type, sortable: true },
@@ -334,6 +335,7 @@ export const TransactionPage = () => {
         <Table hover id="transaction-table">
           <thead>
             <tr>
+              <th>UUID</th>
               <th>交易日期</th>
               <th>商品代碼</th>
               <th>商品名稱</th>
@@ -346,6 +348,7 @@ export const TransactionPage = () => {
           <tbody>
             {cTableData.map((transaction, index) => (
               <tr key={index}>
+                <td>{transaction.uuid}</td>
                 <td>{transaction.transaction_date}</td>
                 <td>{transaction.symbol}</td>
                 <td>{transaction.product_name}</td>
