@@ -5,8 +5,10 @@ import { Table, Button } from 'react-bootstrap';
 import './TransactionPage.scss';
 import { useDate } from '../../context/DateContext';
 import moment from 'moment';
-import DataTable, { createTheme } from 'react-data-table-component';
+// import DataTable, { createTheme } from 'react-data-table-component'; todo dele
 
+import { MainTable } from '../../component/MainTable/MainTable';
+import DefaultExpandRow from '../../component/MainTable/DefaultExpandRow';
 // 手續費折扣率
 const FEE_DISCOUNT = 0.003;
 
@@ -83,23 +85,24 @@ export const TransactionPage = () => {
     // },
   }
 
-  createTheme('customTheme', {
-    text: {
-      primary: '#AFBECC',
-      secondary: '#AFBECC',
-    },
-    background: {
-      default: 'white',// '#22282E', // todo stday
-    },
-    context: {
-      background: '#27303B',
-      text: '#AFBECC',
-    },
-    divider: {
-      default: '#37435A',
-    },
+  // todo dele
+  // createTheme('customTheme', {
+  //   text: {
+  //     primary: '#AFBECC',
+  //     secondary: '#AFBECC',
+  //   },
+  //   background: {
+  //     default: 'white',// '#22282E', // todo stday
+  //   },
+  //   context: {
+  //     background: '#27303B',
+  //     text: '#AFBECC',
+  //   },
+  //   divider: {
+  //     default: '#37435A',
+  //   },
 
-  }, 'dark');
+  // }, 'dark');
 
   const handleInputChangeA = (field, value) => {
     setATableData(prevData => {
@@ -138,6 +141,31 @@ export const TransactionPage = () => {
     { name: '損益試算', selector: row => row.profit_loss, sortable: true },
     { name: '損益試算之二', selector: row => row.profit_loss_2, sortable: true },
   ];
+
+
+
+
+
+  const transactionColumns = [
+    { key: 'uuid', sortable: true },
+    { key: 'date', sortable: true },
+    { key: 'stock_code', sortable: true },
+    { key: 'transaction_type', sortable: true },
+    { key: 'unit_price', sortable: true },
+    { key: 'transaction_quantity', sortable: true },
+    { key: 'transaction_value', sortable: true },
+    { key: 'estimated_fee', sortable: true },
+    { key: 'estimated_tax', sortable: true },
+    { key: 'net_amount', sortable: true },
+    { key: 'writeOffQuantities', sortable: true, isInput: true },
+    { key: 'remaining_quantity', sortable: true },
+    { key: 'amortized_cost', sortable: true },
+    { key: 'amortized_income', sortable: true },
+    { key: 'profit_loss', sortable: true },
+    { key: 'profit_loss_2', sortable: true }
+  ];
+
+
 
   useEffect(() => {
     if (transactions.length > 0) {
@@ -259,6 +287,30 @@ export const TransactionPage = () => {
     dispatch(batchWriteOff({ stockCode: '2330', inventory: editedInventory, transactionDate: moment().format('YYYY-MM-DD HH:mm:ss'), sellRecord: aTableData[0] }));
   };
 
+
+  const tableSettings = {
+
+    tableStyle: {
+
+    },
+    paging: {
+      showFooter: true,
+    },
+    expandColumnName: "detailData",
+    expandColumns: [
+
+      { key: "color" },
+      { key: "season" },
+      { key: "fruit" },
+      { key: "flower" },
+
+
+    ],
+    autoGenColumns: true,
+
+  }
+
+
   return (
     <div>
       <div className="table-card-wrapper">
@@ -313,7 +365,10 @@ export const TransactionPage = () => {
         </Table>
       </div>
 
-      <div >
+
+      <MainTable data={transactionData} settings={tableSettings} columns={transactionColumns} localePrefix={'transaction'}
+        expandUI={DefaultExpandRow} />
+      {/* <div > todo dele
         <DataTable
           columns={columnsB}
           data={transactionData}
@@ -328,10 +383,10 @@ export const TransactionPage = () => {
           <p>攤提總收入: {totals.amortizedIncomeSum}</p>
           <p>攤提總收入誤差: {totals.amortizedIncomeDiff}</p>
         </div>
-        <button onClick={handleBatchWriteOff} className="btn btn-primary">存檔</button>
-      </div>
+        
+      </div> */}
 
-      <div className="table-card-wrapper">
+      {/* todo dele <div className="table-card-wrapper">
         <Table hover id="transaction-table">
           <thead>
             <tr>
@@ -360,7 +415,8 @@ export const TransactionPage = () => {
             ))}
           </tbody>
         </Table>
-      </div>
+      </div> */}
+      <button onClick={handleBatchWriteOff} className="btn btn-primary">存檔</button>
     </div >
   );
 };

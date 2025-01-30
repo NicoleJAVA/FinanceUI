@@ -81,9 +81,9 @@ export const MainTable = ({ columns = [], data, localePrefix, settings, expandUI
                 <tr onClick={() => toggleRow(row.uuid)} data-uuid={row.uuid}>
                     {columns.map((column) => (
 
-                        <td key={column.key} className={getTdClass(row, column)} data-column={column.key}>
+                        <td key={`${column.key}-${row.uuid}`} className={getTdClass(row, column)} data-column={column.key}>
                             {column.key === settings?.expandColumnName ? (
-                                // 當 column 名稱等於 expandColumnName 時，渲染按鈕
+                                // 當s column 名稱等於 expandColumnName 時，渲染按鈕
                                 <button >Expand</button>
                             ) : column.isInput ? (
                                 // 當 isInput 為 true 時，渲染 TableInputCell

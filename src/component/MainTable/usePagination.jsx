@@ -46,10 +46,10 @@ export function usePagination(data, itemsPerPageOptions = [5, 10, 20], initialIt
         setCurrentPage(1);
     };
 
-    const rangeText = `Showing ${Math.min(currentPage * itemsPerPage - itemsPerPage + 1, data.length)} to ${Math.min(
+    const rangeText = `Showing ${Math.min(currentPage * itemsPerPage - itemsPerPage + 1, data?.length)} to ${Math.min(
         currentPage * itemsPerPage,
-        data.length
-    )} of ${data.length} entries`;
+        data?.length
+    )} of ${data?.length} entries`;
 
     const displayedPages = [];
     for (let i = 1; i <= totalPages; i++) {

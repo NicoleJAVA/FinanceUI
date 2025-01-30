@@ -10,5 +10,24 @@
         "price": "價格",
         "amount": "數量",
         "total": "總價"
+    },
+
+    "transaction": {
+        "uuid": "UUID",
+        "date": "成交日期",
+        "stock_code": "股票代碼",
+        "transaction_type": "買賣別",
+        "unit_price": "成交單價",
+        "transaction_value": "成交價金",
+        "transaction_quantity": "成交股數",
+        "estimated_fee": "手續費",
+        "estimated_tax": "交易稅",
+        "net_amount": "淨收付金額",
+        "writeOffQuantities": "沖銷股數",
+        "remaining_quantity": "剩餘股數",
+        "amortized_cost": "攤提成本",
+        "amortized_income": "攤提收入",
+        "profit_loss": "損益試算",
+        "profit_loss_2": "損益試算之二"
     }
 }
