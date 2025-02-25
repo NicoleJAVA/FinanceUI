@@ -41,7 +41,7 @@ export const batchWriteOff = createAsyncThunk(
 export const transactionSlice = createSlice({
   name: 'transactions',
   initialState: {
-    data: [],
+    data: null,
     status: 'idle',
     error: null,
   },

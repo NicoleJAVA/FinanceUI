@@ -23,7 +23,7 @@
         "estimated_fee": "手續費",
         "estimated_tax": "交易稅",
         "net_amount": "淨收付金額",
-        "writeOffQuantities": "沖銷股數",
+        "writeOffQuantity": "沖銷股數",
         "remaining_quantity": "剩餘股數",
         "amortized_cost": "攤提成本",
         "amortized_income": "攤提收入",

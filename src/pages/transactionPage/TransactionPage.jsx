@@ -58,6 +58,10 @@ export const TransactionPage = () => {
     amortizedIncomeDiff: 0,
   });
 
+  const handleUpdatedData = (newData) => {
+    setTransactionData(newData);
+  };
+
   const bTableCustomStyles = {
     // headRow: {
     //   style: {
@@ -115,32 +119,32 @@ export const TransactionPage = () => {
   // 用於管理 B 表格的狀態
   const [transactionData, setTransactionData] = useState(transactions);
 
-  const columnsB = [
-    { name: 'UUID', selector: row => row.uuid, sortable: true },
-    { name: '成交日期', selector: row => $date(row.date), sortable: true },
-    { name: '股票代碼', selector: row => row.stock_code, sortable: true },
-    { name: '買賣別', selector: row => row.transaction_type, sortable: true },
-    { name: '成交單價', selector: row => row.transaction_price, sortable: true },
-    { name: '成交股數', selector: row => row.transaction_quantity, sortable: true },
-    { name: '成交價金', selector: row => row.transaction_price, sortable: true },
-    { name: '手續費', selector: row => row.estimated_fee, sortable: true },
-    { name: '交易稅', selector: row => row.estimated_tax, sortable: true },
-    { name: '淨收付金額', selector: row => row.net_amount, sortable: true },
-    {
-      name: '沖銷股數', cell: (row) => (
-        <input
-          type="number"
-          value={row.writeOffQuantities}
-          onChange={(e) => handleInputChange(row.uuid, 'writeOffQuantity', parseInt(e.target.value))}
-        />
-      ), sortable: true
-    },
-    { name: '剩餘股數', selector: row => row.remaining_quantity, sortable: true },
-    { name: '攤提成本', selector: row => row.amortized_cost, sortable: true },
-    { name: '攤提收入', selector: row => row.amortized_income, sortable: true },
-    { name: '損益試算', selector: row => row.profit_loss, sortable: true },
-    { name: '損益試算之二', selector: row => row.profit_loss_2, sortable: true },
-  ];
+  // const columnsB = [ todo dele
+  //   { name: 'UUID', selector: row => row.uuid, sortable: true },
+  //   { name: '成交日期', selector: row => $date(row.date), sortable: true },
+  //   { name: '股票代碼', selector: row => row.stock_code, sortable: true },
+  //   { name: '買賣別', selector: row => row.transaction_type, sortable: true },
+  //   { name: '成交單價', selector: row => row.transaction_price, sortable: true },
+  //   { name: '成交股數', selector: row => row.transaction_quantity, sortable: true },
+  //   { name: '成交價金', selector: row => row.transaction_price, sortable: true },
+  //   { name: '手續費', selector: row => row.estimated_fee, sortable: true },
+  //   { name: '交易稅', selector: row => row.estimated_tax, sortable: true },
+  //   { name: '淨收付金額', selector: row => row.net_amount, sortable: true },
+  //   {
+  //     name: '沖銷股數', cell: (row) => (
+  //       <input
+  //         type="number"
+  //         value={row.writeOffQuantity}
+  //         onChange={(e) => handleInputChange(row.uuid, 'writeOffQuantity', parseInt(e.target.value))}
+  //       />
+  //     ), sortable: true
+  //   },
+  //   { name: '剩餘股數', selector: row => row.remaining_quantity, sortable: true },
+  //   { name: '攤提成本', selector: row => row.amortized_cost, sortable: true },
+  //   { name: '攤提收入', selector: row => row.amortized_income, sortable: true },
+  //   { name: '損益試算', selector: row => row.profit_loss, sortable: true },
+  //   { name: '損益試算之二', selector: row => row.profit_loss_2, sortable: true },
+  // ];
 
 
 
@@ -157,7 +161,7 @@ export const TransactionPage = () => {
     { key: 'estimated_fee', sortable: true },
     { key: 'estimated_tax', sortable: true },
     { key: 'net_amount', sortable: true },
-    { key: 'writeOffQuantities', sortable: true, isInput: true },
+    { key: 'writeOffQuantity', sortable: true, isInput: true, inputType: 'positive-int' },
     { key: 'remaining_quantity', sortable: true },
     { key: 'amortized_cost', sortable: true },
     { key: 'amortized_income', sortable: true },
@@ -168,7 +172,7 @@ export const TransactionPage = () => {
 
 
   useEffect(() => {
-    if (transactions.length > 0) {
+    if (transactions?.length > 0) {
       setTransactionData(transactions.map(transaction => ({
         ...transaction,
         remaining_quantity: 0,
@@ -184,6 +188,8 @@ export const TransactionPage = () => {
 
 
   useEffect(() => {
+    if (!transactionData) return;
+
     const amortizedCostSum = transactionData.reduce((sum, item) => sum + item.amortized_cost, 0);
     const amortizedIncomeSum = transactionData.reduce((sum, item) => sum + item.amortized_income, 0);
     const amortizedIncomeDiff = amortizedIncomeSum - (aTableData ? aTableData.net_amount : 0);
@@ -201,8 +207,9 @@ export const TransactionPage = () => {
 
 
 
+
   useEffect(() => {
-    if (aTableData && aTableData[0]) {
+    if (aTableData && aTableData[0] && transactionData) {
       setTransactionData(prevData => {
         return prevData.map(transaction => {
           const newQuantity = transaction.writeOffQuantity; // 使用目前的沖銷股數
@@ -367,7 +374,9 @@ export const TransactionPage = () => {
 
 
       <MainTable data={transactionData} settings={tableSettings} columns={transactionColumns} localePrefix={'transaction'}
-        expandUI={DefaultExpandRow} />
+        expandUI={DefaultExpandRow}
+        onDataUpdate={handleUpdatedData}
+      />
       {/* <div > todo dele
         <DataTable
           columns={columnsB}

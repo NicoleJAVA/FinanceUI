@@ -6,6 +6,7 @@ export function usePagination(data, itemsPerPageOptions = [5, 10, 20], initialIt
     const [totalPages, setTotalPages] = useState(1);
     const [sortedData, setSortedData] = useState([]);
 
+    console.log('usePagi', itemsPerPageOptions, initialItemsPerPage, initialPage)
     useEffect(() => {
         if (data && data.length > 0) {
             setTotalPages(Math.ceil(data.length / itemsPerPage));
@@ -16,6 +17,7 @@ export function usePagination(data, itemsPerPageOptions = [5, 10, 20], initialIt
 
     useEffect(() => {
         if (!data || data.length === 0) {
+            console.log('aaa');
             setSortedData([]);
             return;
         }
@@ -27,6 +29,7 @@ export function usePagination(data, itemsPerPageOptions = [5, 10, 20], initialIt
                 return a[sort.key] < b[sort.key] ? 1 : -1;
             }
         });
+        console.log('sorted', sorted);
 
         setSortedData(sorted);
     }, [data, sort.key, sort.order]);

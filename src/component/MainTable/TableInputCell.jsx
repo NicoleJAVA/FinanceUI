@@ -7,7 +7,11 @@ const TableInputCell = ({ columns, column, updatedData, setUpdatedData, uuid, co
         const rowIndex = updatedDataCopy.findIndex((row) => row.uuid === uuid);
 
 
-        console.log("改動", rowIndex); // todo dele
+        console.log("改動", columnKey, rowIndex, e.target.value, {
+            ...updatedDataCopy[rowIndex],
+            [columnKey]: e.target.value,
+            [`${columnKey}_updated`]: true,
+        }); // todo dele
         if (rowIndex === -1) return;
 
         updatedDataCopy[rowIndex] = {
@@ -16,6 +20,8 @@ const TableInputCell = ({ columns, column, updatedData, setUpdatedData, uuid, co
             [`${columnKey}_updated`]: true,
         };
 
+
+        console.log("updatedDataCopy", updatedDataCopy); // todo dele
         setUpdatedData(updatedDataCopy);
 
         // 計算依賴欄位 todo dele

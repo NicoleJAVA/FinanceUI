@@ -9,12 +9,12 @@ import TableInputCell from "./TableInputCell";
 import { ExpandableRow } from "./ExpandableRow";
 import { generateColumns } from "../../helpers/TableHelper";
 
-export const MainTable = ({ columns = [], data, localePrefix, settings, expandUI: ExpandUI }) => {
+export const MainTable = ({ columns = [], data, localePrefix, settings, expandUI: ExpandUI, onDataUpdate }) => {
     const [sort, setSort] = useState({ key: settings?.paging?.sortKey, order: "asc" });
     const [isShowDeleteModal, setIsShowDeleteModal] = useState(false);
     const [selectedDeleteRow, setSelectedDeleteRow] = useState(null);
     const [expandedRows, setExpandedRows] = useState([]);
-    const [updatedData, setUpdatedData] = useState(data); // 用來儲存更新過的資料
+    const [updatedData, setUpdatedData] = useState(data);
     const { t } = useTranslation();
 
     console.log('TABLE DATA', data);
@@ -42,6 +42,55 @@ export const MainTable = ({ columns = [], data, localePrefix, settings, expandUI
         return Object.keys(firstRow).map(key => ({ key }));
     }
 
+    // const handleUpdate = (uuid, columnKey, value) => {
+    //     // setUpdatedData((prevData) =>
+    //     //     prevData.map((row) =>
+    //     //         row.uuid === uuid
+    //     //             ? { ...row, [columnKey]: value, [`${columnKey}_updated`]: true }
+    //     //             : row
+    //     //     )
+    //     // );
+    //     setUpdatedData((prevData) => {
+    //         const newData = prevData.map((row) => {
+    //             console.log("columnKey", columnKey); // todo dele
+
+    //             if (row.uuid === uuid) {
+    //                 return {
+    //                     ...row,
+    //                     [columnKey]: value,
+    //                     [`${columnKey}_updated`]: true,
+    //                 };
+    //             } else {
+    //                 return row;
+    //             }
+    //         });
+
+    //         return newData;
+    //     });
+
+
+    // };
+
+    const handleUpdate = (uuid, columnKey, value) => {
+        const newData = updatedData.map((row) => {
+            if (row.uuid === uuid) {
+                return {
+                    ...row,
+                    [columnKey]: value,
+                    [`${columnKey}_updated`]: true,
+                };
+            }
+            return row;
+        });
+
+        setUpdatedData(newData);
+
+        // ★回傳給父元件 TransactionPage 更新 state★
+        if (onDataUpdate) {
+            onDataUpdate(newData);
+        }
+    };
+
 
     const toggleRow = (uuid) => {
         setExpandedRows((prev) => prev.includes(uuid) ? prev.filter((id) => id !== uuid) : [...prev, uuid]);
@@ -61,6 +110,7 @@ export const MainTable = ({ columns = [], data, localePrefix, settings, expandUI
         goToPage,
     } = usePagination(updatedData, settings?.paging?.itemsPerPageOptions, settings?.paging?.initialItemsPerPage, settings?.paging?.initialPage, sort);
 
+    console.log('pagi', paginatedData)
     const sortBy = (key) => {
         setSort((prev) => ({
             key,
@@ -86,17 +136,58 @@ export const MainTable = ({ columns = [], data, localePrefix, settings, expandUI
                                 // 當s column 名稱等於 expandColumnName 時，渲染按鈕
                                 <button >Expand</button>
                             ) : column.isInput ? (
-                                // 當 isInput 為 true 時，渲染 TableInputCell
-                                <TableInputCell
-                                    columns={columns}
-                                    row={row}
-                                    column={column}
-                                    updatedData={updatedData}
-                                    setUpdatedData={setUpdatedData}
-                                    uuid={row.uuid}
-                                    columnKey={column.key}
-                                    value={row[column.key]}
+                                <input
+                                    type={column.inputType === 'string' ? 'text' : 'number'}
+                                    min={column.inputType === 'positive-int' ? '1' : undefined}
+                                    step={column.inputType === 'positive-int' || column.inputType === 'integer' ? '1' : 'any'}
+                                    pattern={
+                                        column.inputType === 'positive-int'
+                                            ? "^[1-9]\\d*$"
+                                            : column.inputType === 'integer'
+                                                ? "^-?\\d+$"
+                                                : column.inputType === 'float'
+                                                    ? "^-?\\d*(\\.\\d*)?$"
+                                                    : undefined
+                                    }
+                                    title={
+                                        column.inputType === 'positive-int'
+                                            ? "請輸入正整數"
+                                            : column.inputType === 'integer'
+                                                ? "請輸入整數 (含正、負、0)"
+                                                : column.inputType === 'float'
+                                                    ? "請輸入數字 (可含負號、小數)"
+                                                    : undefined
+                                    }
+                                    value={row[column.key] || ""}
+                                    onChange={(e) => {
+                                        const inputEl = e.target;
+
+                                        if (!inputEl.checkValidity()) {
+                                            inputEl.reportValidity(); // 原生提示訊息
+                                            return;
+                                        }
+
+                                        let formattedValue = inputEl.value;
+
+                                        if (column.inputType === 'positive-int' || column.inputType === 'integer') {
+                                            formattedValue = parseInt(inputEl.value, 10);
+                                        } else if (column.inputType === 'float') {
+                                            formattedValue = parseFloat(inputEl.value);
+                                        }
+
+                                        handleUpdate(row.uuid, column.key, formattedValue, column.inputType);
+                                    }}
+                                    onKeyDown={(e) => {
+                                        if (column.inputType === 'positive-int') {
+                                            ["e", "E", "+", "-", "."].includes(e.key) && e.preventDefault();
+                                        } else if (column.inputType === 'integer') {
+                                            ["e", "E", "+", "."].includes(e.key) && e.preventDefault();
+                                        } else if (column.inputType === 'float') {
+                                            ["e", "E", "+"].includes(e.key) && e.preventDefault();
+                                        }
+                                    }}
                                 />
+
                             ) : (
                                 // 否則渲染該欄位的值
                                 row[column.key]
