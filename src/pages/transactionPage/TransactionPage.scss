@@ -2,3 +2,22 @@
     background: white;
     padding: 15px;
 }
+
+@keyframes flash-orange {
+    0% { background-color: orange; }
+    100% { background-color: transparent; }
+  }
+  
+  @keyframes flash-blue {
+    0% { background-color: skyblue; }
+    100% { background-color: transparent; }
+  }
+  
+  .flash-orange {
+    animation: flash-orange 3s ease-in-out;
+  }
+  
+  .flash-blue {
+    animation: flash-blue 3s ease-in-out;
+  }
+  

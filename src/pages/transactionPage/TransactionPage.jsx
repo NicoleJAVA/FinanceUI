@@ -23,6 +23,22 @@ export const TransactionPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [modalData, setModalData] = useState(null);
 
+  const [highlightedCells, setHighlightedCells] = useState({});
+
+  const triggerHighlight = (uuid, columnKey, isIncrease) => {
+    setHighlightedCells(prev => ({
+      ...prev,
+      [`${uuid}-${columnKey}`]: isIncrease ? "flash-blue" : "flash-orange",
+    }));
+
+    setTimeout(() => {
+      setHighlightedCells(prev => ({
+        ...prev,
+        [`${uuid}-${columnKey}`]: "",
+      }));
+    }, 3000);
+  };
+
   // // 管理 A 表格的狀態
   // const [aTableData, setATableData] = useState([
   //   { date: '', code: '', name: '', unit_price: 0, quantity: 0, fee: 0, tax: 0, net_amount: 0 },
@@ -247,7 +263,7 @@ export const TransactionPage = () => {
       setRemainingQuantity(remainingQuantity);
       setProfitLoss(profitLoss);
     }
-  }, [aTableData, transactions]);
+  }, [aTableData, transactionData]);
 
   useEffect(() => {
     if (status === 'idle') {
@@ -256,22 +272,88 @@ export const TransactionPage = () => {
     }
   }, [status, dispatch]);
 
-  const handleInputChange = (transactionUuid, field, value) => {
-    console.log("input changed, ", transactionUuid);
-    // const  = parseFloat(value) || 0; // 確保是數字
+
+
+  const handleInputChange = (uuid, columnKey, value) => {
     setTransactionData(prevData => {
       return prevData.map(transaction => {
-        if (transaction.uuid === transactionUuid) {
-          // console.log("input id", transaction.id, value, typeof value);
-          return {
-            ...transaction,
-            [field]: value // 更新指定的欄位
-          };
+        if (transaction.uuid === uuid) {
+          const newValue = parseFloat(value) || 0;
+          const oldValue = transaction[columnKey];
+
+          // 計算哪些欄位會受影響
+          let affectedColumns = [];
+
+          if (columnKey === "writeOffQuantity") {
+            affectedColumns = ["remaining_quantity", "amortized_cost", "amortized_income", "profit_loss"];
+          } else if (columnKey === "quantity") {
+            affectedColumns = ["remaining_quantity", "profit_loss"];
+          } else if (columnKey === "unit_price") {
+            affectedColumns = ["transaction_price", "net_amount", "profit_loss"];
+          }
+
+          // 設定變色
+          const updatedHighlights = { ...highlightedCells };
+          affectedColumns.forEach(affectedKey => {
+            updatedHighlights[`${uuid}-${affectedKey}`] = newValue > oldValue ? "flash-blue" : "flash-orange";
+          });
+
+          setHighlightedCells(updatedHighlights);
+
+          // 3 秒後清除變色
+          setTimeout(() => {
+            setHighlightedCells(prev => {
+              const newHighlights = { ...prev };
+              affectedColumns.forEach(affectedKey => {
+                delete newHighlights[`${uuid}-${affectedKey}`];
+              });
+              return newHighlights;
+            });
+          }, 3000);
+
+          return { ...transaction, [columnKey]: newValue };
         }
         return transaction;
       });
     });
   };
+
+
+  // const handleInputChange = (transactionUuid, field, value) => {
+  //   setTransactionData(prevData => {
+  //     const index = prevData.findIndex(transaction => transaction.uuid === transactionUuid);
+  //     if (index === -1) return prevData; // 沒找到就回傳原陣列
+
+  //     const newValue = parseFloat(value) || 0;
+  //     const oldValue = prevData[index][field];
+
+  //     // 觸發變色 (數值下降變橘色，數值上升變天藍色)
+  //     triggerHighlight(transactionUuid, field, newValue > oldValue);
+
+  //     // 只更新該筆資料
+  //     const updatedTransaction = { ...prevData[index], [field]: newValue };
+
+  //     // 用 slice() 只改變單一物件
+  //     return [...prevData.slice(0, index), updatedTransaction, ...prevData.slice(index + 1)];
+  //   });
+  // };
+
+  // const handleInputChange = (transactionUuid, field, value) => {
+  //   console.log("input changed, ", transactionUuid);
+  //   // const  = parseFloat(value) || 0; // 確保是數字
+  //   setTransactionData(prevData => {
+  //     return prevData.map(transaction => {
+  //       if (transaction.uuid === transactionUuid) {
+  //         // console.log("input id", transaction.id, value, typeof value);
+  //         return {
+  //           ...transaction,
+  //           [field]: value // 更新指定的欄位
+  //         };
+  //       }
+  //       return transaction;
+  //     });
+  //   });
+  // };
 
   if (status === 'loading') {
     return <div>載入中...</div>;
@@ -321,7 +403,7 @@ export const TransactionPage = () => {
   return (
     <div>
       <div className="table-card-wrapper">
-        <Table hover>
+        <Table hover id="table-A">
           <thead>
             <tr>
               <th>成交日期</th>
@@ -373,9 +455,10 @@ export const TransactionPage = () => {
       </div>
 
 
-      <MainTable data={transactionData} settings={tableSettings} columns={transactionColumns} localePrefix={'transaction'}
+      <MainTable id="table-B" data={transactionData} settings={tableSettings} columns={transactionColumns} localePrefix={'transaction'}
         expandUI={DefaultExpandRow}
-        onDataUpdate={handleUpdatedData}
+        onInputChange={handleInputChange}
+        highlightedCells={highlightedCells}
       />
       {/* <div > todo dele
         <DataTable
