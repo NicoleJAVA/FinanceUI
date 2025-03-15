@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getTransactions, batchWriteOff } from '../../redux/transaction/slice';
 import { Table, Button } from 'react-bootstrap';
@@ -15,6 +15,7 @@ const FEE_DISCOUNT = 0.003;
 export const TransactionPage = () => {
   const dispatch = useDispatch();
   const transactions = useSelector((state) => state.transactions.data);
+  console.log('transactions---', transactions);
   const status = useSelector((state) => state.transactions.status);
   const error = useSelector((state) => state.transactions.error);
   const $date = useDate();
@@ -67,6 +68,7 @@ export const TransactionPage = () => {
   const [netAmount, setNetAmount] = useState(0);
   const [remainingQuantity, setRemainingQuantity] = useState(0);
   const [profitLoss, setProfitLoss] = useState(0);
+  const transactionDataRef = useRef([]);
 
   const [totals, setTotals] = useState({
     amortizedCostSum: 0,
@@ -133,7 +135,7 @@ export const TransactionPage = () => {
   };
 
   // 用於管理 B 表格的狀態
-  const [transactionData, setTransactionData] = useState(transactions);
+  const [transactionData, setTransactionData] = useState([]);
 
   // const columnsB = [ todo dele
   //   { name: 'UUID', selector: row => row.uuid, sortable: true },
@@ -189,14 +191,14 @@ export const TransactionPage = () => {
 
   useEffect(() => {
     if (transactions?.length > 0) {
-      setTransactionData(transactions.map(transaction => ({
-        ...transaction,
-        remaining_quantity: 0,
-        amortized_cost: 0,
-        amortized_income: 0,
-        profit_loss: 0,
-        writeOffQuantity: transaction.writeOffQuantity || 0 // 合併沖銷股數
-      })));
+      // setTransactionData(transactions.map(transaction => ({
+      //   ...transaction,
+      //   remaining_quantity: 0,
+      //   amortized_cost: 0,
+      //   amortized_income: 0,
+      //   profit_loss: 0,
+      //   writeOffQuantity: transaction.writeOffQuantity || 0 // 合併沖銷股數
+      // })));
       console.log('TYPE TYPE ', typeof transactions[0].writeOffQuantity)
 
     }
@@ -225,7 +227,7 @@ export const TransactionPage = () => {
 
 
   useEffect(() => {
-    if (aTableData && aTableData[0] && transactionData) {
+    if (aTableData && aTableData[0]) {
       setTransactionData(prevData => {
         return prevData.map(transaction => {
           const newQuantity = transaction.writeOffQuantity; // 使用目前的沖銷股數
@@ -247,23 +249,24 @@ export const TransactionPage = () => {
         });
       });
 
-      const transactionValue = aTableData[0].unit_price * aTableData[0].quantity;
+      setTransactionValue(aTableData[0].unit_price * aTableData[0].quantity);
       const fee = Math.round(transactionValue * 0.01425 * FEE_DISCOUNT);
       const tax = Math.round(transactionValue * 0.01); // 假設 1% 的交易稅
       const netAmount = transactionValue - fee - tax;
 
-      const remainingQuantity = aTableData[0].quantity - transactionData.reduce((sum, item) => sum + item.writeOffQuantity, 0);
-      const profitLoss = transactionData.reduce((sum, item) => sum + item.profit_loss, 0);
+
+      const remainingQuantity = aTableData[0].quantity - transactionDataRef.current.reduce((sum, item) => sum + item.writeOffQuantity, 0);
+      const profitLoss = transactionDataRef.current.reduce((sum, item) => sum + item.profit_loss, 0);
 
       // 更新狀態
-      setTransactionValue(transactionValue);
+
       setFee(fee);
       setTax(tax);
       setNetAmount(netAmount);
       setRemainingQuantity(remainingQuantity);
       setProfitLoss(profitLoss);
     }
-  }, [aTableData, transactionData]);
+  }, [aTableData, transactionValue]);
 
   useEffect(() => {
     if (status === 'idle') {

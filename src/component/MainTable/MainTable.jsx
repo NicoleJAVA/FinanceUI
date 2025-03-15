@@ -27,21 +27,21 @@ export const MainTable = ({ id, columns = [], data, localePrefix, settings,
         setExpandedRows((prev) => prev.includes(uuid) ? prev.filter((id) => id !== uuid) : [...prev, uuid]);
     };
 
-    const {
-        sortedData,
-        currentPage,
-        itemsPerPage,
-        totalPages,
-        paginatedData,
-        rangeText,
-        displayedPages,
-        changePage,
-        resetToFirstPage,
-        itemsPerPageOptions,
-        goToPage,
-    } = usePagination(data, settings?.paging?.itemsPerPageOptions, settings?.paging?.initialItemsPerPage, settings?.paging?.initialPage, sort);
+    // const {
+    //     sortedData,
+    //     currentPage,
+    //     itemsPerPage,
+    //     totalPages,
+    //     paginatedData,
+    //     rangeText,
+    //     displayedPages,
+    //     changePage,
+    //     resetToFirstPage,
+    //     itemsPerPageOptions,
+    //     goToPage,
+    // } = usePagination(data, settings?.paging?.itemsPerPageOptions, settings?.paging?.initialItemsPerPage, settings?.paging?.initialPage, sort);
 
-    console.log('pagi', paginatedData);
+    // console.log('pagi', paginatedData);
 
     const sortBy = (key) => {
         setSort((prev) => ({
@@ -56,7 +56,7 @@ export const MainTable = ({ id, columns = [], data, localePrefix, settings,
     };
 
     const renderRows = () => {
-        return paginatedData.map((row) => (
+        return data.map((row) => (
             <React.Fragment key={row.uuid}>
                 <tr onClick={() => toggleRow(row.uuid)} data-uuid={row.uuid}>
                     {columns.map((column) => (
@@ -147,7 +147,7 @@ export const MainTable = ({ id, columns = [], data, localePrefix, settings,
                     </tr>
                 </thead>
                 <tbody>
-                    {paginatedData && paginatedData.length > 0 ? renderRows() : (
+                    {data && data.length > 0 ? renderRows() : (
                         <tr>
                             <td colSpan={columns.length}>No data available</td>
                         </tr>
@@ -155,21 +155,44 @@ export const MainTable = ({ id, columns = [], data, localePrefix, settings,
                 </tbody>
             </table>
 
-            {settings?.paging?.showFooter && (
-                <TableFooter
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    itemsPerPage={itemsPerPage}
-                    itemsPerPageOptions={itemsPerPageOptions}
-                    rangeText={rangeText}
-                    displayedPages={displayedPages}
-                    changePage={changePage}
-                    goToPage={goToPage}
-                    resetToFirstPage={resetToFirstPage}
-                />
-            )}
         </div>
     );
+    // return (
+    //     <div>
+    //         <table className="summary-table" id={id}>
+    //             <thead>
+    //                 <tr>
+    //                     {columns.map((column) => (
+    //                         <th key={column.key} className="main-table-th">
+    //                             {t(`${localePrefix}.${column.key}`)}
+    //                         </th>
+    //                     ))}
+    //                 </tr>
+    //             </thead>
+    //             <tbody>
+    //                 {paginatedData && paginatedData.length > 0 ? renderRows() : (
+    //                     <tr>
+    //                         <td colSpan={columns.length}>No data available</td>
+    //                     </tr>
+    //                 )}
+    //             </tbody>
+    //         </table>
+
+    //         {settings?.paging?.showFooter && (
+    //             <TableFooter
+    //                 currentPage={currentPage}
+    //                 totalPages={totalPages}
+    //                 itemsPerPage={itemsPerPage}
+    //                 itemsPerPageOptions={itemsPerPageOptions}
+    //                 rangeText={rangeText}
+    //                 displayedPages={displayedPages}
+    //                 changePage={changePage}
+    //                 goToPage={goToPage}
+    //                 resetToFirstPage={resetToFirstPage}
+    //             />
+    //         )}
+    //     </div>
+    // );
 
     //   ----------- END: return( )  -------
 
