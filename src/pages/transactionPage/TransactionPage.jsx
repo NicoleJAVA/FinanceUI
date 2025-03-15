@@ -14,8 +14,15 @@ const FEE_DISCOUNT = 0.003;
 
 export const TransactionPage = () => {
   const dispatch = useDispatch();
-  const transactions = useSelector((state) => state.transactions.data);
-  console.log('transactions---', transactions);
+
+
+  // (1). transactionSource: 交易資料的來源，是從 API 得到
+  // (2). transactionDraftRef: 正在編輯中的草稿，是 user 在動態更新
+  const transactionSource = useSelector((state) => state.transactions.data);
+  const [transactionDraft, setTransactionDraft] = useState([]);
+  const transactionDraftRef = useRef([]);
+
+  console.log('transactionSource---', transactionSource);
   // const status = useSelector((state) => state.transactions.status); // todo delete this variable
   const hasFetchedData = useRef(false);
   const error = useSelector((state) => state.transactions.error);
@@ -26,6 +33,36 @@ export const TransactionPage = () => {
   const [modalData, setModalData] = useState(null);
 
   const [highlightedCells, setHighlightedCells] = useState({});
+  const [transactionValue, setTransactionValue] = useState(0);
+  const [fee, setFee] = useState(0);
+  const [tax, setTax] = useState(0);
+  const [netAmount, setNetAmount] = useState(0);
+  const [remainingQuantity, setRemainingQuantity] = useState(0);
+  const [profitLoss, setProfitLoss] = useState(0);
+
+  const [totals, setTotals] = useState({
+    amortizedCostSum: 0,
+    amortizedIncomeSum: 0,
+    amortizedIncomeDiff: 0,
+  });
+
+  const [aTableData, setATableData] = useState([
+    {
+      data_uuid: '',
+      transaction_date: '',
+      stock_code: '',
+      product_name: '',
+      unit_price: 0,
+      quantity: 0,
+      transaction_price: 0,
+      fee: 0,
+      tax: 0,
+      net_amount: 0,
+      remaining_quantity: 0,
+      profit_loss: 0,
+      inventory_uuids: [],
+    },
+  ]);
 
   const triggerHighlight = (uuid, columnKey, isIncrease) => {
     setHighlightedCells(prev => ({
@@ -45,40 +82,11 @@ export const TransactionPage = () => {
   // const [aTableData, setATableData] = useState([
   //   { date: '', code: '', name: '', unit_price: 0, quantity: 0, fee: 0, tax: 0, net_amount: 0 },
   // ]);
-  const [aTableData, setATableData] = useState([
-    {
-      data_uuid: '',
-      transaction_date: '',
-      stock_code: '',
-      product_name: '',
-      unit_price: 0,
-      quantity: 0,
-      transaction_price: 0,
-      fee: 0,
-      tax: 0,
-      net_amount: 0,
-      remaining_quantity: 0,
-      profit_loss: 0,
-      inventory_uuids: [],
-    },
-  ]);
 
-  const [transactionValue, setTransactionValue] = useState(0);
-  const [fee, setFee] = useState(0);
-  const [tax, setTax] = useState(0);
-  const [netAmount, setNetAmount] = useState(0);
-  const [remainingQuantity, setRemainingQuantity] = useState(0);
-  const [profitLoss, setProfitLoss] = useState(0);
-  const transactionDataRef = useRef([]);
 
-  const [totals, setTotals] = useState({
-    amortizedCostSum: 0,
-    amortizedIncomeSum: 0,
-    amortizedIncomeDiff: 0,
-  });
 
   const handleUpdatedData = (newData) => {
-    setTransactionData(newData);
+    setTransactionDraft(newData);
   };
 
   const bTableCustomStyles = {
@@ -136,7 +144,7 @@ export const TransactionPage = () => {
   };
 
   // 用於管理 B 表格的狀態
-  const [transactionData, setTransactionData] = useState([]);
+
 
   // const columnsB = [ todo dele
   //   { name: 'UUID', selector: row => row.uuid, sortable: true },
@@ -189,18 +197,18 @@ export const TransactionPage = () => {
   ];
 
 
-  // useEffect(() => {
-  //   if (!hasFetchedData.current) {
-  //     console.log("Fetching transactions...");
-  //     dispatch(getTransactions({ stockCode: "2330" }));
-  //     hasFetchedData.current = true;
-  //   }
-  // }, [dispatch]);
+  useEffect(() => {
+    if (!hasFetchedData.current) {
+      console.log("Fetching transactionSource...");
+      dispatch(getTransactions({ stockCode: "2330" }));
+      hasFetchedData.current = true;
+    }
+  }, [dispatch]);
 
 
   useEffect(() => {
-    if (transactions?.length > 0) {
-      transactionDataRef.current = transactions.map(transaction => ({
+    if (transactionSource?.length > 0) {
+      transactionDraftRef.current = transactionSource.map(transaction => ({
         ...transaction,
         remaining_quantity: 0,
         amortized_cost: 0,
@@ -208,8 +216,8 @@ export const TransactionPage = () => {
         profit_loss: 0,
         writeOffQuantity: transaction.writeOffQuantity || 0
       }));
-      setTransactionData(transactionDataRef.current);
-      // setTransactionData(transactions.map(transaction => ({
+      setTransactionDraft(transactionDraftRef.current);
+      // setTransactionDraft(transactionSource.map(transaction => ({
       //   ...transaction,
       //   remaining_quantity: 0,
       //   amortized_cost: 0,
@@ -217,17 +225,17 @@ export const TransactionPage = () => {
       //   profit_loss: 0,
       //   writeOffQuantity: transaction.writeOffQuantity || 0 // 合併沖銷股數
       // })));
-      console.log('TYPE TYPE ', typeof transactions[0].writeOffQuantity)
+      console.log('TYPE TYPE ', typeof transactionSource[0].writeOffQuantity)
 
     }
-  }, [transactions]);
+  }, [transactionSource]);
 
   // todo dele
   // useEffect(() => {
-  //   if (!transactionData) return;
+  //   if (!transactionDraft) return;
 
-  //   const amortizedCostSum = transactionData.reduce((sum, item) => sum + item.amortized_cost, 0);
-  //   const amortizedIncomeSum = transactionData.reduce((sum, item) => sum + item.amortized_income, 0);
+  //   const amortizedCostSum = transactionDraft.reduce((sum, item) => sum + item.amortized_cost, 0);
+  //   const amortizedIncomeSum = transactionDraft.reduce((sum, item) => sum + item.amortized_income, 0);
   //   const amortizedIncomeDiff = amortizedIncomeSum - (aTableData ? aTableData.net_amount : 0);
 
   //   setTotals({
@@ -235,63 +243,61 @@ export const TransactionPage = () => {
   //     amortizedIncomeSum,
   //     amortizedIncomeDiff,
   //   });
-  // }, [transactionData, aTableData]);
+  // }, [transactionDraft, aTableData]);
 
-  console.log("transactionData", transactionData);
+  console.log("transactionDraft", transactionDraft);
 
   const [cTableData, setCTableData] = useState([]);
 
 
 
-  // todo @begin @1 this is what causes re-reder!
-  useEffect(() => {
-    if (aTableData && aTableData[0]) {
-      setTransactionData(prevData => {
-        return prevData.map(transaction => {
-          const newQuantity = transaction.writeOffQuantity; // 使用目前的沖銷股數
-          const remainingQuantity = transaction.transaction_quantity - newQuantity; // 剩餘股數
-          const amortizedCost = Math.round(transaction.net_amount * (newQuantity / transaction.transaction_quantity)); // 攤提成本
-          const amortizedIncome = Math.round(aTableData[0].net_amount * (newQuantity / aTableData[0].quantity)); // 攤提收入
-          const profitLoss = Math.round(
-            newQuantity * (aTableData[0].unit_price - transaction.transaction_price) -
-            ((aTableData[0].fee + aTableData[0].tax) * (newQuantity / aTableData[0].quantity))
-          ); // 損益試算
+  // todo @begin @1 this is what causes re-reder! // todo dele
+  // useEffect(() => {
+  //   if (aTableData && aTableData[0]) {
+  //     setTransactionDraft(prevData => {
+  //       return prevData.map(transaction => {
+  //         const newQuantity = transaction.writeOffQuantity; // 使用目前的沖銷股數
+  //         const remainingQuantity = transaction.transaction_quantity - newQuantity; // 剩餘股數
+  //         const amortizedCost = Math.round(transaction.net_amount * (newQuantity / transaction.transaction_quantity)); // 攤提成本
+  //         const amortizedIncome = Math.round(aTableData[0].net_amount * (newQuantity / aTableData[0].quantity)); // 攤提收入
+  //         const profitLoss = Math.round(
+  //           newQuantity * (aTableData[0].unit_price - transaction.transaction_price) -
+  //           ((aTableData[0].fee + aTableData[0].tax) * (newQuantity / aTableData[0].quantity))
+  //         ); // 損益試算
 
-          return {
-            ...transaction,
-            remaining_quantity: remainingQuantity,
-            amortized_cost: amortizedCost,
-            amortized_income: amortizedIncome,
-            profit_loss: profitLoss
-          };
-        });
-      });
+  //         return {
+  //           ...transaction,
+  //           remaining_quantity: remainingQuantity,
+  //           amortized_cost: amortizedCost,
+  //           amortized_income: amortizedIncome,
+  //           profit_loss: profitLoss
+  //         };
+  //       });
+  //     });
 
-      setTransactionValue(aTableData[0].unit_price * aTableData[0].quantity);
-      const fee = Math.round(transactionValue * 0.01425 * FEE_DISCOUNT);
-      const tax = Math.round(transactionValue * 0.01); // 假設 1% 的交易稅
-      const netAmount = transactionValue - fee - tax;
-
-
-      const remainingQuantity = aTableData[0].quantity - transactionDataRef.current.reduce((sum, item) => sum + item.writeOffQuantity, 0);
-      const profitLoss = transactionDataRef.current.reduce((sum, item) => sum + item.profit_loss, 0);
-
-      // 更新狀態
-
-      setFee(fee);
-      setTax(tax);
-      setNetAmount(netAmount);
-      setRemainingQuantity(remainingQuantity);
-      setProfitLoss(profitLoss);
-    }
-  }, [aTableData, transactionValue]);
+  //     setTransactionValue(aTableData[0].unit_price * aTableData[0].quantity);
+  //     const fee = Math.round(transactionValue * 0.01425 * FEE_DISCOUNT);
+  //     const tax = Math.round(transactionValue * 0.01); // 假設 1% 的交易稅
+  //     const netAmount = transactionValue - fee - tax;
 
 
+  //     const remainingQuantity = aTableData[0].quantity - transactionDraftRef.current.reduce((sum, item) => sum + item.writeOffQuantity, 0);
+  //     const profitLoss = transactionDraftRef.current.reduce((sum, item) => sum + item.profit_loss, 0);
+
+  //     // 更新狀態
+
+  //     setFee(fee);
+  //     setTax(tax);
+  //     setNetAmount(netAmount);
+  //     setRemainingQuantity(remainingQuantity);
+  //     setProfitLoss(profitLoss);
+  //   }
+  // }, [aTableData, transactionValue]);
 
 
 
   const handleInputChange = (uuid, columnKey, value) => {
-    setTransactionData(prevData => {
+    setTransactionDraft(prevData => {
       return prevData.map(transaction => {
         if (transaction.uuid === uuid) {
           const newValue = parseFloat(value) || 0;
@@ -338,13 +344,13 @@ export const TransactionPage = () => {
 
   const handleBatchWriteOff = () => {
     console.log("clicked");
-    // const editedInventory = transactionData.filter(item => parseFloat((item.writeOffQuantity) || 0) > 0);
-    const editedInventory = transactionData.filter(
+    // const editedInventory = transactionDraft.filter(item => parseFloat((item.writeOffQuantity) || 0) > 0);
+    const editedInventory = transactionDraft.filter(
       item => {
         console.log("item.writeOffQuantity", item.writeOffQuantity);
         return parseFloat((item.writeOffQuantity) || 0) > 0;
       });
-    console.log("原始", transactionData);
+    console.log("原始", transactionDraft);
     console.log("編輯", editedInventory);
 
     dispatch(batchWriteOff({ stockCode: '2330', inventory: editedInventory, transactionDate: moment().format('YYYY-MM-DD HH:mm:ss'), sellRecord: aTableData[0] }));
@@ -429,7 +435,7 @@ export const TransactionPage = () => {
       </div>
 
 
-      <MainTable id="table-B" data={transactionData} settings={tableSettings} columns={transactionColumns} localePrefix={'transaction'}
+      <MainTable id="table-B" data={transactionDraft} settings={tableSettings} columns={transactionColumns} localePrefix={'transaction'}
         expandUI={DefaultExpandRow}
         onInputChange={handleInputChange}
         highlightedCells={highlightedCells}
@@ -437,7 +443,7 @@ export const TransactionPage = () => {
       {/* <div > todo dele
         <DataTable
           columns={columnsB}
-          data={transactionData}
+          data={transactionDraft}
           pagination
           highlightOnHover
           pointerOnHover
