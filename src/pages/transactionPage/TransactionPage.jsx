@@ -191,6 +191,15 @@ export const TransactionPage = () => {
 
   useEffect(() => {
     if (transactions?.length > 0) {
+      transactionDataRef.current = transactions.map(transaction => ({
+        ...transaction,
+        remaining_quantity: 0,
+        amortized_cost: 0,
+        amortized_income: 0,
+        profit_loss: 0,
+        writeOffQuantity: transaction.writeOffQuantity || 0
+      }));
+      setTransactionData(transactionDataRef.current);
       // setTransactionData(transactions.map(transaction => ({
       //   ...transaction,
       //   remaining_quantity: 0,
@@ -423,7 +432,7 @@ export const TransactionPage = () => {
             </tr>
           </thead>
           <tbody>
-            {aTableData && (
+            {aTableData && aTableData.length > 0 && (
               <tr>
                 <td><input type="date" defaultValue={aTableData.transaction_date} /></td>
                 <td><input type="text" defaultValue={aTableData.stock_code} /></td>
