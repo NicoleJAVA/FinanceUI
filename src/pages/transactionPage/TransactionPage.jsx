@@ -16,7 +16,8 @@ export const TransactionPage = () => {
   const dispatch = useDispatch();
   const transactions = useSelector((state) => state.transactions.data);
   console.log('transactions---', transactions);
-  const status = useSelector((state) => state.transactions.status);
+  // const status = useSelector((state) => state.transactions.status); // todo delete this variable
+  const hasFetchedData = useRef(false);
   const error = useSelector((state) => state.transactions.error);
   const $date = useDate();
 
@@ -188,6 +189,14 @@ export const TransactionPage = () => {
   ];
 
 
+  // useEffect(() => {
+  //   if (!hasFetchedData.current) {
+  //     console.log("Fetching transactions...");
+  //     dispatch(getTransactions({ stockCode: "2330" }));
+  //     hasFetchedData.current = true;
+  //   }
+  // }, [dispatch]);
+
 
   useEffect(() => {
     if (transactions?.length > 0) {
@@ -213,20 +222,20 @@ export const TransactionPage = () => {
     }
   }, [transactions]);
 
+  // todo dele
+  // useEffect(() => {
+  //   if (!transactionData) return;
 
-  useEffect(() => {
-    if (!transactionData) return;
+  //   const amortizedCostSum = transactionData.reduce((sum, item) => sum + item.amortized_cost, 0);
+  //   const amortizedIncomeSum = transactionData.reduce((sum, item) => sum + item.amortized_income, 0);
+  //   const amortizedIncomeDiff = amortizedIncomeSum - (aTableData ? aTableData.net_amount : 0);
 
-    const amortizedCostSum = transactionData.reduce((sum, item) => sum + item.amortized_cost, 0);
-    const amortizedIncomeSum = transactionData.reduce((sum, item) => sum + item.amortized_income, 0);
-    const amortizedIncomeDiff = amortizedIncomeSum - (aTableData ? aTableData.net_amount : 0);
-
-    setTotals({
-      amortizedCostSum,
-      amortizedIncomeSum,
-      amortizedIncomeDiff,
-    });
-  }, [transactionData, aTableData]);
+  //   setTotals({
+  //     amortizedCostSum,
+  //     amortizedIncomeSum,
+  //     amortizedIncomeDiff,
+  //   });
+  // }, [transactionData, aTableData]);
 
   console.log("transactionData", transactionData);
 
@@ -234,7 +243,7 @@ export const TransactionPage = () => {
 
 
 
-
+  // todo @begin @1 this is what causes re-reder!
   useEffect(() => {
     if (aTableData && aTableData[0]) {
       setTransactionData(prevData => {
@@ -277,12 +286,7 @@ export const TransactionPage = () => {
     }
   }, [aTableData, transactionValue]);
 
-  useEffect(() => {
-    if (status === 'idle') {
-      console.log("IDLE");
-      dispatch(getTransactions({ stockCode: "2330" }));
-    }
-  }, [status, dispatch]);
+
 
 
 
@@ -331,49 +335,7 @@ export const TransactionPage = () => {
   };
 
 
-  // const handleInputChange = (transactionUuid, field, value) => {
-  //   setTransactionData(prevData => {
-  //     const index = prevData.findIndex(transaction => transaction.uuid === transactionUuid);
-  //     if (index === -1) return prevData; // 沒找到就回傳原陣列
 
-  //     const newValue = parseFloat(value) || 0;
-  //     const oldValue = prevData[index][field];
-
-  //     // 觸發變色 (數值下降變橘色，數值上升變天藍色)
-  //     triggerHighlight(transactionUuid, field, newValue > oldValue);
-
-  //     // 只更新該筆資料
-  //     const updatedTransaction = { ...prevData[index], [field]: newValue };
-
-  //     // 用 slice() 只改變單一物件
-  //     return [...prevData.slice(0, index), updatedTransaction, ...prevData.slice(index + 1)];
-  //   });
-  // };
-
-  // const handleInputChange = (transactionUuid, field, value) => {
-  //   console.log("input changed, ", transactionUuid);
-  //   // const  = parseFloat(value) || 0; // 確保是數字
-  //   setTransactionData(prevData => {
-  //     return prevData.map(transaction => {
-  //       if (transaction.uuid === transactionUuid) {
-  //         // console.log("input id", transaction.id, value, typeof value);
-  //         return {
-  //           ...transaction,
-  //           [field]: value // 更新指定的欄位
-  //         };
-  //       }
-  //       return transaction;
-  //     });
-  //   });
-  // };
-
-  if (status === 'loading') {
-    return <div>載入中...</div>;
-  }
-
-  if (status === 'failed') {
-    return <div>發生錯誤: {error}</div>;
-  }
   const handleBatchWriteOff = () => {
     console.log("clicked");
     // const editedInventory = transactionData.filter(item => parseFloat((item.writeOffQuantity) || 0) > 0);
