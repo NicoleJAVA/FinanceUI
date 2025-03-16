@@ -1,6 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getTransactions, batchWriteOff } from '../../redux/transaction/slice';
+import {
+  getTransactions, batchWriteOff,
+  updateTransactionField, setTransactionDraft,
+  clearHighlight
+} from '../../redux/transaction/slice';
 import { Table, Button } from 'react-bootstrap';
 import './TransactionPage.scss';
 import { useDate } from '../../context/DateContext';
@@ -18,10 +22,12 @@ export const TransactionPage = () => {
 
   // (1). transactionSource: 交易資料的來源，是從 API 得到
   // (2). transactionDraftRef: 正在編輯中的草稿，是 user 在動態更新
-  const transactionSource = useSelector((state) => state.transactions.data);
-  const [transactionDraft, setTransactionDraft] = useState([]);
+  const transactionSource = useSelector((state) => state.transactions.transactionSource);
+  const transactionDraft = useSelector(state => state.transactions.transactionDraft);
+
   const transactionDraftRef = useRef([]);
 
+  const highlightedCells = useSelector(state => state.transactions.highlightedCells);
   console.log('transactionSource---', transactionSource);
   // const status = useSelector((state) => state.transactions.status); // todo delete this variable
   const hasFetchedData = useRef(false);
@@ -32,7 +38,7 @@ export const TransactionPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [modalData, setModalData] = useState(null);
 
-  const [highlightedCells, setHighlightedCells] = useState({});
+
   const [transactionValue, setTransactionValue] = useState(0);
   const [fee, setFee] = useState(0);
   const [tax, setTax] = useState(0);
@@ -64,19 +70,7 @@ export const TransactionPage = () => {
     },
   ]);
 
-  const triggerHighlight = (uuid, columnKey, isIncrease) => {
-    setHighlightedCells(prev => ({
-      ...prev,
-      [`${uuid}-${columnKey}`]: isIncrease ? "flash-blue" : "flash-orange",
-    }));
 
-    setTimeout(() => {
-      setHighlightedCells(prev => ({
-        ...prev,
-        [`${uuid}-${columnKey}`]: "",
-      }));
-    }, 3000);
-  };
 
   // // 管理 A 表格的狀態
   // const [aTableData, setATableData] = useState([
@@ -208,49 +202,26 @@ export const TransactionPage = () => {
 
   useEffect(() => {
     if (transactionSource?.length > 0) {
-      transactionDraftRef.current = transactionSource.map(transaction => ({
+      dispatch(setTransactionDraft(transactionSource.map(transaction => ({
         ...transaction,
         remaining_quantity: 0,
         amortized_cost: 0,
         amortized_income: 0,
         profit_loss: 0,
         writeOffQuantity: transaction.writeOffQuantity || 0
-      }));
-      setTransactionDraft(transactionDraftRef.current);
-      // setTransactionDraft(transactionSource.map(transaction => ({
-      //   ...transaction,
-      //   remaining_quantity: 0,
-      //   amortized_cost: 0,
-      //   amortized_income: 0,
-      //   profit_loss: 0,
-      //   writeOffQuantity: transaction.writeOffQuantity || 0 // 合併沖銷股數
-      // })));
-      console.log('TYPE TYPE ', typeof transactionSource[0].writeOffQuantity)
-
+      }))));
     }
-  }, [transactionSource]);
-
-  // todo dele
-  // useEffect(() => {
-  //   if (!transactionDraft) return;
-
-  //   const amortizedCostSum = transactionDraft.reduce((sum, item) => sum + item.amortized_cost, 0);
-  //   const amortizedIncomeSum = transactionDraft.reduce((sum, item) => sum + item.amortized_income, 0);
-  //   const amortizedIncomeDiff = amortizedIncomeSum - (aTableData ? aTableData.net_amount : 0);
-
-  //   setTotals({
-  //     amortizedCostSum,
-  //     amortizedIncomeSum,
-  //     amortizedIncomeDiff,
-  //   });
-  // }, [transactionDraft, aTableData]);
-
-  console.log("transactionDraft", transactionDraft);
-
-  const [cTableData, setCTableData] = useState([]);
+  }, [transactionSource, dispatch]);
 
 
-
+  useEffect(() => {
+    if (Object.keys(highlightedCells).length > 0) {
+      const timer = setTimeout(() => {
+        dispatch(clearHighlight());
+      }, 3000);
+      return () => clearTimeout(timer); // ✅ 清除 timeout，避免 memory leak
+    }
+  }, [highlightedCells, dispatch]);
   // todo @begin @1 this is what causes re-reder! // todo dele
   // useEffect(() => {
   //   if (aTableData && aTableData[0]) {
@@ -296,48 +267,8 @@ export const TransactionPage = () => {
 
 
 
-  const handleInputChange = (uuid, columnKey, value) => {
-    setTransactionDraft(prevData => {
-      return prevData.map(transaction => {
-        if (transaction.uuid === uuid) {
-          const newValue = parseFloat(value) || 0;
-          const oldValue = transaction[columnKey];
-
-          // 計算哪些欄位會受影響
-          let affectedColumns = [];
-
-          if (columnKey === "writeOffQuantity") {
-            affectedColumns = ["remaining_quantity", "amortized_cost", "amortized_income", "profit_loss"];
-          } else if (columnKey === "quantity") {
-            affectedColumns = ["remaining_quantity", "profit_loss"];
-          } else if (columnKey === "unit_price") {
-            affectedColumns = ["transaction_price", "net_amount", "profit_loss"];
-          }
-
-          // 設定變色
-          const updatedHighlights = { ...highlightedCells };
-          affectedColumns.forEach(affectedKey => {
-            updatedHighlights[`${uuid}-${affectedKey}`] = newValue > oldValue ? "flash-blue" : "flash-orange";
-          });
-
-          setHighlightedCells(updatedHighlights);
-
-          // 3 秒後清除變色
-          setTimeout(() => {
-            setHighlightedCells(prev => {
-              const newHighlights = { ...prev };
-              affectedColumns.forEach(affectedKey => {
-                delete newHighlights[`${uuid}-${affectedKey}`];
-              });
-              return newHighlights;
-            });
-          }, 3000);
-
-          return { ...transaction, [columnKey]: newValue };
-        }
-        return transaction;
-      });
-    });
+  const handleInputChange = (uuid, field, value) => {
+    dispatch(updateTransactionField({ uuid, field, value: parseFloat(value) || 0 }));
   };
 
 
@@ -353,7 +284,12 @@ export const TransactionPage = () => {
     console.log("原始", transactionDraft);
     console.log("編輯", editedInventory);
 
-    dispatch(batchWriteOff({ stockCode: '2330', inventory: editedInventory, transactionDate: moment().format('YYYY-MM-DD HH:mm:ss'), sellRecord: aTableData[0] }));
+    dispatch(batchWriteOff({
+      stockCode: '2330',
+      inventory: editedInventory,
+      transactionDate: moment().format('YYYY-MM-DD HH:mm:ss'),
+      sellRecord: transactionDraft[0]
+    }));
   };
 
 
