@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   getTransactions, batchWriteOff,
   updateTransactionField, setTransactionDraft,
-  clearHighlight
+  clearHighlight, updateATableField
 } from '../../redux/transaction/slice';
 import { Table, Button } from 'react-bootstrap';
 import './TransactionPage.scss';
@@ -24,11 +24,13 @@ export const TransactionPage = () => {
   // (2). transactionDraftRef: 正在編輯中的草稿，是 user 在動態更新
   const transactionSource = useSelector((state) => state.transactions.transactionSource);
   const transactionDraft = useSelector(state => state.transactions.transactionDraft);
+  console.log('transactionSource---', transactionSource);
 
   const transactionDraftRef = useRef([]);
 
   const highlightedCells = useSelector(state => state.transactions.highlightedCells);
-  console.log('transactionSource---', transactionSource);
+  const aTableData = useSelector(state => state.transactions.aTableData);
+
   // const status = useSelector((state) => state.transactions.status); // todo delete this variable
   const hasFetchedData = useRef(false);
   const error = useSelector((state) => state.transactions.error);
@@ -52,36 +54,34 @@ export const TransactionPage = () => {
     amortizedIncomeDiff: 0,
   });
 
-  const [aTableData, setATableData] = useState([
-    {
-      data_uuid: '',
-      transaction_date: '',
-      stock_code: '',
-      product_name: '',
-      unit_price: 0,
-      quantity: 0,
-      transaction_price: 0,
-      fee: 0,
-      tax: 0,
-      net_amount: 0,
-      remaining_quantity: 0,
-      profit_loss: 0,
-      inventory_uuids: [],
-    },
-  ]);
+
+  // todo dele
+  // const [aTableData, setATableData] = useState([
+  //   {
+  //     data_uuid: '',
+  //     transaction_date: '',
+  //     stock_code: '',
+  //     product_name: '',
+  //     unit_price: 0,
+  //     transaction_quantity: 0,
+  //     transaction_price: 0,
+  //     fee: 0,
+  //     tax: 0,
+  //     net_amount: 0,
+  //     remaining_quantity: 0,
+  //     profit_loss: 0,
+  //     inventory_uuids: [],
+  //   },
+  // ]);
 
 
 
   // // 管理 A 表格的狀態
   // const [aTableData, setATableData] = useState([
-  //   { date: '', code: '', name: '', unit_price: 0, quantity: 0, fee: 0, tax: 0, net_amount: 0 },
+  //   { date: '', code: '', name: '', unit_price: 0, transaction_quantity: 0, fee: 0, tax: 0, net_amount: 0 },
   // ]);
 
 
-
-  const handleUpdatedData = (newData) => {
-    setTransactionDraft(newData);
-  };
 
   const bTableCustomStyles = {
     // headRow: {
@@ -129,12 +129,18 @@ export const TransactionPage = () => {
 
   // }, 'dark');
 
+
+  // todo dele
+  // const handleInputChangeA = (field, value) => {
+  //   setATableData(prevData => {
+  //     const updatedData = [...prevData];
+  //     updatedData[0][field] = value; // 更新指定的欄位
+  //     return updatedData;
+  //   });
+  // };
+
   const handleInputChangeA = (field, value) => {
-    setATableData(prevData => {
-      const updatedData = [...prevData];
-      updatedData[0][field] = value; // 更新指定的欄位
-      return updatedData;
-    });
+    dispatch(updateATableField({ field, value }));
   };
 
   // 用於管理 B 表格的狀態
@@ -219,7 +225,7 @@ export const TransactionPage = () => {
       const timer = setTimeout(() => {
         dispatch(clearHighlight());
       }, 3000);
-      return () => clearTimeout(timer); // ✅ 清除 timeout，避免 memory leak
+      return () => clearTimeout(timer); // 清除 timeout，避免 memory leak
     }
   }, [highlightedCells, dispatch]);
   // todo @begin @1 this is what causes re-reder! // todo dele
@@ -230,10 +236,10 @@ export const TransactionPage = () => {
   //         const newQuantity = transaction.writeOffQuantity; // 使用目前的沖銷股數
   //         const remainingQuantity = transaction.transaction_quantity - newQuantity; // 剩餘股數
   //         const amortizedCost = Math.round(transaction.net_amount * (newQuantity / transaction.transaction_quantity)); // 攤提成本
-  //         const amortizedIncome = Math.round(aTableData[0].net_amount * (newQuantity / aTableData[0].quantity)); // 攤提收入
+  //         const amortizedIncome = Math.round(aTableData[0].net_amount * (newQuantity / aTableData[0].transaction_quantity)); // 攤提收入
   //         const profitLoss = Math.round(
   //           newQuantity * (aTableData[0].unit_price - transaction.transaction_price) -
-  //           ((aTableData[0].fee + aTableData[0].tax) * (newQuantity / aTableData[0].quantity))
+  //           ((aTableData[0].fee + aTableData[0].tax) * (newQuantity / aTableData[0].transaction_quantity))
   //         ); // 損益試算
 
   //         return {
@@ -246,13 +252,13 @@ export const TransactionPage = () => {
   //       });
   //     });
 
-  //     setTransactionValue(aTableData[0].unit_price * aTableData[0].quantity);
+  //     setTransactionValue(aTableData[0].unit_price * aTableData[0].transaction_quantity);
   //     const fee = Math.round(transactionValue * 0.01425 * FEE_DISCOUNT);
   //     const tax = Math.round(transactionValue * 0.01); // 假設 1% 的交易稅
   //     const netAmount = transactionValue - fee - tax;
 
 
-  //     const remainingQuantity = aTableData[0].quantity - transactionDraftRef.current.reduce((sum, item) => sum + item.writeOffQuantity, 0);
+  //     const remainingQuantity = aTableData[0].transaction_quantity - transactionDraftRef.current.reduce((sum, item) => sum + item.writeOffQuantity, 0);
   //     const profitLoss = transactionDraftRef.current.reduce((sum, item) => sum + item.profit_loss, 0);
 
   //     // 更新狀態
@@ -338,32 +344,36 @@ export const TransactionPage = () => {
           <tbody>
             {aTableData && aTableData.length > 0 && (
               <tr>
-                <td><input type="date" defaultValue={aTableData.transaction_date} /></td>
-                <td><input type="text" defaultValue={aTableData.stock_code} /></td>
-                <td><input type="text" defaultValue={aTableData.product_name} /></td>
+                <td><input type="date" defaultValue={aTableData[0].transaction_date} /></td>
+                <td><input type="text" defaultValue={aTableData[0].stock_code} /></td>
+                <td><input type="text" defaultValue={aTableData[0].product_name} /></td>
                 <td> <input
                   type="number"
                   placeholder="成交單價"
+                  defaultValue={aTableData[0].unit_price}
                   onChange={(e) => handleInputChangeA('unit_price', parseFloat(e.target.value))}
                 /></td>
                 <td><input
                   type="number"
-                  onChange={(e) => handleInputChangeA('quantity', parseInt(e.target.value, 10))}
+                  defaultValue={aTableData[0].transaction_quantity}
+                  onChange={(e) => handleInputChangeA('transaction_quantity', parseInt(e.target.value, 10))}
                 /></td>
-                <td>{transactionValue}</td>
+                <td>{aTableData[0].transaction_price}</td>
                 <td><input
                   type="number"
+                  defaultValue={aTableData[0].fee}
                   onChange={(e) => handleInputChangeA('fee', parseFloat(e.target.value))}
                 />
                 </td>
                 <td><input
                   type="number"
+                  defaultValue={aTableData[0].tax}
                   onChange={(e) => handleInputChangeA('tax', parseFloat(e.target.value))}
                 />
                 </td>
-                <td>{netAmount}</td>
-                <td>{remainingQuantity}</td>
-                <td>{profitLoss}</td>
+                <td>{aTableData[0].net_amount}</td>
+                <td>{aTableData[0].remaining_quantity}</td>
+                <td>{aTableData[0].profit_loss}</td>
               </tr>
             )}
           </tbody>
@@ -416,7 +426,7 @@ export const TransactionPage = () => {
                 <td>{transaction.symbol}</td>
                 <td>{transaction.product_name}</td>
                 <td>{transaction.unit_price}</td>
-                <td>{transaction.quantity}</td>
+                <td>{transaction.transaction_quantity}</td>
                 <td>{transaction.total_price}</td>
                 <td>{transaction.remarks}</td>
               </tr>
