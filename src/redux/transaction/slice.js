@@ -3,13 +3,14 @@ import axios from '../axios';
 
 export const getTransactions = createAsyncThunk(
   'transactions/getTransactions',
-  async (stockCode) => {
+  async ({ stockCode, page = 1, limit = 10 }) => {
     const response = await axios.get('/inventory', {
-        params: { stockCode: stockCode }
-      });
+      params: { stockCode, page, limit }
+    });
     return response.data;
   }
 );
+
 
 export const batchWriteOff = createAsyncThunk(
  'transactions/batchWriteOff',
@@ -75,6 +76,7 @@ export const transactionSlice = createSlice({
       profit_loss: 0,
       inventory_uuids: [],
     }],
+    total: 0,
     error: null,
   },
 
@@ -180,24 +182,27 @@ export const transactionSlice = createSlice({
     builder
       .addCase(getTransactions.pending, (state) => { state.status = 'loading'; })
       .addCase(getTransactions.fulfilled, (state, action) => {
+        const pagination = action.payload.pagination;
+        state.total = pagination.total;
+
+        
         state.status = 'succeeded';
-        // state.transactionSource = action.payload; //  存入原始交易數據 
+        
+        const  data = action.payload.data;
 
-        state.transactionSource = action.payload.map(transaction => ({
-          ...transaction,
-          estimated_tax: Math.round(transaction.transaction_value * 0.003) // 計算交易稅
-        }));
+  state.transactionSource = data.map(transaction => ({
+    ...transaction,
+    estimated_tax: Math.round(transaction.transaction_value * 0.003)
+  }));
 
-        // 初始化 `transactionDraft`（可編輯的）
-        state.transactionDraft = action.payload.map(transaction => ({
-          ...transaction,
-          remaining_quantity: 0,
-          amortized_cost: 0,
-          amortized_income: 0,
-          profit_loss: 0,
-          writeOffQuantity: transaction.writeOffQuantity || 0,
-          
-        }));
+  state.transactionDraft = data.map(transaction => ({
+    ...transaction,
+    remaining_quantity: 0,
+    amortized_cost: 0,
+    amortized_income: 0,
+    profit_loss: 0,
+    writeOffQuantity: transaction.writeOffQuantity || 0,
+  }));
       })
       .addCase(getTransactions.rejected, (state, action) => {
         state.status = 'failed';

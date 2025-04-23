@@ -19,6 +19,10 @@ const FEE_DISCOUNT = 0.003;
 export const TransactionPage = () => {
   const dispatch = useDispatch();
 
+  const total = useSelector(state => state.transactions.total);
+
+  const [limit] = useState(10);
+  const [page, setPage] = useState(1);
 
   // (1). transactionSource: 交易資料的來源，是從 API 得到
   // (2). transactionDraftRef: 正在編輯中的草稿，是 user 在動態更新
@@ -200,7 +204,7 @@ export const TransactionPage = () => {
   useEffect(() => {
     if (!hasFetchedData.current) {
       console.log("Fetching transactionSource...");
-      dispatch(getTransactions({ stockCode: "2330" }));
+      dispatch(getTransactions({ stockCode: "2330", page: 1, limit: 10 }));
       hasFetchedData.current = true;
     }
   }, [dispatch]);
@@ -322,6 +326,10 @@ export const TransactionPage = () => {
   }
 
 
+  const getNextPage = (currentPage, total, limit) => {
+    return Math.min(currentPage + 1, Math.ceil(total / limit));
+  };
+
   return (
     <div>
       <div className="table-card-wrapper">
@@ -435,6 +443,19 @@ export const TransactionPage = () => {
         </Table>
       </div> */}
       <button onClick={handleBatchWriteOff} className="btn btn-primary">存檔</button>
+      <div className="pagination-controls">
+        <Button
+          onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+          disabled={page === 1}
+        >
+          上一頁
+        </Button>        <span style={{ margin: "0 10px" }}>頁數: {page}</span>
+        <Button
+          onClick={() => setPage((prev) => getNextPage(prev, total, limit))}
+          disabled={page >= Math.ceil(total / limit)}
+        >
+          下一頁
+        </Button>      </div>
     </div >
   );
 };
