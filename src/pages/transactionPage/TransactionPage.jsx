@@ -23,7 +23,7 @@ export const TransactionPage = () => {
 
   const [limit] = useState(10);
   const [page, setPage] = useState(1);
-
+  const [loading, setLoading] = useState(false);
   // (1). transactionSource: 交易資料的來源，是從 API 得到
   // (2). transactionDraftRef: 正在編輯中的草稿，是 user 在動態更新
   const transactionSource = useSelector((state) => state.transactions.transactionSource);
@@ -283,8 +283,11 @@ export const TransactionPage = () => {
 
 
 
-  const handleBatchWriteOff = () => {
+  const handleBatchWriteOff = async () => {
     console.log("clicked");
+    setLoading(true); // 顯示 loading
+
+
     // const editedInventory = transactionDraft.filter(item => parseFloat((item.writeOffQuantity) || 0) > 0);
     const editedInventory = transactionDraft.filter(
       item => {
@@ -298,8 +301,30 @@ export const TransactionPage = () => {
       stockCode: '2330',
       inventory: editedInventory,
       transactionDate: moment().format('YYYY-MM-DD HH:mm:ss'),
-      sellRecord: transactionDraft[0]
-    }));
+      sellRecord: {
+        ...transactionDraft[0],
+        product_name: aTableData[0]?.product_name || '',
+        quantity: transactionDraft[0]?.transaction_quantity || 0,
+        fee: aTableData[0]?.fee || 0,
+        tax: aTableData[0]?.tax || 0,
+        transaction_value: aTableData[0]?.transaction_price || 0,
+        net_amount: aTableData[0]?.net_amount || 0,
+        profit_loss: aTableData[0]?.profit_loss || 0,
+      }
+    }))
+      .then(() => {
+        // 重新抓取目前頁數的資料
+        return dispatch(getTransactions({ stockCode: "2330", page, limit }));
+      })
+      .catch(err => {
+        console.error("寫入失敗", err);
+        alert("寫入失敗：" + (err.message || '發生錯誤'));
+      })
+      .finally(() => {
+        setLoading(false);// 關閉 loading
+      });
+
+
   };
 
 
@@ -332,6 +357,13 @@ export const TransactionPage = () => {
 
   return (
     <div>
+      {loading && (
+        <div className="fullscreen-loading">
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">載入中...</span>
+          </div>
+        </div>
+      )}
       <div className="table-card-wrapper">
         <Table hover id="table-A">
           <thead>

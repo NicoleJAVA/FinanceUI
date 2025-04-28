@@ -6,6 +6,7 @@ import { useDate } from '../../context/DateContext';
 import { getAllSellHistory } from '../../redux/history/slice';
 import { MainTable } from '../../component/MainTable/MainTable';
 import { generateColumns } from '../../helpers/TableHelper';
+import DefaultExpandRow from '../../component/MainTable/DefaultExpandRow';
 
 export const HistoryPage = () => {
 
@@ -15,7 +16,6 @@ export const HistoryPage = () => {
 
   const [historyData, setHistoryData] = useState(history);
   const $date = useDate();
-
 
 
 
@@ -45,10 +45,9 @@ export const HistoryPage = () => {
     <div className="demo-root-container">
       <div className="demo-title">History page</div>
 
-      <MainTable data={history} settings={tableSettings} localePrefix={'common'}
-        columns={generateColumns(history)}
+      <MainTable data={history} settings={tableSettings} localePrefix={'history'}
+        columns={generateColumns(history)} expandUI={DefaultExpandRow}
       />
-
 
 
     </div>

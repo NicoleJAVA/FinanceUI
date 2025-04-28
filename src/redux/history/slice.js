@@ -7,6 +7,7 @@ export const getAllSellHistory = createAsyncThunk(
     const response = await axios.get('/sellHistory/all', {
       params: { stockCode: stockCode }
     });
+    console.log("step 1 - response", response); // todo dele
     return response.data;
   }
 );
@@ -29,7 +30,7 @@ export const historySlice = createSlice({
       .addCase(getAllSellHistory.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.data = action.payload;
-        console.log("rtk", state.data); // todo 
+        console.log("step 2 - state.data", state.data); // todo dele
       })
       .addCase(getAllSellHistory.rejected, (state, action) => {
         state.status = 'failed';
