@@ -356,7 +356,7 @@ export const TransactionPage = () => {
   };
 
   return (
-    <div>
+    <div className='page-container'>
       {loading && (
         <div className="fullscreen-loading">
           <div className="spinner-border text-primary" role="status">
@@ -364,6 +364,10 @@ export const TransactionPage = () => {
           </div>
         </div>
       )}
+
+      <div className="top-section">
+        <div className="title-stock-name">TSMC</div>
+      </div>
       <div className="table-card-wrapper">
         <Table hover id="table-A">
           <thead>

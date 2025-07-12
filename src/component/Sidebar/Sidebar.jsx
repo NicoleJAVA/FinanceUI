@@ -4,6 +4,7 @@ import { NavLink } from "react-router-dom";
 import { Nav } from "react-bootstrap";
 import avatar from "../../../src/img/avatar.png";
 import ThemeToggle from "../ThemeToggle/ThemeToggle";
+import ThemeToggleVar from "../ThemeToggleVar/ThemeToggleVar";
 
 export const Sidebar = () => {
     const [activeKey, setActiveKey] = useState("#demo");
@@ -28,6 +29,7 @@ export const Sidebar = () => {
                 <img src={avatar} alt="Avatar" className="avatar" />
             </div>
             <ThemeToggle /> */}
+            <ThemeToggleVar />
             <Nav
                 className="mr-auto flex-column mt-4"
                 activeKey={activeKey}
