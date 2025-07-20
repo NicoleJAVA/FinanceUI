@@ -13,6 +13,13 @@ import moment from 'moment';
 
 import { MainTable } from '../../component/MainTable/MainTable';
 import DefaultExpandRow from '../../component/MainTable/DefaultExpandRow';
+
+import cartIcon from '../../img/cart-icon.svg'
+import sellIcon from '../../img/sell-icon.svg'
+import exRightsIcon from '../../img/ex-rights-icon.svg'
+import exDividendsIcon from '../../img/ex-dividends-icon.svg'
+
+
 // 手續費折扣率
 const FEE_DISCOUNT = 0.003;
 
@@ -366,7 +373,18 @@ export const TransactionPage = () => {
       )}
 
       <div className="top-section">
-        <div className="title-stock-name">TSMC</div>
+        <div className="title-group">
+          <div className="title-stock-name">TSMC</div>
+        </div>
+        <div className="tab-section">
+          <div className="tab-item">
+            <div className="tab-item-text">買進</div>
+            <img className="tab-item-icon" src={cartIcon} alt="buy" />
+            <div className="tab-item-side-decor-bar">123</div>
+          </div>
+
+        </div>
+
       </div>
       <div className="table-card-wrapper">
         <Table id="table-A">

@@ -84,7 +84,6 @@
   }
 
   background: var(--bg-color);
-  background: skyblue;
 }
 
 .table-card-wrapper {
@@ -163,11 +162,13 @@
 
 .top-section {
   max-width: 700px;
+  margin-bottom: 28px;
 }
 
 .title-group {
   display: flex;
   align-items: center;
+  margin-bottom: 40px;
 }
 
 
@@ -186,4 +187,60 @@
 
   color: var(--text-color);
 
+}
+
+.tab-section {
+  width: 100%;
+  border-top: 0.5px solid $dark-mode-theme-gray;
+  height: 78px;
+  display: flex;
+}
+
+.tab-item {
+  width: 25%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px;
+}
+
+.tab-item-text {
+
+  font-size: 13px;
+
+  [data-theme='light'] & {
+    // --text-color: $light-mode-theme-gray;
+  }
+
+  [data-theme='dark'] & {
+    --text-color: #{$dark-mode-theme-gray};
+  }
+
+  color: var(--text-color);
+}
+
+.tab-item-icon {
+  height: 24px;
+  width: 24px;
+}
+
+.tab-item-side-decor-bar {
+  position: absolute;
+  right: 0;
+  top: 26px;
+  height: 38px;
+  width: 1px;
+
+  [data-theme='light'] & {
+    // --border-color: #{$light-mode-theme-gray};
+  }
+
+  [data-theme='dark'] & {
+    --border-color: #{$dark-mode-theme-gray};
+  }
+
+  border-right: 0.5px solid var(--border-color);
 }
