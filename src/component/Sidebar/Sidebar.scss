@@ -4,19 +4,19 @@
 
 $tooltip-triangle-border: 8px;
 
-:root {
-    
-  }
-  
+:root {}
+
 
 
 .sidebar-container {
     --background-color: #{$light-theme-bg};
     --text-color: #{$light-theme-text};
+
     [data-theme='dark'] & {
-        --background-color:  #{$dark-theme-bg};
+        --background-color: #{$dark-theme-bg};
         --text-color: #{$dark-theme-text};
-      }
+    }
+
     position: fixed;
     width: 260px;
     top: 0;
@@ -41,9 +41,11 @@ $tooltip-triangle-border: 8px;
 
 .nav-link {
     --text-color: #{$light-theme-text};
+
     [data-theme='dark'] & {
         --text-color: #{$dark-theme-text};
-      }
+    }
+
     width: 100%;
     position: relative;
     color: var(--text-color) !important;
@@ -97,10 +99,14 @@ $tooltip-triangle-border: 8px;
 }
 
 .avatar-container {
-    width: 100px; /* 大頭貼的寬度 */
-    height: 100px; /* 大頭貼的高度 */
-    overflow: hidden; /* 隱藏超出的部分 */
-    border-radius: 50%; /* 圓形的關鍵 */
+    width: 100px;
+    /* 大頭貼的寬度 */
+    height: 100px;
+    /* 大頭貼的高度 */
+    overflow: hidden;
+    /* 隱藏超出的部分 */
+    border-radius: 50%;
+    /* 圓形的關鍵 */
     border: 1px solid #ccc;
     margin: auto;
     margin-bottom: 50px;
@@ -109,5 +115,6 @@ $tooltip-triangle-border: 8px;
 .avatar {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* 保持圖片比例並填滿容器 */
+    object-fit: cover;
+    /* 保持圖片比例並填滿容器 */
 }

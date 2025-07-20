@@ -8,13 +8,13 @@
 :root {
     --background-color: #{$light-theme-bg};
     --text-color: #{$light-theme-text};
-  }
-  
 
-  [data-theme='dark'] {
-      --background-color:  #{$dark-theme-bg};
-      --text-color: #{$dark-theme-text};
-    }
+}
+
+[data-theme='dark'] {
+    --background-color: #{$dark-theme-bg};
+    --text-color: #{$dark-theme-text};
+}
 
 .app-fluid-container {
     position: relative;
@@ -36,6 +36,39 @@
     grid-area: content;
     // background-color: var(--background-color) !important;
     // color: var(--text-color) !important;
-    padding: 60px 20px;
+    overflow-x: scroll;
+    width: calc(100vw - 260px);
+
 }
 
+.app-content::-webkit-scrollbar {
+    height: 22px;
+    background-color: #fff;
+
+}
+
+::-webkit-scrollbar {
+    // height: 8px;
+}
+
+.app-content::-webkit-scrollbar-thumb {
+    background: #5E6880;
+    border-radius: 10px;
+    border: 3px solid transparent;
+
+    /* 讓 thumb 背景不要延伸進 border 的透明區 */
+    background-clip: content-box;
+}
+
+::webkit-scrollbar-track {
+    background: #f1f1f1;
+    /* 捲軸軌道背景 */
+}
+
+::-webkit-scrollbar-thumb:horizontal {
+    // background-color: red;
+    // /* 捲軸本體顏色 */
+    // border-radius: 8px;
+    // border: 3px solid transparent;
+    // background-clip: content-box;
+}

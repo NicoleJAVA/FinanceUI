@@ -65,6 +65,7 @@ export const MainTable = ({ id, columns = [], data, localePrefix, settings,
                                 <button>Expand</button>
                             ) : column.isInput ? (
                                 <input
+                                    className="main-table-input"
                                     type={column.inputType === 'string' ? 'text' : 'number'}
                                     min={column.inputType === 'positive-int' ? '1' : undefined}
                                     step={column.inputType === 'positive-int' || column.inputType === 'integer' ? '1' : 'any'}

@@ -369,7 +369,7 @@ export const TransactionPage = () => {
         <div className="title-stock-name">TSMC</div>
       </div>
       <div className="table-card-wrapper">
-        <Table hover id="table-A">
+        <Table id="table-A">
           <thead>
             <tr>
               <th>成交日期</th>
@@ -388,28 +388,28 @@ export const TransactionPage = () => {
           <tbody>
             {aTableData && aTableData.length > 0 && (
               <tr>
-                <td><input type="date" defaultValue={aTableData[0].transaction_date} /></td>
-                <td><input type="text" defaultValue={aTableData[0].stock_code} /></td>
-                <td><input type="text" defaultValue={aTableData[0].product_name} /></td>
-                <td> <input
+                <td><input className='table-A-input' type="date" defaultValue={aTableData[0].transaction_date} /></td>
+                <td><input className='table-A-input' type="text" defaultValue={aTableData[0].stock_code} /></td>
+                <td><input className='table-A-input' type="text" defaultValue={aTableData[0].product_name} /></td>
+                <td> <input className='table-A-input'
                   type="number"
                   placeholder="成交單價"
                   defaultValue={aTableData[0].unit_price}
                   onChange={(e) => handleInputChangeA('unit_price', parseFloat(e.target.value))}
                 /></td>
-                <td><input
+                <td><input className='table-A-input'
                   type="number"
                   defaultValue={aTableData[0].transaction_quantity}
                   onChange={(e) => handleInputChangeA('transaction_quantity', parseInt(e.target.value, 10))}
                 /></td>
                 <td>{aTableData[0].transaction_price}</td>
-                <td><input
+                <td><input className='table-A-input'
                   type="number"
                   defaultValue={aTableData[0].fee}
                   onChange={(e) => handleInputChangeA('fee', parseFloat(e.target.value))}
                 />
                 </td>
-                <td><input
+                <td><input className='table-A-input'
                   type="number"
                   defaultValue={aTableData[0].tax}
                   onChange={(e) => handleInputChangeA('tax', parseFloat(e.target.value))}

@@ -107,7 +107,9 @@ $theme-form-border: $cadet-gray;
 $dropdown-selected: $cadet-gray;
 
 
-
+// dark mode
+$dark-mode-primary: #4CDBCB;
+$dark-mode-secondary: #8C75FF;
 
 // dark mode white
 $dark-mode-highlight-white: #D1DCFA;
@@ -118,9 +120,7 @@ $dark-mode-input-white: #B8C2DB;
 $dark-mode-main-bg-gray: #23252E;
 $dark-mode-sidebar-bg-gray: #1E2024;
 $dark-mode-theme-gray: #6A758C;
-$dark-mode-primary-gray:#434659;
+$dark-mode-primary-gray: #434659;
 $dark-mode-input-underline-gray: #5E6880;
 $dark-mode-section-bg-gray: #2E313D;
 $dark-mode-input-bg-gray: #353845;
-
-
