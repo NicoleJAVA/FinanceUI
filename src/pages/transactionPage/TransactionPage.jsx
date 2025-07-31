@@ -380,9 +380,22 @@ export const TransactionPage = () => {
           <div className="tab-item">
             <div className="tab-item-text">買進</div>
             <img className="tab-item-icon" src={cartIcon} alt="buy" />
-            <div className="tab-item-side-decor-bar">123</div>
+            <div className="tab-item-side-decor-bar"></div>
           </div>
-
+          <div className="tab-item">
+            <div className="tab-item-text">賣出</div>
+            <img className="tab-item-icon" src={sellIcon} alt="buy" />
+            <div className="tab-item-side-decor-bar"></div>
+          </div>
+          <div className="tab-item">
+            <div className="tab-item-text">除權</div>
+            <img className="tab-item-icon" src={exRightsIcon} alt="buy" />
+            <div className="tab-item-side-decor-bar"></div>
+          </div>
+          <div className="tab-item">
+            <div className="tab-item-text">除息</div>
+            <img className="tab-item-icon" src={exDividendsIcon} alt="buy" />
+          </div>
         </div>
 
       </div>
