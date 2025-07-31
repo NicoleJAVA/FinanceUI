@@ -23,7 +23,7 @@ import exDividendsIcon from '../../img/ex-dividends-icon.svg'
 // 手續費折扣率
 const FEE_DISCOUNT = 0.003;
 
-export const TransactionPage = () => {
+export const BuyPage = () => {
   const dispatch = useDispatch();
 
   const total = useSelector(state => state.transactions.total);
@@ -204,8 +204,7 @@ export const TransactionPage = () => {
     { key: 'amortized_cost', sortable: true },
     { key: 'amortized_income', sortable: true },
     { key: 'profit_loss', sortable: true },
-    { key: 'profit_loss_2', sortable: true },
-    { key: 'remarks', sortable: true }
+    { key: 'profit_loss_2', sortable: true }
   ];
 
 
@@ -415,7 +414,6 @@ export const TransactionPage = () => {
               <th>淨收付金額</th>
               <th>沖銷剩餘股數</th>
               <th>損益試算</th>
-              <th>備註</th>
             </tr>
           </thead>
           <tbody>
@@ -451,7 +449,6 @@ export const TransactionPage = () => {
                 <td>{aTableData[0].net_amount}</td>
                 <td>{aTableData[0].remaining_quantity}</td>
                 <td>{aTableData[0].profit_loss}</td>
-                <td><input className='table-A-input' type="text" defaultValue={aTableData[0].remarks} /></td>
               </tr>
             )}
           </tbody>

@@ -1,0 +1,246 @@
+@import "../../../scss/helpers/color";
+@import "../../../scss/helpers/text";
+
+
+#table-A th {
+  border-bottom-width: 0px !important;
+  height: 45px;
+  max-height: 45px;
+  white-space: nowrap;
+  position: relative;
+  position: relative;
+  overflow: hidden;
+  animation: marquee 10s linear infinite;
+}
+
+#table-A td {
+  border-bottom-width: 0px !important;
+  height: 55px;
+  padding: 0px 8px !important;
+}
+
+#table-A td,
+#table-A th {
+  font-size: 14px !important;
+
+
+  [data-theme='light'] & {
+    // --background-color: #{$light-mode-section-bg-gray};
+    // --text-color: #{$light-mode-main-white};
+  }
+
+  [data-theme='dark'] & {
+    --background-color: #{$dark-mode-section-bg-gray};
+    --text-color: #{$dark-mode-main-white};
+  }
+
+  background-color: var(--background-color) !important;
+
+  color: var(--text-color) !important;
+  font-weight: 300;
+  vertical-align: middle;
+  height: 50px;
+}
+
+.table-A-input {
+  height: 44px;
+
+  [data-theme='dark'] & {
+    --bg-color: transparent;
+    --border-bottom-color: #{$dark-mode-input-underline-gray};
+    --caret-color: $dark-mode-primary;
+    --text-color: $dark-mode-input-white;
+  }
+
+  border: none;
+  background: var(--bg-color);
+  border-bottom: 1.5px solid var(--border-bottom-color);
+  caret-color: var(--caret-color);
+  color: var(--text-color);
+
+}
+
+.table-A-input:focus {
+
+  [data-theme='dark'] & {
+    --border-bottom-color: #{$dark-mode-primary};
+    --text-color: white;
+  }
+
+  border-bottom: 1.5px solid var(--border-bottom-color);
+  color: var(--text-color);
+}
+
+.page-container {
+  padding-top: 66px;
+  padding-left: 50px;
+
+  [data-theme='light'] & {
+    // --bg-color: #{$light-mode-main-bg-gray};
+  }
+
+  [data-theme='dark'] & {
+    --bg-color: #{$dark-mode-main-bg-gray};
+  }
+
+  background: var(--bg-color);
+}
+
+.table-card-wrapper {
+  padding: 10px;
+  border-radius: 5px;
+
+
+  [data-theme='light'] & {
+    // --background-color: #{$light-mode-section-bg-gray};
+  }
+
+  [data-theme='dark'] & {
+    --background-color: #{$dark-mode-section-bg-gray};
+  }
+
+  background-color: var(--background-color);
+}
+
+
+
+
+
+
+.totals {
+  background: white;
+  padding: 15px;
+}
+
+@keyframes flash-orange {
+  0% {
+    background-color: orange;
+  }
+
+  100% {
+    background-color: transparent;
+  }
+}
+
+@keyframes flash-blue {
+  0% {
+    background-color: skyblue;
+  }
+
+  100% {
+    background-color: transparent;
+  }
+}
+
+.flash-orange {
+  animation: flash-orange 3s ease-in-out;
+}
+
+.flash-blue {
+  animation: flash-blue 3s ease-in-out;
+}
+
+
+
+.fullscreen-loading {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
+}
+
+.top-section {
+  max-width: 700px;
+  margin-bottom: 28px;
+}
+
+.title-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+
+.title-stock-name {
+  font-size: 26px;
+  font-family: $theme-font;
+  font-weight: 200;
+
+  [data-theme='light'] & {
+    // --text-color: #{$light-mode-highlight-white};
+  }
+
+  [data-theme='dark'] & {
+    --text-color: #{$dark-mode-highlight-white};
+  }
+
+  color: var(--text-color);
+
+}
+
+.tab-section {
+  width: 100%;
+  border-top: 0.5px solid $dark-mode-theme-gray;
+  height: 78px;
+  display: flex;
+}
+
+.tab-item {
+  width: 25%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px;
+}
+
+.tab-item-text {
+
+  font-size: 13px;
+
+  [data-theme='light'] & {
+    // --text-color: $light-mode-theme-gray;
+  }
+
+  [data-theme='dark'] & {
+    --text-color: #{$dark-mode-theme-gray};
+  }
+
+  color: var(--text-color);
+}
+
+.tab-item-icon {
+  height: 24px;
+  width: 24px;
+}
+
+.tab-item-side-decor-bar {
+  position: absolute;
+  right: 0;
+  top: 26px;
+  height: 38px;
+  width: 1px;
+
+  [data-theme='light'] & {
+    // --border-color: #{$light-mode-theme-gray};
+  }
+
+  [data-theme='dark'] & {
+    --border-color: #{$dark-mode-theme-gray};
+  }
+
+  border-right: 0.5px solid var(--border-color);
+}

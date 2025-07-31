@@ -11,7 +11,6 @@
         "amount": "數量",
         "total": "總價"
     },
-
     "transaction": {
         "uuid": "UUID",
         "date": "成交日期",
@@ -28,6 +27,7 @@
         "amortized_cost": "攤提成本",
         "amortized_income": "攤提收入",
         "profit_loss": "損益試算",
-        "profit_loss_2": "損益試算之二"
+        "profit_loss_2": "損益試算之二",
+        "remarks": "備註"
     }
 }
