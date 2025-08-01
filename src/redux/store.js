@@ -3,6 +3,7 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { demoSlice } from "./demo/slice";
 import { toastStackSlice } from "./ToastStack/slice";
 import { transactionSlice } from './transaction/slice';
+import { buySlice } from './buy/slice';
 import { historySlice } from './history/slice';
 import { allHistorySlice } from './allHistory/slice';
 
@@ -10,6 +11,7 @@ const rootReducer = combineReducers({
   demo: demoSlice.reducer,
   toastStack: toastStackSlice.reducer,
   transactions: transactionSlice.reducer,
+  buy: buySlice.reducer,
   history: historySlice.reducer,
   allHistory: allHistorySlice.reducer,
 });
