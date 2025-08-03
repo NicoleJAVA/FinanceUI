@@ -58,7 +58,14 @@ export const MainTable = ({ id, columns = [], data, localePrefix, settings,
     const renderRows = () => {
         return data.map((row) => (
             <React.Fragment key={row.uuid}>
-                <tr onClick={() => toggleRow(row.uuid)} data-uuid={row.uuid}>
+                <tr onClick={() => toggleRow(row.uuid)} data-uuid={row.uuid}
+                    className={columns.some(c => row[`${c.key}_editing`]) ? 'editing-row' : ''}
+                >
+                    <td className="edit-icon-cell">
+                        {columns.some(c => row[`${c.key}_updated`]) && (
+                            <span className="edit-icon">🟢</span>
+                        )}
+                    </td>
                     {columns.map((column) => (
                         <td key={`${column.key}-${row.uuid}`} className={getTdClass(row, column)} data-column={column.key}>
                             {column.key === settings?.expandColumnName ? (
@@ -103,6 +110,24 @@ export const MainTable = ({ id, columns = [], data, localePrefix, settings,
                                             ["e", "E", "+"].includes(e.key) && e.preventDefault();
                                         }
                                     }}
+                                    onFocus={() => {
+                                        // 範例：
+                                        // 假設欄位是 "transaction_price"
+                                        // column.key === "transaction_price"
+
+                                        // onFocus → dispatch({
+                                        // uuid: "abc-123",
+                                        // field: "transaction_price_editing",
+                                        // value: true
+                                        // })
+
+                                        // → reducer 寫入：
+                                        // state.transactionDraft[rowIndex]["transaction_price_editing"] = true
+                                        onInputChange(row.uuid, `${column.key}_editing`, true);
+                                    }}
+                                    onBlur={() => {
+                                        onInputChange(row.uuid, `${column.key}_editing`, false);
+                                    }}
                                 />
                             ) : (
                                 // 否則渲染該欄位的值
@@ -113,7 +138,7 @@ export const MainTable = ({ id, columns = [], data, localePrefix, settings,
                 </tr>
 
 
-                {settings?.expandColumnName &&
+                {/* {settings?.expandColumnName &&
                     <ExpandableRow isExpanded={expandedRows.includes(row.uuid)}
                         columns={generateColumns(row[settings?.expandColumnName])}
                         colSpan={columns.length}
@@ -125,7 +150,7 @@ export const MainTable = ({ id, columns = [], data, localePrefix, settings,
 
                             <div>No details available</div>
                         )}
-                    </ExpandableRow>}
+                    </ExpandableRow>} */}
 
             </React.Fragment>
         ));
@@ -140,6 +165,7 @@ export const MainTable = ({ id, columns = [], data, localePrefix, settings,
             <table className="summary-table" id={id}>
                 <thead>
                     <tr>
+                        <th></th>
                         {columns.map((column) => (
                             <th key={column.key} className="main-table-th">
                                 {t(`${localePrefix}.${column.key}`)}

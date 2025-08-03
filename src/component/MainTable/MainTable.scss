@@ -23,8 +23,20 @@
 
 .main-table-th {
     height: 50px;
-    border-bottom: 1px solid $bright-gray !important;
     padding: 0 !important;
+
+    [data-theme='light'] & {
+        // --text-color: #{$light-mode-main-white};
+    }
+
+    [data-theme='dark'] & {
+        --text-color: #{$dark-mode-main-white};
+    }
+
+    font-weight: 300;
+
+    color: var(--text-color);
+
 }
 
 .main-table-td {
@@ -32,7 +44,18 @@
     height: 50px;
     border-bottom: 0px solid $bright-gray !important;
     vertical-align: top;
-    color: $theme-black;
+
+    [data-theme='light'] & {
+        // --text-color: #{$light-mode-main-white};
+    }
+
+    [data-theme='dark'] & {
+        --text-color: #{$dark-mode-main-white};
+    }
+
+    font-weight: 300;
+
+    color: var(--text-color);
 }
 
 .th-box {
@@ -92,3 +115,33 @@
 
 
 // --------------
+.editing-row {
+
+    [data-theme='light'] & {
+        // --bg-color: #{$light-mode-primary};
+        // --row-outline-color: #{$light-mode-primary};
+    }
+
+    [data-theme='dark'] & {
+        --bg-color: #{$dark-mode-primary};
+        --row-outline-color: #{$dark-mode-primary};
+    }
+
+    background-color: rgba(var(--bg-color), 0.1);
+    outline: 1px solid var(--row-outline-color);
+
+    transition: all 0.2s ease-in-out;
+}
+
+.main-table-td.updated input {
+    border: 0.6px solid #1ecb83;
+}
+
+.edit-icon-cell {
+    width: 24px;
+    text-align: center;
+}
+
+.edit-icon {
+    font-size: 14px;
+}

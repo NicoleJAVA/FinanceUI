@@ -286,7 +286,8 @@ export const TransactionPage = () => {
 
 
   const handleInputChange = (uuid, field, value) => {
-    dispatch(updateTransactionField({ uuid, field, value: parseFloat(value) || 0 }));
+    const isEditingField = field.endsWith('_editing');
+    dispatch(updateTransactionField({ uuid, field, value: isEditingField ? value : parseFloat(value) || 0 }));
   };
 
 
