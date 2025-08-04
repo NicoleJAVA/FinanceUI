@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { MainTable } from '../../component/MainTable/MainTable';
@@ -6,9 +6,16 @@ import { MainTable } from '../../component/MainTable/MainTable';
 const SellPreviewPage = () => {
     const previewData = useSelector(state => state.transactions.previewResult);
     const transactionDraft = useSelector(state => state.transactions.transactionDraft);
+    const aTableData = useSelector(state => state.transactions.aTableData);
     const navigate = useNavigate();
 
-    const validPreviewData = Array.isArray(previewData) && previewData.length > 0 ? previewData : [];
+    const [validPreviewData, setValidPreviewData] = useState([]);
+
+    useEffect(() => {
+        if (Array.isArray(previewData) && previewData.length > 0) {
+            setValidPreviewData(previewData);
+        }
+    }, [previewData]);
 
     const previewColumns = [
         { key: 'uuid', name: 'UUID', selector: row => row.uuid, sortable: true },
@@ -33,8 +40,29 @@ const SellPreviewPage = () => {
         { key: 'writeOffQuantity', name: '沖銷股數', selector: row => row.writeOffQuantity },
     ];
 
+    const aTableColumns = [
+        { key: 'transaction_date', name: '交易日期', selector: row => row.transaction_date },
+        { key: 'stock_code', name: '股票代號', selector: row => row.stock_code },
+        { key: 'product_name', name: '商品名稱', selector: row => row.product_name },
+        { key: 'unit_price', name: '成交單價', selector: row => row.unit_price },
+        { key: 'transaction_quantity', name: '成交股數', selector: row => row.transaction_quantity },
+        { key: 'transaction_value', name: '成交價金', selector: row => row.transaction_value },
+        { key: 'estimated_fee', name: '手續費', selector: row => row.estimated_fee },
+        { key: 'estimated_tax', name: '交易稅', selector: row => row.estimated_tax },
+        { key: 'net_amount', name: '淨收付金額', selector: row => row.net_amount },
+    ];
+
     return (
         <div className="page-container">
+
+            <h3 style={{ marginTop: 40 }}>Table A 原始交易</h3>
+            <MainTable
+                id="atable-section"
+                data={aTableData}
+                columns={aTableColumns}
+                localePrefix="transaction"
+                settings={{}}
+            />
             <h3>攤提預覽結果</h3>
             <MainTable
                 id="preview-table"

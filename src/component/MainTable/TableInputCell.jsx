@@ -24,6 +24,20 @@ const TableInputCell = ({ columns, column, updatedData, setUpdatedData, uuid, co
         console.log("updatedDataCopy", updatedDataCopy); // todo dele
         setUpdatedData(updatedDataCopy);
 
+        // @begin: 邊打字邊存到 local storage
+        try {
+            const storageKey = 'transactionDraftOverrides';
+            const storage = JSON.parse(localStorage.getItem(storageKey) || '{}');
+            const currentRow = storage[uuid] || {};
+            currentRow[columnKey] = e.target.value;
+            storage[uuid] = currentRow;
+            localStorage.setItem(storageKey, JSON.stringify(storage));
+        } catch (err) {
+            console.error('localStorage 寫入失敗', err);
+        }
+
+        // @end: 邊打字邊存到 local storage
+
         // 計算依賴欄位 todo dele
         // calculateDependentColumns(columns, updatedDataCopy[rowIndex], updatedDataCopy, setUpdatedData);
 

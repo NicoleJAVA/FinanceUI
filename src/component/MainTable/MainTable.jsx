@@ -5,7 +5,7 @@ import { handleInputChange } from "./ComputeTable";
 import "./MainTable.scss";
 import "./ComputeTable.scss";
 import { useTranslation } from 'react-i18next';
-import TableInputCell from "./TableInputCell";
+
 import { ExpandableRow } from "./ExpandableRow";
 import { generateColumns } from "../../helpers/TableHelper";
 
@@ -16,6 +16,8 @@ export const MainTable = ({ id, columns = [], data, localePrefix, settings,
     const [selectedDeleteRow, setSelectedDeleteRow] = useState(null);
     const [expandedRows, setExpandedRows] = useState([]);
     const { t } = useTranslation();
+    const draftOverrideMap = JSON.parse(localStorage.getItem('transactionDraftOverrides') || '{}');
+
 
     console.log('TABLE DATA', data);
 
@@ -87,7 +89,7 @@ export const MainTable = ({ id, columns = [], data, localePrefix, settings,
                                             column.inputType === 'integer' ? "請輸入整數 (含正、負、0)" :
                                                 column.inputType === 'float' ? "請輸入數字 (可含負號、小數)" : undefined
                                     }
-                                    value={row[column.key] || ""}
+                                    value={(draftOverrideMap?.[row.uuid]?.[column.key] ?? row[column.key]) || ""}
                                     onChange={(e) => {
                                         const inputEl = e.target;
                                         if (!inputEl.checkValidity()) {

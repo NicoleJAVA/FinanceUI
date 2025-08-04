@@ -7,7 +7,7 @@ import {
   clearHighlight, updateATableField,
   previewWriteOff
 } from '../../redux/transaction/slice';
-import { Table, Button } from 'react-bootstrap';
+import { Table, Button, Modal } from 'react-bootstrap';
 import './TransactionPage.scss';
 import { useDate } from '../../context/DateContext';
 import moment from 'moment';
@@ -36,6 +36,10 @@ export const TransactionPage = () => {
   const [limit] = useState(10);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [showLoadModal, setShowLoadModal] = useState(false);
+  const [showConfirmClearModal, setShowConfirmClearModal] = useState(false);
+  const [hasLocalDraft, setHasLocalDraft] = useState(false);
+  const [draftLoaded, setDraftLoaded] = useState(false);
   // (1). transactionSource: 交易資料的來源，是從 API 得到
   // (2). transactionDraftRef: 正在編輯中的草稿，是 user 在動態更新
   const transactionSource = useSelector((state) => state.transactions.transactionSource);
@@ -157,6 +161,18 @@ export const TransactionPage = () => {
 
   const handleInputChangeA = (field, value) => {
     dispatch(updateATableField({ field, value }));
+
+
+    // @begin: 存入 local storage
+
+    const currentOverrides = JSON.parse(localStorage.getItem('aTableOverrides') || '{}');
+    const newOverride = {
+      ...(currentOverrides || {}),
+      [field]: value
+    };
+    localStorage.setItem('aTableOverrides', JSON.stringify(newOverride));
+    // @end: 存入 local storage
+
   };
 
   // 用於管理 B 表格的狀態
@@ -214,17 +230,137 @@ export const TransactionPage = () => {
   ];
 
 
+  // @begin: 載入/儲存 localstorage 草稿
+  // useEffect(() => { // 這一段是自動就填入上次寫的資料，沒有事先詢問者要不要填，會自動填
+  //   const draftOverrideMap = JSON.parse(localStorage.getItem('transactionDraftOverrides') || '{}');
+  //   const aTableOverrideMap = JSON.parse(localStorage.getItem('aTableOverrides') || '{}');
+
+  //   const updatedDraft = transactionDraft.map(row => {
+  //     if (draftOverrideMap[row.uuid]) {
+  //       return { ...row, ...draftOverrideMap[row.uuid] };
+  //     }
+  //     return row;
+  //   });
+
+  //   const updatedATable = aTableData.map(row => {
+  //     if (aTableOverrideMap[row.uuid]) {
+  //       return { ...row, ...aTableOverrideMap[row.uuid] };
+  //     }
+  //     return row;
+  //   });
+
+  //   dispatch(setTransactionDraft(updatedDraft));
+  //   dispatch(updateATableField({ field: '__bulkReplace__', value: updatedATable }));
+  // }, []);
+
+  useEffect(() => {
+    const overrideMap = {};
+    transactionDraft.forEach(row => {
+      const editedFields = {};
+      Object.keys(row).forEach(key => {
+        if (key.endsWith('_updated')) {
+          const originKey = key.replace('_updated', '');
+          editedFields[originKey] = row[originKey];
+        }
+      });
+      if (Object.keys(editedFields).length > 0) {
+        overrideMap[row.uuid] = editedFields;
+      }
+    });
+    localStorage.setItem('transactionDraftOverrides', JSON.stringify(overrideMap));
+  }, [transactionDraft]);
+
+
+  const handleLoadDraft = () => {
+    const draftOverrideMap = JSON.parse(localStorage.getItem('transactionDraftOverrides') || '{}');
+    const aTableOverrideMap = JSON.parse(localStorage.getItem('aTableOverrides') || '{}');
+
+    const updatedDraft = transactionDraft.map(row => {
+      if (draftOverrideMap[row.uuid]) {
+        return { ...row, ...draftOverrideMap[row.uuid] };
+      }
+      return row;
+    });
+
+    // const updatedATable = aTableData.map(row => {
+    //   if (aTableOverrideMap) {
+    //     return { ...row, ...aTableOverrideMap };
+    //   }
+    //   return row;
+    // });
+    const updatedATable = [{
+      ...aTableData[0],
+      ...aTableOverrideMap
+    }];
+
+    dispatch(setTransactionDraft(updatedDraft));
+    dispatch(updateATableField({ field: '__bulkReplace__', value: updatedATable }));
+    setShowLoadModal(false);
+    setDraftLoaded(true);
+  };
+
+  // const handleClearDraft = () => { todo dele
+  //   localStorage.removeItem('transactionDraft');
+  //   localStorage.removeItem('aTableData');
+  //   setShowLoadModal(false);
+  // };
+
+
+  const finalConfirmClearModal = () => {
+    localStorage.removeItem('transactionDraftOverrides');
+    localStorage.removeItem('aTableOverrides');
+    setShowLoadModal(false);
+    setShowConfirmClearModal(false);
+  }
+  // @end: 載入/儲存 localstorage 草稿
+
+
+  // 生命週期開始
   useEffect(() => {
     if (!hasFetchedData.current) {
       console.log("Fetching transactionSource...");
       dispatch(getTransactions({ stockCode: "2330", page: 1, limit: 10 }));
       hasFetchedData.current = true;
+
+      // 清空 A 表格，才不會有上次留著的資料
+      dispatch(updateATableField({
+        field: '__bulkReplace__', value: [{
+          data_uuid: '',
+          transaction_date: '',
+          stock_code: '',
+          product_name: '',
+          unit_price: 0,
+          transaction_quantity: 0,
+          transaction_price: 0,
+          fee: 0,
+          tax: 0,
+          net_amount: 0,
+          remaining_quantity: 0,
+          profit_loss: 0,
+          remarks: '',
+          inventory_uuids: [],
+        }]
+      }));
+
+      const draftMap = JSON.parse(localStorage.getItem('transactionDraftOverrides') || '{}');
+      const aTableOverrides = JSON.parse(localStorage.getItem('aTableOverrides') || '{}');
+      if (
+        !draftLoaded &&
+        (Object.keys(draftMap).length > 0 || Object.keys(aTableOverrides).length > 0)
+      ) {
+        setShowLoadModal(true);
+      }
     }
   }, [dispatch]);
 
 
+  //   這整個 if 條件的意思是：
+  // 「只有當草稿還沒載入，而且 API 有成功拿到資料時，才執行初始化 transactionDraft 的邏輯。」
+  // 這樣可以避免兩種問題：
+  // 使用者還沒點「載入草稿」，但你就自動改掉資料（不符合你說的預期 ）
+  // 使用者載入草稿後，又被 transactionSource 覆蓋回原始資料（導致無效 ）
   useEffect(() => {
-    if (transactionSource?.length > 0) {
+    if (!draftLoaded && transactionSource?.length > 0) { //
       dispatch(setTransactionDraft(transactionSource.map(transaction => ({
         ...transaction,
         remaining_quantity: 0,
@@ -234,7 +370,7 @@ export const TransactionPage = () => {
         writeOffQuantity: transaction.writeOffQuantity || 0
       }))));
     }
-  }, [transactionSource, dispatch]);
+  }, [transactionSource, dispatch, draftLoaded]);
 
 
   useEffect(() => {
@@ -384,6 +520,40 @@ export const TransactionPage = () => {
 
   return (
     <div className='page-container'>
+
+      <Modal show={showLoadModal} onHide={() => setShowLoadModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>載入草稿？</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>偵測到上次未完成的草稿，要載入嗎？</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowConfirmClearModal(true)}>
+            清空
+          </Button>
+          <Button variant="primary" onClick={handleLoadDraft}>
+            載入
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal show={showConfirmClearModal} onHide={() => setShowConfirmClearModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>確認清空草稿</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>請您再次確認，是否確定要清空上次的草稿內容？此操作無法復原。</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowConfirmClearModal(false)}>
+            取消
+          </Button>
+          <Button
+            variant="danger"
+            onClick={finalConfirmClearModal}
+          >
+            確認清空
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
       {loading && (
         <div className="fullscreen-loading">
           <div className="spinner-border text-primary" role="status">
@@ -440,37 +610,45 @@ export const TransactionPage = () => {
           <tbody>
             {aTableData && aTableData.length > 0 && (
               <tr>
-                <td><input className='table-A-input' type="date" defaultValue={aTableData[0].transaction_date} /></td>
-                <td><input className='table-A-input' type="text" defaultValue={aTableData[0].stock_code} /></td>
-                <td><input className='table-A-input' type="text" defaultValue={aTableData[0].product_name} /></td>
+                <td><input
+                  onChange={(e) => handleInputChangeA('transaction_date', e.target.value)}
+                  className='table-A-input' type="date" value={aTableData[0].transaction_date} /></td>
+                <td><input
+                  onChange={(e) => handleInputChangeA('stock_code', e.target.value)}
+                  className='table-A-input' type="text" value={aTableData[0].stock_code} /></td>
+                <td><input
+                  onChange={(e) => handleInputChangeA('product_name', e.target.value)}
+                  className='table-A-input' type="text" value={aTableData[0].product_name} /></td>
                 <td> <input className='table-A-input'
                   type="number"
                   placeholder="成交單價"
-                  defaultValue={aTableData[0].unit_price}
+                  value={aTableData[0].unit_price}
                   onChange={(e) => handleInputChangeA('unit_price', parseFloat(e.target.value))}
                 /></td>
                 <td><input className='table-A-input'
                   type="number"
-                  defaultValue={aTableData[0].transaction_quantity}
+                  value={aTableData[0].transaction_quantity}
                   onChange={(e) => handleInputChangeA('transaction_quantity', parseInt(e.target.value, 10))}
                 /></td>
                 <td>{aTableData[0].transaction_price}</td>
                 <td><input className='table-A-input'
                   type="number"
-                  defaultValue={aTableData[0].fee}
+                  value={aTableData[0].fee}
                   onChange={(e) => handleInputChangeA('fee', parseFloat(e.target.value))}
                 />
                 </td>
                 <td><input className='table-A-input'
                   type="number"
-                  defaultValue={aTableData[0].tax}
+                  value={aTableData[0].tax}
                   onChange={(e) => handleInputChangeA('tax', parseFloat(e.target.value))}
                 />
                 </td>
                 <td>{aTableData[0].net_amount}</td>
                 <td>{aTableData[0].remaining_quantity}</td>
                 <td>{aTableData[0].profit_loss}</td>
-                <td><input className='table-A-input' type="text" defaultValue={aTableData[0].remarks} /></td>
+                <td><input
+                  onChange={(e) => handleInputChangeA('remarks', e.target.value)}
+                  className='table-A-input' type="text" value={aTableData[0].remarks} /></td>
               </tr>
             )}
           </tbody>

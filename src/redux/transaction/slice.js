@@ -81,12 +81,12 @@ export const transactionSlice = createSlice({
       transaction_date: '',
       stock_code: '',
       product_name: '',
-      unit_price: 850,
-      transaction_quantity: 15,
+      unit_price: 0,
+      transaction_quantity: 0,
       transaction_price: 0,
-      fee: 55,
-      tax: 38,
-      net_amount: 12657,
+      fee: 0,
+      tax: 0,
+      net_amount: 0,
       remaining_quantity: 0,
       profit_loss: 0,
       inventory_uuids: [],
@@ -106,6 +106,19 @@ export const transactionSlice = createSlice({
     // 更新 A 表格欄位 (並影響 B 表格)
     updateATableField: (state, action) => {
       const { field, value } = action.payload;
+
+
+      // 想一次把整筆 aTableData 替換成 localStorage 撈回來的版本，
+      // 就不能一個欄位一個欄位 dispatch。所以才讓 reducer 支援這種特例：
+      if (field === '__bulkReplace__' && Array.isArray(value)) {
+        console.log("清空", value); // todo dele
+        state.aTableData = value;  // 這邊是整包替換！
+        console.log("清空", state.aTableData); // todo dele
+
+        return;
+      }
+
+
       const oldValue = state.aTableData[0][field];
       state.aTableData[0][field] = value;
 
