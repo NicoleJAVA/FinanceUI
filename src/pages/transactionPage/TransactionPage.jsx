@@ -1,9 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import {
   getTransactions, batchWriteOff,
   updateTransactionField, setTransactionDraft,
-  clearHighlight, updateATableField
+  clearHighlight, updateATableField,
+  previewWriteOff
 } from '../../redux/transaction/slice';
 import { Table, Button } from 'react-bootstrap';
 import './TransactionPage.scss';
@@ -26,6 +28,9 @@ const FEE_DISCOUNT = 0.003;
 export const TransactionPage = () => {
   const dispatch = useDispatch();
 
+
+  // 在 component 內部加上：
+  const navigate = useNavigate();
   const total = useSelector(state => state.transactions.total);
 
   const [limit] = useState(10);
@@ -359,6 +364,19 @@ export const TransactionPage = () => {
 
   }
 
+  const handlePreview = () => {
+    dispatch(previewWriteOff({
+      stockCode: aTableData[0].stock_code,
+      inventory: transactionDraft.map(tx => ({
+        uuid: tx.uuid,
+        writeOffQuantity: tx.writeOffQuantity
+      })),
+      transactionDate: aTableData[0].transaction_date,
+      sellRecord: aTableData[0],
+    })).then(() => {
+      navigate('/sell-preview');
+    });
+  };
 
   const getNextPage = (currentPage, total, limit) => {
     return Math.min(currentPage + 1, Math.ceil(total / limit));
@@ -514,6 +532,7 @@ export const TransactionPage = () => {
         </Table>
       </div> */}
       <button onClick={handleBatchWriteOff} className="btn btn-primary">存檔</button>
+      <Button onClick={handlePreview}>預覽攤提</Button>
       <div className="pagination-controls">
         <Button
           onClick={() => setPage((prev) => Math.max(prev - 1, 1))}

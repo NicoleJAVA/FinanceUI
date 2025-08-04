@@ -51,7 +51,8 @@ export const MainTable = ({ id, columns = [], data, localePrefix, settings,
     };
 
     const getTdClass = (row, column) => {
-        return `main-table-td ${row[`${column.key}_updated`] ? 'updated' : ''} ${highlightedCells[`${row.uuid}-${column.key}`] || ''}`;
+        return `main-table-td ${row[`${column.key}_updated`] ? 'updated' : ''} `;
+        // return `main-table-td ${row[`${column.key}_updated`] ? 'updated' : ''} ${highlightedCells[`${row.uuid}-${column.key}`] || ''}`;
         // return 'main-table-td' + (row[`${column.key}_updated`] ? ' updated' : '');
     };
 

@@ -17,6 +17,8 @@ import "./helpers/fontawesome";
 // import { TranslationProvider, useTranslationContext } from '../src/locales/TranslationContext'; todo dele
 
 import { useTranslation } from 'react-i18next';
+import SellPreviewPage from "./pages/transactionPage/SellPreviewPage";
+
 function App() {
   const dispatch = useAppDispatch();
   const toastStackRef = useRef();
@@ -40,6 +42,7 @@ function App() {
               <Route path="/inventory" element={<InventoryPage />} />
               <Route path="/history" element={<HistoryPage />} />
               <Route path="/all-history" element={<AllHistoryPage />} />
+              <Route path="/sell-preview" element={<SellPreviewPage />} />
 
 
               <Route path="*" element={<DemoPage />} />
