@@ -230,45 +230,62 @@ export const TransactionPage = () => {
   ];
 
 
-  // @begin: 載入/儲存 localstorage 草稿
-  // useEffect(() => { // 這一段是自動就填入上次寫的資料，沒有事先詢問者要不要填，會自動填
-  //   const draftOverrideMap = JSON.parse(localStorage.getItem('transactionDraftOverrides') || '{}');
-  //   const aTableOverrideMap = JSON.parse(localStorage.getItem('aTableOverrides') || '{}');
 
-  //   const updatedDraft = transactionDraft.map(row => {
-  //     if (draftOverrideMap[row.uuid]) {
-  //       return { ...row, ...draftOverrideMap[row.uuid] };
-  //     }
-  //     return row;
-  //   });
-
-  //   const updatedATable = aTableData.map(row => {
-  //     if (aTableOverrideMap[row.uuid]) {
-  //       return { ...row, ...aTableOverrideMap[row.uuid] };
-  //     }
-  //     return row;
-  //   });
-
-  //   dispatch(setTransactionDraft(updatedDraft));
-  //   dispatch(updateATableField({ field: '__bulkReplace__', value: updatedATable }));
-  // }, []);
 
   useEffect(() => {
     const overrideMap = {};
+
     transactionDraft.forEach(row => {
       const editedFields = {};
+
       Object.keys(row).forEach(key => {
-        if (key.endsWith('_updated')) {
-          const originKey = key.replace('_updated', '');
-          editedFields[originKey] = row[originKey];
+        // ✅ 只有處理 "_editing" 結尾的欄位
+        if (key.endsWith('_editing')) {
+          const originKey = key.replace('_editing', '');
+
+          // ✅ 一定要這個 _editing 是 false 才表示使用者剛離開該欄位
+          if (row[key] === false) {
+            // ✅ 只寫入「這筆 row 裡有 editing 屬性的欄位」
+            editedFields[originKey] = row[originKey];
+          }
         }
       });
+
       if (Object.keys(editedFields).length > 0) {
         overrideMap[row.uuid] = editedFields;
       }
     });
-    localStorage.setItem('transactionDraftOverrides', JSON.stringify(overrideMap));
+
+    if (Object.keys(overrideMap).length > 0) {
+      localStorage.setItem('transactionDraftOverrides', JSON.stringify(overrideMap));
+      console.log('✅ 已寫入草稿 localStorage', overrideMap);
+    } else {
+      console.log('⏭️ 沒有任何完成編輯的欄位，不寫入草稿');
+    }
   }, [transactionDraft]);
+
+  // useEffect(() => {
+
+  //   const overrideMap = {};
+  //   transactionDraft.forEach(row => {
+  //     const editedFields = {};
+  //     Object.keys(row).forEach(key => {
+  //       if (key.endsWith('_editing')) {
+  //         const originKey = key.replace('_editing', '');
+  //         editedFields[originKey] = row[originKey];
+  //         console.log(new Date(), '打字', key, editedFields[originKey]);
+
+
+  //       }
+  //     });
+  //     if (Object.keys(editedFields).length > 0) {
+  //       overrideMap[row.uuid] = editedFields;
+  //     }
+  //      localStorage.setItem('transactionDraftOverrides', JSON.stringify(overrideMap));
+  //   console.log('剛寫入, 取得 localStorage', localStorage.getItem('transactionDraftOverrides'));
+  //   });
+
+  // }, [transactionDraft]);
 
 
   const handleLoadDraft = () => {
@@ -282,12 +299,7 @@ export const TransactionPage = () => {
       return row;
     });
 
-    // const updatedATable = aTableData.map(row => {
-    //   if (aTableOverrideMap) {
-    //     return { ...row, ...aTableOverrideMap };
-    //   }
-    //   return row;
-    // });
+
     const updatedATable = [{
       ...aTableData[0],
       ...aTableOverrideMap
@@ -299,11 +311,6 @@ export const TransactionPage = () => {
     setDraftLoaded(true);
   };
 
-  // const handleClearDraft = () => { todo dele
-  //   localStorage.removeItem('transactionDraft');
-  //   localStorage.removeItem('aTableData');
-  //   setShowLoadModal(false);
-  // };
 
 
   const finalConfirmClearModal = () => {
@@ -660,6 +667,7 @@ export const TransactionPage = () => {
         expandUI={DefaultExpandRow}
         onInputChange={handleInputChange}
         highlightedCells={highlightedCells}
+        draftOverrideMap={JSON.parse(localStorage.getItem('transactionDraftOverrides') || '{}')}
       />
       {/* <div > todo dele
         <DataTable

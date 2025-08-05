@@ -10,13 +10,14 @@ import { ExpandableRow } from "./ExpandableRow";
 import { generateColumns } from "../../helpers/TableHelper";
 
 export const MainTable = ({ id, columns = [], data, localePrefix, settings,
-    expandUI: ExpandUI, onInputChange, highlightedCells }) => {
+    expandUI: ExpandUI, onInputChange, highlightedCells, draftOverrideMap }) => {
     const [sort, setSort] = useState({ key: settings?.paging?.sortKey, order: "asc" });
     const [isShowDeleteModal, setIsShowDeleteModal] = useState(false);
     const [selectedDeleteRow, setSelectedDeleteRow] = useState(null);
     const [expandedRows, setExpandedRows] = useState([]);
     const { t } = useTranslation();
-    const draftOverrideMap = JSON.parse(localStorage.getItem('transactionDraftOverrides') || '{}');
+    // const draftOverrideMap = JSON.parse(localStorage.getItem('transactionDraftOverrides') || '{}');
+    // console.log('draftOverrideMap ---', draftOverrideMap['b8a0dce1-6e6b-4eb6-9688-7a9bca5d3422']);
 
 
     console.log('TABLE DATA', data);
@@ -60,7 +61,9 @@ export const MainTable = ({ id, columns = [], data, localePrefix, settings,
 
     const renderRows = () => {
         return paginatedData.map((row) => (
+
             <React.Fragment key={row.uuid}>
+
                 <tr onClick={() => toggleRow(row.uuid)} data-uuid={row.uuid}
                     className={columns.some(c => row[`${c.key}_editing`]) ? 'editing-row' : ''}
                 >
@@ -89,7 +92,13 @@ export const MainTable = ({ id, columns = [], data, localePrefix, settings,
                                             column.inputType === 'integer' ? "請輸入整數 (含正、負、0)" :
                                                 column.inputType === 'float' ? "請輸入數字 (可含負號、小數)" : undefined
                                     }
-                                    value={(draftOverrideMap?.[row.uuid]?.[column.key] ?? row[column.key]) || ""}
+                                    // value={(draftOverrideMap?.[row.uuid]?.[column.key] ?? row[column.key]) || ""}
+                                    value={row[column.key]}
+                                    // value={
+                                    //     draftOverrideMap?.[row.uuid]?.[column.key] !== undefined
+                                    //         ? draftOverrideMap[row.uuid][column.key]
+                                    //         : row[column.key] || ""
+                                    // }
                                     onChange={(e) => {
                                         const inputEl = e.target;
                                         if (!inputEl.checkValidity()) {
