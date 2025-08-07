@@ -139,10 +139,7 @@ export const transactionSlice = createSlice({
       state.transactionDraft.forEach(transaction => {
         const newQuantity = transaction.writeOffQuantity;
         transaction.amortized_income = Math.round(state.aTableData[0].net_amount * (newQuantity / state.aTableData[0].transaction_quantity));
-        transaction.profit_loss = Math.round(
-          newQuantity * (state.aTableData[0].unit_price - transaction.transaction_price) -
-          ((state.aTableData[0].fee + state.aTableData[0].tax) * (newQuantity / state.aTableData[0].transaction_quantity))
-        );
+        transaction.profit_loss = calculateProfitLoss(transaction, state); // 這邊要修正，才不會出現 NaN
         transaction.profit_loss_2 = transaction.amortized_cost + transaction.amortized_income;
 
         // Highlight 受影響的 B 表格欄位
@@ -183,11 +180,18 @@ export const transactionSlice = createSlice({
         // 沖銷股數 * (A 表格成交單價 - 成交單價)     
         //  -      
         //    (    (A 表格交易費 + A 表格手續費)*(成交股數/A 表格成交股數)   )
-        transaction.profit_loss = Math.round(
-          transaction.writeOffQuantity * (state.aTableData[0].unit_price - transaction.unit_price) -
-          ((state.aTableData[0].fee + state.aTableData[0].tax) * (transaction.transaction_quantity / state.aTableData[0].transaction_quantity))
-        );
+        // transaction.profit_loss = Math.round(
+        //   transaction.writeOffQuantity * (state.aTableData[0].unit_price - transaction.unit_price) -
+        //   ((state.aTableData[0].fee + state.aTableData[0].tax) * (transaction.transaction_quantity / state.aTableData[0].transaction_quantity))
+        // );
 
+        transaction.profit_loss = calculateProfitLoss(transaction, state);
+        console.log('------'); // todo dele
+        console.log('1. ', state.aTableData[0].unit_price - transaction.unit_price); // todo dele
+        console.log('2.', (transaction.transaction_quantity / state.aTableData[0].transaction_quantity)); // todo dele
+        console.log(''); // todo dele
+        console.log(''); // todo dele
+        console.log(''); // todo dele
         // transaction.profit_loss = Math.round(
         //   transaction.writeOffQuantity * (state.aTableData[0].unit_price - transaction.transaction_price) );
         console.log("335 850 666", JSON.stringify(transaction), transaction.writeOffQuantity, state.aTableData[0].unit_price, transaction.transaction_price); // todo dele
@@ -228,7 +232,7 @@ export const transactionSlice = createSlice({
           remaining_quantity: 0,
           amortized_cost: 0,
           amortized_income: 0,
-          profit_loss: 0,
+          profit_loss: calculateProfitLoss(transaction, state),
           writeOffQuantity: transaction.writeOffQuantity || 0,
         }));
       })
@@ -242,6 +246,15 @@ export const transactionSlice = createSlice({
       });
   },
 });
+
+const calculateProfitLoss = (transaction, state) => {
+  return Math.round(
+    transaction.writeOffQuantity * (state.aTableData[0].unit_price - transaction.unit_price) -
+    ((state.aTableData[0].fee + state.aTableData[0].tax) * (transaction.transaction_quantity / state.aTableData[0].transaction_quantity))
+  );
+
+
+};
 
 export const { setTransactionDraft,
   updateTransactionField,

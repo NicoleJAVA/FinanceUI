@@ -220,7 +220,7 @@ export const TransactionPage = () => {
     { key: 'estimated_fee', sortable: true },
     { key: 'estimated_tax', sortable: true },
     { key: 'net_amount', sortable: true },
-    { key: 'writeOffQuantity', sortable: true, isInput: true, inputType: 'positive-int' },
+    { key: 'writeOffQuantity', sortable: true, isInput: true, inputType: 'int' },
     { key: 'remaining_quantity', sortable: true },
     { key: 'amortized_cost', sortable: true },
     { key: 'amortized_income', sortable: true },
