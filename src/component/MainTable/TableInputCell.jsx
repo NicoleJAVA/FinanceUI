@@ -26,7 +26,7 @@ const TableInputCell = ({ columns, column, updatedData, setUpdatedData, uuid, co
 
         // @begin: 邊打字邊存到 local storage
         try {
-            const storageKey = 'transactionDraftOverrides';
+            const storageKey = `transactionDraftOverrides_${stockCode}`;
             const storage = JSON.parse(localStorage.getItem(storageKey) || '{}');
             const currentRow = storage[uuid] || {};
             currentRow[columnKey] = e.target.value;

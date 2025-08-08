@@ -16,8 +16,6 @@ export const MainTable = ({ id, columns = [], data, localePrefix, settings,
     const [selectedDeleteRow, setSelectedDeleteRow] = useState(null);
     const [expandedRows, setExpandedRows] = useState([]);
     const { t } = useTranslation();
-    // const draftOverrideMap = JSON.parse(localStorage.getItem('transactionDraftOverrides') || '{}');
-    // console.log('draftOverrideMap ---', draftOverrideMap['b8a0dce1-6e6b-4eb6-9688-7a9bca5d3422']);
 
 
     console.log('TABLE DATA', data);

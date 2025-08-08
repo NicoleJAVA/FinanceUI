@@ -34,6 +34,8 @@ export const TransactionPage = () => {
   const total = useSelector(state => state.transactions.total);
 
   const [limit] = useState(10);
+  const [stockCode, setStockCode] = useState('');
+  const [pendingStockCode, setPendingStockCode] = useState('');
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [showLoadModal, setShowLoadModal] = useState(false);
@@ -74,6 +76,13 @@ export const TransactionPage = () => {
     amortizedIncomeDiff: 0,
   });
 
+
+  // ▼ 當使用者輸入代號後，把它寫入 A 表的 stock_code
+  useEffect(() => {
+    if (stockCode) {
+      dispatch(updateATableField({ field: 'stock_code', value: stockCode }));
+    }
+  }, [stockCode, dispatch]);
 
   // todo dele
   // const [aTableData, setATableData] = useState([
@@ -165,12 +174,12 @@ export const TransactionPage = () => {
 
     // @begin: 存入 local storage
 
-    const currentOverrides = JSON.parse(localStorage.getItem('aTableOverrides') || '{}');
+    const currentOverrides = JSON.parse(localStorage.getItem(`aTableOverrides_${stockCode}`) || '{}');
     const newOverride = {
       ...(currentOverrides || {}),
       [field]: value
     };
-    localStorage.setItem('aTableOverrides', JSON.stringify(newOverride));
+    localStorage.setItem(`aTableOverrides_${stockCode}`, JSON.stringify(newOverride));
     // @end: 存入 local storage
 
   };
@@ -257,40 +266,19 @@ export const TransactionPage = () => {
     });
 
     if (Object.keys(overrideMap).length > 0) {
-      localStorage.setItem('transactionDraftOverrides', JSON.stringify(overrideMap));
-      console.log('✅ 已寫入草稿 localStorage', overrideMap);
+      localStorage.setItem(`transactionDraftOverrides_${stockCode}`, JSON.stringify(overrideMap));
+      console.log('已寫入草稿 localStorage', overrideMap);
     } else {
-      console.log('⏭️ 沒有任何完成編輯的欄位，不寫入草稿');
+      console.log('沒有任何完成編輯的欄位，不寫入草稿');
     }
   }, [transactionDraft]);
 
-  // useEffect(() => {
 
-  //   const overrideMap = {};
-  //   transactionDraft.forEach(row => {
-  //     const editedFields = {};
-  //     Object.keys(row).forEach(key => {
-  //       if (key.endsWith('_editing')) {
-  //         const originKey = key.replace('_editing', '');
-  //         editedFields[originKey] = row[originKey];
-  //         console.log(new Date(), '打字', key, editedFields[originKey]);
-
-
-  //       }
-  //     });
-  //     if (Object.keys(editedFields).length > 0) {
-  //       overrideMap[row.uuid] = editedFields;
-  //     }
-  //      localStorage.setItem('transactionDraftOverrides', JSON.stringify(overrideMap));
-  //   console.log('剛寫入, 取得 localStorage', localStorage.getItem('transactionDraftOverrides'));
-  //   });
-
-  // }, [transactionDraft]);
 
 
   const handleLoadDraft = () => {
-    const draftOverrideMap = JSON.parse(localStorage.getItem('transactionDraftOverrides') || '{}');
-    const aTableOverrideMap = JSON.parse(localStorage.getItem('aTableOverrides') || '{}');
+    const draftOverrideMap = JSON.parse(localStorage.getItem(`transactionDraftOverrides_${stockCode}`) || '{}');
+    const aTableOverrideMap = JSON.parse(localStorage.getItem(`aTableOverrides_${stockCode}`) || '{}');
 
     const updatedDraft = transactionDraft.map(row => {
       if (draftOverrideMap[row.uuid]) {
@@ -314,8 +302,8 @@ export const TransactionPage = () => {
 
 
   const finalConfirmClearModal = () => {
-    localStorage.removeItem('transactionDraftOverrides');
-    localStorage.removeItem('aTableOverrides');
+    localStorage.removeItem(`transactionDraftOverrides_${stockCode}`);
+    localStorage.removeItem(`aTableOverrides_${stockCode}`);
     setShowLoadModal(false);
     setShowConfirmClearModal(false);
   }
@@ -324,7 +312,7 @@ export const TransactionPage = () => {
 
   // 生命週期開始
   useEffect(() => {
-    if (!hasFetchedData.current) {
+    if (!hasFetchedData.current && stockCode) {
       console.log("Fetching transactionSource...");
       dispatch(getTransactions({ stockCode: "2330", page: 1, limit: 10 }));
       hasFetchedData.current = true;
@@ -349,8 +337,8 @@ export const TransactionPage = () => {
         }]
       }));
 
-      const draftMap = JSON.parse(localStorage.getItem('transactionDraftOverrides') || '{}');
-      const aTableOverrides = JSON.parse(localStorage.getItem('aTableOverrides') || '{}');
+      const draftMap = JSON.parse(localStorage.getItem(`transactionDraftOverrides_${stockCode}`) || '{}');
+      const aTableOverrides = JSON.parse(localStorage.getItem(`aTableOverrides_${stockCode}`) || '{}');
       if (
         !draftLoaded &&
         (Object.keys(draftMap).length > 0 || Object.keys(aTableOverrides).length > 0)
@@ -358,7 +346,7 @@ export const TransactionPage = () => {
         setShowLoadModal(true);
       }
     }
-  }, [dispatch]);
+  }, [stockCode, dispatch]);
 
 
   //   這整個 if 條件的意思是：
@@ -455,7 +443,7 @@ export const TransactionPage = () => {
     console.log("編輯", editedInventory);
 
     dispatch(batchWriteOff({
-      stockCode: '2330',
+      stockCode: stockCode,
       inventory: editedInventory,
       transactionDate: moment().format('YYYY-MM-DD HH:mm:ss'),
       sellRecord: {
@@ -471,7 +459,7 @@ export const TransactionPage = () => {
     }))
       .then(() => {
         // 重新抓取目前頁數的資料
-        return dispatch(getTransactions({ stockCode: "2330", page, limit }));
+        return dispatch(getTransactions({ stockCode: stockCode, page, limit }));
       })
       .catch(err => {
         console.error("寫入失敗", err);
@@ -524,6 +512,37 @@ export const TransactionPage = () => {
   const getNextPage = (currentPage, total, limit) => {
     return Math.min(currentPage + 1, Math.ceil(total / limit));
   };
+
+  // ▼ 先輸入股票代號，未填就不渲染原本內容
+  if (!stockCode) {
+    return (
+      <div className='page-container'>
+        <div className="table-card-wrapper" style={{ maxWidth: 520, margin: '80px auto' }}>
+
+          <div>請輸入股票代號</div>
+          <input
+            className='table-A-input'
+            type="text"
+            placeholder="例如：2330"
+            value={pendingStockCode}
+            onChange={(e) => setPendingStockCode(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && pendingStockCode.trim()) {
+                setStockCode(pendingStockCode.trim());
+              }
+            }}
+          />
+          <Button
+            style={{ marginLeft: 8 }}
+            onClick={() => pendingStockCode.trim() && setStockCode(pendingStockCode.trim())}
+          >
+            確認
+          </Button>
+
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className='page-container'>
@@ -667,7 +686,7 @@ export const TransactionPage = () => {
         expandUI={DefaultExpandRow}
         onInputChange={handleInputChange}
         highlightedCells={highlightedCells}
-        draftOverrideMap={JSON.parse(localStorage.getItem('transactionDraftOverrides') || '{}')}
+        draftOverrideMap={JSON.parse(localStorage.getItem(`transactionDraftOverrides_${stockCode}`) || '{}')}
       />
       {/* <div > todo dele
         <DataTable
@@ -717,9 +736,9 @@ export const TransactionPage = () => {
           </tbody>
         </Table>
       </div> */}
-      <button onClick={handleBatchWriteOff} className="btn btn-primary">存檔</button>
+      {/* <button onClick={handleBatchWriteOff} className="btn btn-primary">存檔</button> */}
       <Button onClick={handlePreview}>預覽攤提</Button>
-      <div className="pagination-controls">
+      {/* <div className="pagination-controls">
         <Button
           onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
           disabled={page === 1}
@@ -731,7 +750,7 @@ export const TransactionPage = () => {
           disabled={page >= Math.ceil(total / limit)}
         >
           下一頁
-        </Button>      </div>
+        </Button>      </div> */}
     </div >
   );
 };
