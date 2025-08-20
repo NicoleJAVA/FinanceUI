@@ -44,6 +44,7 @@
 
 .table-A-input {
   height: 44px;
+  width: 100px;
 
   [data-theme='dark'] & {
     --bg-color: transparent;
@@ -72,8 +73,11 @@
 }
 
 .page-container {
+  min-width: fit-content;
+  min-height: 100vh;
   padding-top: 66px;
   padding-left: 50px;
+  padding-right: 20px;
 
   [data-theme='light'] & {
     // --bg-color: #{$light-mode-main-bg-gray};
@@ -89,6 +93,7 @@
 .table-card-wrapper {
   padding: 10px;
   border-radius: 5px;
+  max-width: 1400px;
 
 
   [data-theme='light'] & {

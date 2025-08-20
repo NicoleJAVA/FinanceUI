@@ -40,8 +40,11 @@ $theme-font-size: 14px;
   text-align: center;
 }
 
-.text-theme {
+.theme-text {
   // color: $text-theme-color !important;
+  color: $dark-mode-main-white;
+  font-weight: 300;
+  font-size: 14px;
 }
 
 .theme-font {

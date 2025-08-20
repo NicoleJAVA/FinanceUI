@@ -13,7 +13,7 @@ export const TableFooter = ({
     resetToFirstPage,
 }) => {
     return (
-        <div>
+        <div className='theme-text'>
             <div className="table-tfoot-td">
                 <div className="table-tfoot-container">
                     <div className="tfoot-left-container">
@@ -22,7 +22,7 @@ export const TableFooter = ({
                             Page
                         </span>
                         <input
-                            className="form-control page-input"
+                            className="page-input"
                             type="number"
                             value={currentPage}
                             onChange={(e) => goToPage(Number(e.target.value))}
@@ -31,6 +31,7 @@ export const TableFooter = ({
                             of {totalPages}
                             <span className="page-arrow">&gt;&gt;|</span>
                         </span>
+                        <span>每頁筆數：</span>
                         <div className="items-per-page-container">
                             <select
                                 id="items-per-page-select"
@@ -39,7 +40,7 @@ export const TableFooter = ({
                                 onChange={(e) => resetToFirstPage(Number(e.target.value))}
                             >
                                 {itemsPerPageOptions.map((option) => (
-                                    <option key={option} value={option}>
+                                    <option className='items-per-page-option' key={option} value={option}>
                                         {option}
                                     </option>
                                 ))}
@@ -49,11 +50,9 @@ export const TableFooter = ({
                     <div className="tfoot-right-container">{rangeText}</div>
                 </div>
             </div>
-
+            {/* 
             <div colSpan="10" className="page-number-group">
-                <div className="total-range">
-                    {`${rangeText} records in ${totalPages} pages`}
-                </div>
+
                 <div>
                     {displayedPages.map((page) => (
                         <span
@@ -65,7 +64,7 @@ export const TableFooter = ({
                         </span>
                     ))}
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 };

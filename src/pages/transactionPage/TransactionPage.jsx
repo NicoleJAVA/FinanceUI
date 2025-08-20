@@ -620,8 +620,8 @@ export const TransactionPage = () => {
           <thead>
             <tr>
               <th>成交日期</th>
-              <th>商品代碼</th>
-              <th>商品名稱</th>
+              {/* <th>商品代碼</th>
+              <th>商品名稱</th> */}
               <th>成交單價</th>
               <th>成交股數</th>
               <th>成交價金</th>
@@ -639,12 +639,12 @@ export const TransactionPage = () => {
                 <td><input
                   onChange={(e) => handleInputChangeA('transaction_date', e.target.value)}
                   className='table-A-input' type="date" value={aTableData[0].transaction_date} /></td>
-                <td><input
+                {/* <td><input
                   onChange={(e) => handleInputChangeA('stock_code', e.target.value)}
                   className='table-A-input' type="text" value={aTableData[0].stock_code} /></td>
                 <td><input
                   onChange={(e) => handleInputChangeA('product_name', e.target.value)}
-                  className='table-A-input' type="text" value={aTableData[0].product_name} /></td>
+                  className='table-A-input' type="text" value={aTableData[0].product_name} /></td> */}
                 <td> <input className='table-A-input'
                   type="number"
                   placeholder="成交單價"
@@ -737,7 +737,7 @@ export const TransactionPage = () => {
         </Table>
       </div> */}
       {/* <button onClick={handleBatchWriteOff} className="btn btn-primary">存檔</button> */}
-      <Button onClick={handlePreview}>預覽攤提</Button>
+      <Button className='mt-4 mb-5' onClick={handlePreview}>預覽攤提</Button>
       {/* <div className="pagination-controls">
         <Button
           onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
