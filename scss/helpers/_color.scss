@@ -85,11 +85,6 @@ $platinum-gray: #e8e8e8;
 $mid-gray: #677489;
 $roman-silver: #848e9f;
 
-// override bootstrap
-$primary: $lemon-lime;
-$info: #00a3c5;
-$secondary: $secondary-gray;
-
 
 
 // theme
@@ -124,3 +119,9 @@ $dark-mode-primary-gray: #434659;
 $dark-mode-input-underline-gray: #5E6880;
 $dark-mode-section-bg-gray: #2E313D;
 $dark-mode-input-bg-gray: #353845;
+
+
+// override bootstrap
+$primary: $dark-mode-primary;
+$info: #00a3c5;
+$secondary: $secondary-gray;

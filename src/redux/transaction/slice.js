@@ -106,50 +106,21 @@ export const transactionSlice = createSlice({
     // 更新 A 表格欄位 (並影響 B 表格)
     updateATableField: (state, action) => {
       const { field, value } = action.payload;
-
-
-      // 想一次把整筆 aTableData 替換成 localStorage 撈回來的版本，
-      // 就不能一個欄位一個欄位 dispatch。所以才讓 reducer 支援這種特例：
       if (field === '__bulkReplace__' && Array.isArray(value)) {
-        console.log("清空", value); // todo dele
-        state.aTableData = value;  // 這邊是整包替換！
-        console.log("清空", state.aTableData); // todo dele
-
+        state.aTableData = value;
+        chainingCalc(state);       // ← 這行一定要加，初次載入就跑四步驟
         return;
       }
 
-
       const oldValue = state.aTableData[0][field];
       state.aTableData[0][field] = value;
-
-      // Highlight 變動的欄位
       state.highlightedCells[`A-${field}`] = value > oldValue ? "flash-blue" : "flash-orange";
-
-      // 更新成交價金
-      console.log("state.aTableData[0].transaction_price", state.aTableData[0].transaction_price, state.aTableData[0].unit_price, state.aTableData[0].transaction_quantity);
-
-      state.aTableData[0].transaction_price = state.aTableData[0].unit_price * state.aTableData[0].transaction_quantity;
-      // 更新淨收付金額
-      state.aTableData[0].net_amount = state.aTableData[0].transaction_price - state.aTableData[0].fee - state.aTableData[0].tax;
-
-      // 更新沖銷剩餘股數
-      state.aTableData[0].remaining_quantity = state.aTableData[0].transaction_quantity - state.transactionDraft.reduce((sum, item) => sum + item.writeOffQuantity, 0);
-
-      // 影響 B 表格的數據
-      state.transactionDraft.forEach(transaction => {
-        const newQuantity = transaction.writeOffQuantity;
-        transaction.amortized_income = Math.round(state.aTableData[0].net_amount * (newQuantity / state.aTableData[0].transaction_quantity));
-        transaction.profit_loss = calculateProfitLoss(transaction, state); // 這邊要修正，才不會出現 NaN
-        transaction.profit_loss_2 = transaction.amortized_cost + transaction.amortized_income;
-
-        // Highlight 受影響的 B 表格欄位
-        state.highlightedCells[`${transaction.uuid}-amortized_income`] = "flash-yellow";
-        state.highlightedCells[`${transaction.uuid}-profit_loss`] = "flash-yellow";
-        state.highlightedCells[`${transaction.uuid}-profit_loss_2`] = "flash-yellow";
-      });
 
       // 更新 A 表格的損益試算（累加 B 表格的「損益試算之二」）
       state.aTableData[0].profit_loss = state.transactionDraft.reduce((sum, item) => sum + item.profit_loss_2, 0);
+
+      // 呼叫統一計算
+      chainingCalc(state);
     },
 
     // 更新 B 表格欄位 (並影響 A 表格)
@@ -158,55 +129,10 @@ export const transactionSlice = createSlice({
       const transaction = state.transactionDraft.find(t => t.uuid === uuid);
       if (!transaction) return;
 
-      const oldValue = transaction[field];
       transaction[field] = value;
 
-      // 影響 B 表格自身欄位
-      if (field === "writeOffQuantity" || field === "transaction_price") {
-        transaction.remaining_quantity = transaction.transaction_quantity - transaction.writeOffQuantity;
-        console.log("transaction.remaining_quantity", transaction.remaining_quantity);
-        transaction.amortized_cost = Math.round(transaction.net_amount * (transaction.writeOffQuantity / transaction.transaction_quantity));
-
-
-
-
-
-
-        transaction.amortized_income = Math.round(
-          state.aTableData[0].net_amount * (transaction.writeOffQuantity / state.aTableData[0].transaction_quantity)
-        );
-        console.log("=====", state.aTableData[0].net_amount, transaction.writeOffQuantity, state.aTableData[0].transaction_quantity); // todo dele
-
-        // 沖銷股數 * (A 表格成交單價 - 成交單價)     
-        //  -      
-        //    (    (A 表格交易費 + A 表格手續費)*(成交股數/A 表格成交股數)   )
-        // transaction.profit_loss = Math.round(
-        //   transaction.writeOffQuantity * (state.aTableData[0].unit_price - transaction.unit_price) -
-        //   ((state.aTableData[0].fee + state.aTableData[0].tax) * (transaction.transaction_quantity / state.aTableData[0].transaction_quantity))
-        // );
-
-        transaction.profit_loss = calculateProfitLoss(transaction, state);
-        console.log('------'); // todo dele
-        console.log('1. ', state.aTableData[0].unit_price - transaction.unit_price); // todo dele
-        console.log('2.', (transaction.transaction_quantity / state.aTableData[0].transaction_quantity)); // todo dele
-        console.log(''); // todo dele
-        console.log(''); // todo dele
-        console.log(''); // todo dele
-        // transaction.profit_loss = Math.round(
-        //   transaction.writeOffQuantity * (state.aTableData[0].unit_price - transaction.transaction_price) );
-        console.log("335 850 666", JSON.stringify(transaction), transaction.writeOffQuantity, state.aTableData[0].unit_price, transaction.transaction_price); // todo dele
-
-        transaction.profit_loss_2 = transaction.amortized_cost + transaction.amortized_income;
-
-        // Highlight 自己變動的 B 表格欄位
-        state.highlightedCells[`${uuid}-remaining_quantity`] = "flash-blue";
-        state.highlightedCells[`${uuid}-amortized_cost`] = "flash-blue";
-        state.highlightedCells[`${uuid}-amortized_income`] = "flash-blue";
-        state.highlightedCells[`${uuid}-profit_loss`] = "flash-blue";
-        state.highlightedCells[`${uuid}-profit_loss_2`] = "flash-blue";
-      }
-
-
+      // 呼叫統一計算
+      chainingCalc(state);
     },
 
   },
@@ -247,13 +173,84 @@ export const transactionSlice = createSlice({
   },
 });
 
+// const calculateProfitLoss = (transaction, state) => {
+//   return Math.round(
+//     transaction.writeOffQuantity * (state.aTableData[0].unit_price - transaction.unit_price) -
+//     ((state.aTableData[0].fee + state.aTableData[0].tax) * (transaction.transaction_quantity / state.aTableData[0].transaction_quantity))
+//   );
+
+
+// };
+
+// ── 工具：安全數字/比例（空字串、undefined、NaN 都當 0） ──
+const toNum = (v) => {
+  const n = Number(v);
+  return Number.isFinite(n) ? n : 0;
+};
+const safeRatio = (num, den) => {
+  const a = toNum(num), b = toNum(den);
+  return b === 0 ? 0 : a / b;
+};
+
+
+// ── 四步驟（順序固定）：對齊 Excel 紅字公式 ──
+const chainingCalc = (state) => {
+  if (!state.aTableData || !state.aTableData[0]) return;
+  const A = state.aTableData[0];
+
+  const A_F = toNum(A.transaction_quantity); // A.F5 成交股數
+  const A_E = toNum(A.unit_price);           // A.E5 成交單價
+  const A_H = toNum(A.fee);                  // A.H5 手續費
+  const A_I = toNum(A.tax);                  // A.I5 交易稅
+
+  // (2) 先算 A（Excel：F5*E5, G5-H5-I5, F5-sum(S11:S..))
+  A.transaction_price = A_E * A_F;                         // G5 = F5*E5
+  A.net_amount = A.transaction_price - A_H - A_I;   // R5 = G5-H5-I5
+  const sumB_S = state.transactionDraft.reduce((s, t) => s + toNum(t.writeOffQuantity), 0);
+  A.remaining_quantity = A_F - sumB_S;                      // T5 = F5 - sum(S11:S..)
+
+  // (1)(3)(4) 逐筆算 B
+  state.transactionDraft.forEach(B => {
+    const B_F = toNum(B.transaction_quantity);   // F11
+    const B_E = toNum(B.unit_price);             // E11
+    const B_R = toNum(B.net_amount);             // R11（淨收付金額，表內已有）
+    const B_S = toNum(B.writeOffQuantity);       // S11
+
+    // 剩餘股數（Excel：F11 - S11）
+    B.remaining_quantity = B_F - B_S;
+
+    // (1) 攤提成本（Excel：round(R11*(S11/F11),0)）
+    B.amortized_cost = Math.round(B_R * safeRatio(B_S, B_F));
+
+    // (3) 攤提收入（Excel：round($R$5*(S11/$F$5),0)）
+    B.amortized_income = Math.round(A.net_amount * safeRatio(B_S, A_F));
+
+    // 損益試算（Excel：round(S11*($E$5-E11) - (sum($H$5:$I$5)*(F11/$F$5)), 0)）
+    B.profit_loss = Math.round(
+      B_S * (A_E - B_E) - ((A_H + A_I) * safeRatio(B_F, A_F))
+    );
+
+    // (4) 損益試算二（Excel：V11 + U11）
+    B.profit_loss_2 = toNum(B.amortized_cost) + toNum(B.amortized_income);
+  });
+
+  // A.損益試算（Excel：sum( X11:X.. ) → 我們等同 Σ(損益試算之二)）
+  A.profit_loss = state.transactionDraft.reduce((s, t) => s + toNum(t.profit_loss_2), 0);
+};
+
+// ── 取代：損益試算（維持與上面一致的公式 & 防呆） ──
 const calculateProfitLoss = (transaction, state) => {
+  const A = state.aTableData[0] || {};
+  const S = Number(transaction.writeOffQuantity) || 0;  // 沖銷股數
+  const A_E = Number(A.unit_price) || 0;               // A 單價
+  const B_E = Number(transaction.unit_price) || 0;     // B 單價
+  const fees = (Number(A.fee) || 0) + (Number(A.tax) || 0);
+  const B_F = Number(transaction.transaction_quantity) || 0; // B 成交股數
+  const A_F = Number(A.transaction_quantity) || 0;           // A 成交股數
+
   return Math.round(
-    transaction.writeOffQuantity * (state.aTableData[0].unit_price - transaction.unit_price) -
-    ((state.aTableData[0].fee + state.aTableData[0].tax) * (transaction.transaction_quantity / state.aTableData[0].transaction_quantity))
+    S * (A_E - B_E) - (fees * (B_F / (A_F || 1)))   // 這裡改成 B_F / A_F
   );
-
-
 };
 
 export const { setTransactionDraft,

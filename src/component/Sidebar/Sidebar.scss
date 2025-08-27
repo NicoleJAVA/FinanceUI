@@ -9,11 +9,11 @@ $tooltip-triangle-border: 8px;
 
 
 .sidebar-container {
-    --background-color: #{$light-theme-bg};
-    --text-color: #{$light-theme-text};
+    // --background-color: #{$light-mode-sidebar-bg-gray};
+    // --text-color: #{$light-theme-text};
 
     [data-theme='dark'] & {
-        --background-color: #{$dark-theme-bg};
+        --background-color: #{$dark-mode-sidebar-bg-gray};
         --text-color: #{$dark-theme-text};
     }
 

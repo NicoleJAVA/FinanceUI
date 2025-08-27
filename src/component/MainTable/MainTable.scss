@@ -164,6 +164,7 @@
 
     [data-theme='light'] & {
         // --bg-color: #{$light-mode-input-bg-gray};
+        //  --text-color: #{$light-mode-input-white};
     }
 
     background: var(--bg-color);
@@ -189,8 +190,22 @@
 
 .items-per-page-select {
     height: 34px;
+
 }
 
 .items-per-page-option {
     font-size: 10px;
+
+    [data-theme='dark'] & {
+        --bg-color: #{$dark-mode-input-bg-gray};
+        --text-color: #{$dark-mode-input-white};
+    }
+
+    [data-theme='light'] & {
+        // --bg-color: #{$light-mode-input-bg-gray};
+        //  --text-color: #{$light-mode-input-white};
+    }
+
+    background: var(--bg-color);
+    color: var(--text-color);
 }

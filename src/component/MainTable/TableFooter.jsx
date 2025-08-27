@@ -22,7 +22,7 @@ export const TableFooter = ({
                             Page
                         </span>
                         <input
-                            className="page-input"
+                            className="theme-input"
                             type="number"
                             value={currentPage}
                             onChange={(e) => goToPage(Number(e.target.value))}
@@ -36,7 +36,7 @@ export const TableFooter = ({
                             <select
                                 id="items-per-page-select"
                                 value={itemsPerPage}
-                                className="form-select items-per-page-select"
+                                className="theme-input items-per-page-select"
                                 onChange={(e) => resetToFirstPage(Number(e.target.value))}
                             >
                                 {itemsPerPageOptions.map((option) => (
