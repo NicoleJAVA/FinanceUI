@@ -533,7 +533,7 @@ export const TransactionPage = () => {
             }}
           />
           <Button
-            style={{ marginLeft: 8 }}
+            style={{ marginLeft: 8, marginTop: 10 }}
             onClick={() => pendingStockCode.trim() && setStockCode(pendingStockCode.trim())}
           >
             確認

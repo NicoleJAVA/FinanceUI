@@ -4,7 +4,7 @@ import { demoSlice } from "./demo/slice";
 import { toastStackSlice } from "./ToastStack/slice";
 import { transactionSlice } from './transaction/slice';
 import { buySlice } from './buy/slice';
-import { historySlice } from './history/slice';
+import { historySlice } from './sellHistory/slice';
 import { allHistorySlice } from './allHistory/slice';
 
 const rootReducer = combineReducers({

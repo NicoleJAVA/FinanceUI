@@ -10,7 +10,7 @@ import { ExpandableRow } from "./ExpandableRow";
 import { generateColumns } from "../../helpers/TableHelper";
 
 export const MainTable = ({ id, columns = [], data, localePrefix, settings,
-    expandUI: ExpandUI, onInputChange, highlightedCells, draftOverrideMap }) => {
+    expandUI: ExpandUI, onInputChange, highlightedCells, draftOverrideMap, onRowClick }) => {
     const [sort, setSort] = useState({ key: settings?.paging?.sortKey, order: "asc" });
     const [isShowDeleteModal, setIsShowDeleteModal] = useState(false);
     const [selectedDeleteRow, setSelectedDeleteRow] = useState(null);
@@ -62,7 +62,12 @@ export const MainTable = ({ id, columns = [], data, localePrefix, settings,
 
             <React.Fragment key={row.uuid}>
 
-                <tr onClick={() => toggleRow(row.uuid)} data-uuid={row.uuid}
+                {/* <tr onClick={() => toggleRow(row.uuid)} data-uuid={row.uuid}
+                    className={columns.some(c => row[`${c.key}_editing`]) ? 'editing-row' : ''}
+                > */}
+
+                <tr data-uuid={row.uuid}
+                    onClick={() => onRowClick && onRowClick(row)}
                     className={columns.some(c => row[`${c.key}_editing`]) ? 'editing-row' : ''}
                 >
                     <td className="edit-icon-cell">
@@ -162,7 +167,7 @@ export const MainTable = ({ id, columns = [], data, localePrefix, settings,
                         )}
                     </ExpandableRow>} */}
 
-            </React.Fragment>
+            </React.Fragment >
         ));
     };
 

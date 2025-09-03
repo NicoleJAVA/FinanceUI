@@ -5,7 +5,10 @@ import {
   Route,
 } from "react-router-dom";
 import { useSelector, useAppDispatch } from "./redux/hooks";
-import { DemoPage, MyPage, TransactionPage, InventoryPage, HistoryPage, AllHistoryPage, BuyPage } from "./pages";
+import {
+  DemoPage, MyPage, TransactionPage, InventoryPage,
+  SellHistoryPage, SellHistoryDetail, AllHistoryPage, BuyPage
+} from "./pages";
 import { Sidebar } from "./component/Sidebar/Sidebar";
 import { ToastStack } from "./ToastStack/ToastStack";
 import "./App.scss";
@@ -40,12 +43,13 @@ function App() {
               <Route path="/transaction" element={<TransactionPage />} />
               <Route path="/buy" element={<BuyPage />} />
               <Route path="/inventory" element={<InventoryPage />} />
-              <Route path="/history" element={<HistoryPage />} />
+              <Route path="/sell-history" element={<SellHistoryPage />} />
+              <Route path="/sell-history/:id" element={<SellHistoryDetail />} />
               <Route path="/all-history" element={<AllHistoryPage />} />
               <Route path="/sell-preview" element={<SellPreviewPage />} />
 
 
-              <Route path="*" element={<DemoPage />} />
+              <Route path="*" element={<TransactionPage />} />
 
               <Route path="*" element={<h1>Not Found</h1>} />
             </Routes>
