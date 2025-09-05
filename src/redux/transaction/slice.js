@@ -103,6 +103,9 @@ export const transactionSlice = createSlice({
     clearHighlight: (state) => {
       state.highlightedCells = {}; // 3 秒後清除所有 highlight
     },
+    setAStockCode: (state, action) => {
+      state.aTableData[0].stock_code = action.payload;
+    },
     // 更新 A 表格欄位 (並影響 B 表格)
     updateATableField: (state, action) => {
       const { field, value } = action.payload;
@@ -256,5 +259,5 @@ const calculateProfitLoss = (transaction, state) => {
 export const { setTransactionDraft,
   updateTransactionField,
   clearHighlight,
-  updateATableField } = transactionSlice.actions;
+  updateATableField, setAStockCode } = transactionSlice.actions;
 export default transactionSlice.reducer;

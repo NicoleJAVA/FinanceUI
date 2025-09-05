@@ -17,10 +17,10 @@ export const Sidebar = () => {
     const navItems = [
         // { path: "/demo", label: "Demo", subtitle: "測試" },
         // { path: "/my-page", label: "My Page", subtitle: "測試" },
-        { path: "/transaction", label: "Transaction", subtitle: "測試" },
+        { path: "/transaction", label: "Transaction", subtitle: "賣出" },
         // { path: "/buy", label: "Buy", subtitle: "測試" },
         // { path: "/inventory", label: "Inventory", subtitle: "測試" },
-        { path: "/sell-history", label: "SellHistory", subtitle: "測試" },
+        { path: "/sell-history", label: "SellHistory", subtitle: "賣出歷史" },
         // { path: "/another-link", label: "Another Link", subtitle: "測試" },
     ];
 

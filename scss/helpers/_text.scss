@@ -69,6 +69,33 @@ $theme-font-size: 14px;
   text-decoration: line-through;
 }
 
+.theme-title,
+.theme-subtitle {
+  font-family: $theme-font;
+  font-weight: 200;
+  margin-bottom: 20px;
+
+  [data-theme='light'] & {
+    // --text-color: #{$light-mode-highlight-white};
+  }
+
+  [data-theme='dark'] & {
+    --text-color: #{$dark-mode-highlight-white};
+  }
+
+  color: var(--text-color);
+
+}
+
+.theme-title {
+  font-size: 26px;
+}
+
+.theme-subtitle {
+  font-size: 20px;
+}
+
+
 ::placeholder {
   /* Chrome, Firefox, Opera, Safari 10.1+ */
   color: $input-placeholder-color;

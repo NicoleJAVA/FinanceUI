@@ -1,0 +1,20 @@
+@import "../helpers/color";
+
+
+.theme-divider {
+    margin-top: 40px;
+    margin-bottom: 40px;
+    width: 100%;
+    height: 1px;
+
+    [data-theme='light'] & {
+        // --bd-color: #{$light-mode-highlight-white};
+    }
+
+    [data-theme='dark'] & {
+        --bd-color: #{$dark-mode-highlight-white};
+    }
+
+    border-bottom: 0.5px solid var(--bd-color);
+
+}

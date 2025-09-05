@@ -41,34 +41,34 @@
     min-height: 100dvh;
 }
 
-.app-content::-webkit-scrollbar {
-    height: 18px;
-    background-color: #dedede;
+// .app-content::-webkit-scrollbar {
+//     height: 18px;
+//     background-color: #dedede;
 
-}
+// }
 
-::-webkit-scrollbar {
-    // height: 8px;
-}
+// ::-webkit-scrollbar {
+//     // height: 8px;
+// }
 
-.app-content::-webkit-scrollbar-thumb {
-    background: #5E6880;
-    border-radius: 10px;
-    border: 3px solid transparent;
+// .app-content::-webkit-scrollbar-thumb {
+//     background: #5E6880;
+//     border-radius: 10px;
+//     border: 3px solid transparent;
 
-    /* 讓 thumb 背景不要延伸進 border 的透明區 */
-    background-clip: content-box;
-}
+//     /* 讓 thumb 背景不要延伸進 border 的透明區 */
+//     background-clip: content-box;
+// }
 
-::webkit-scrollbar-track {
-    background: #c02626;
-    /* 捲軸軌道背景 */
-}
+// ::webkit-scrollbar-track {
+//     background: #c02626;
+//     /* 捲軸軌道背景 */
+// }
 
-::-webkit-scrollbar-thumb:horizontal {
-    // background-color: red;
-    // /* 捲軸本體顏色 */
-    // border-radius: 8px;
-    // border: 3px solid transparent;
-    // background-clip: content-box;
-}
+// ::-webkit-scrollbar-thumb:horizontal {
+//     // background-color: red;
+//     // /* 捲軸本體顏色 */
+//     // border-radius: 8px;
+//     // border: 3px solid transparent;
+//     // background-clip: content-box;
+// }

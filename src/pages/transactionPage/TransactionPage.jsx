@@ -5,7 +5,7 @@ import {
   getTransactions, batchWriteOff,
   updateTransactionField, setTransactionDraft,
   clearHighlight, updateATableField,
-  previewWriteOff
+  previewWriteOff, setAStockCode
 } from '../../redux/transaction/slice';
 import { Table, Button, Modal } from 'react-bootstrap';
 import './TransactionPage.scss';
@@ -81,6 +81,7 @@ export const TransactionPage = () => {
   useEffect(() => {
     if (stockCode) {
       dispatch(updateATableField({ field: 'stock_code', value: stockCode }));
+
     }
   }, [stockCode, dispatch]);
 
@@ -295,6 +296,8 @@ export const TransactionPage = () => {
 
     dispatch(setTransactionDraft(updatedDraft));
     dispatch(updateATableField({ field: '__bulkReplace__', value: updatedATable }));
+    dispatch(updateATableField({ field: 'stock_code', value: stockCode }));
+
     setShowLoadModal(false);
     setDraftLoaded(true);
   };
@@ -519,8 +522,9 @@ export const TransactionPage = () => {
       <div className='page-container'>
         <div className="table-card-wrapper" style={{ maxWidth: 520, margin: '80px auto' }}>
 
-          <div>請輸入股票代號</div>
+          <div className='theme-text'>請輸入股票代號</div>
           <input
+            autoFocus
             className='table-A-input'
             type="text"
             placeholder="例如：2330"
@@ -529,6 +533,7 @@ export const TransactionPage = () => {
             onKeyDown={(e) => {
               if (e.key === 'Enter' && pendingStockCode.trim()) {
                 setStockCode(pendingStockCode.trim());
+                setAStockCode(pendingStockCode.trim());
               }
             }}
           />
@@ -556,7 +561,7 @@ export const TransactionPage = () => {
           <Button variant="secondary" onClick={() => setShowConfirmClearModal(true)}>
             清空
           </Button>
-          <Button variant="primary" onClick={handleLoadDraft}>
+          <Button autoFocus variant="primary" onClick={handleLoadDraft}>
             載入
           </Button>
         </Modal.Footer>

@@ -78,7 +78,7 @@ export const SellHistoryPage = () => {
 
   return (
     <div className="page-container">
-      <h3 style={{ margin: '24px 0' }}>沖銷交易歷史</h3>
+      <div className='theme-title' style={{ margin: '24px 0' }}>沖銷交易歷史</div>
 
       <MainTable
         id="transaction-history-list"
