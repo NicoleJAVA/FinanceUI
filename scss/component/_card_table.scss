@@ -1,0 +1,58 @@
+@import "../helpers/color";
+
+.card-table-wrapper {
+    padding: 10px;
+    border-radius: 5px;
+
+
+    [data-theme='light'] & {
+        // --background-color: #{$light-mode-section-bg-gray};
+    }
+
+    [data-theme='dark'] & {
+        --background-color: #{$dark-mode-section-bg-gray};
+    }
+
+    background-color: var(--background-color);
+}
+
+
+
+.card-table-wrapper th {
+    border-bottom-width: 0px !important;
+    height: 45px;
+    max-height: 45px;
+    white-space: nowrap;
+    position: relative;
+    position: relative;
+    overflow: hidden;
+    animation: marquee 10s linear infinite;
+}
+
+.card-table-wrapper td {
+    border-bottom-width: 0px !important;
+    height: 55px;
+    padding: 0px 8px !important;
+}
+
+.card-table-wrapper td,
+.card-table-wrapper th {
+    font-size: 14px !important;
+
+
+    [data-theme='light'] & {
+        // --background-color: #{$light-mode-section-bg-gray};
+        // --text-color: #{$light-mode-main-white};
+    }
+
+    [data-theme='dark'] & {
+        --background-color: #{$dark-mode-section-bg-gray};
+        --text-color: #{$dark-mode-main-white};
+    }
+
+    background-color: var(--background-color) !important;
+
+    font-weight: 300;
+    vertical-align: middle;
+    height: 50px;
+}

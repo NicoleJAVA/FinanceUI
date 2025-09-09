@@ -18,3 +18,22 @@
     border-bottom: 0.5px solid var(--bd-color);
 
 }
+
+
+.card-table-header-divider {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    width: 100%;
+    height: 1px;
+
+    [data-theme='light'] & {
+        // --bd-color: #{$light-mode-highlight-white};
+    }
+
+    [data-theme='dark'] & {
+        --bd-color: #{$dark-mode-theme-gray};
+    }
+
+    border-bottom: 1px solid var(--bd-color);
+
+}

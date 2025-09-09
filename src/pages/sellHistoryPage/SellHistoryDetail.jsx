@@ -128,40 +128,45 @@ export const SellHistoryDetail = () => {
         <div className="page-container">
             <div className='theme-title' style={{ margin: '24px 0' }}>交易歷史詳情</div>
 
-            <div className="theme-divider"></div>
 
-            <div className='theme-subtitle' >Table A（賣出單主檔）</div>
-            <MainTable
-                id="history-detail-A"
-                data={aData}
-                columns={aColumns}
-                localePrefix="transaction"
-                settings={{}}
-            />
+            <div className='card-table-wrapper mb-5'>
+                <div className='theme-subtitle' >Table A（賣出單主檔）</div>
+                <div className="card-table-header-divider"></div>
 
-            <div className="theme-divider"></div>
+                <MainTable
+                    id="history-detail-A"
+                    data={aData}
+                    columns={aColumns}
+                    localePrefix="transaction"
+                    settings={{}}
+                />
+            </div>
 
-            <div className='theme-subtitle' style={{ marginTop: 28 }}>B（沖後結果）</div>
-            <MainTable
-                id="history-detail-B-after"
-                data={bAfterData}
-                columns={bAfterColumns}
-                localePrefix="transaction"
-                settings={{}}
-            />
+            <div className='card-table-wrapper mb-5'>
+                <div className='theme-subtitle'>B（沖後結果）</div>
+                <div className="card-table-header-divider"></div>
+                <MainTable
+                    id="history-detail-B-after"
+                    data={bAfterData}
+                    columns={bAfterColumns}
+                    localePrefix="transaction"
+                    settings={{}}
+                />
+            </div>
 
-            <div className="theme-divider"></div>
 
-            <div className='theme-subtitle' style={{ marginTop: 28 }}>B（沖前快照）</div>
-            <MainTable
-                id="history-detail-B-before"
-                data={bBeforeData}
-                columns={bBeforeColumns}
-                localePrefix="transaction"
-                settings={{}}
-            />
+            <div className='card-table-wrapper mb-5'>
+                <div className='theme-subtitle' >B（沖前快照）</div>
+                <div className="card-table-header-divider"></div>
 
-            <div className="theme-divider"></div>
+                <MainTable
+                    id="history-detail-B-before"
+                    data={bBeforeData}
+                    columns={bBeforeColumns}
+                    localePrefix="transaction"
+                    settings={{}}
+                />
+            </div>
 
             <div style={{ marginTop: 20, marginBottom: 60 }}>
                 <button className='btn btn-primary' onClick={() => navigate(-1)}>返回</button>
