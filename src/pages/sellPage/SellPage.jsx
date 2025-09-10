@@ -620,7 +620,7 @@ export const SellPage = () => {
         </div>
 
       </div>
-      <div className="table-card-wrapper">
+      <div className="table-card-wrapper mb-40">
         <Table id="table-A">
           <thead>
             <tr>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-export function usePagination(data, itemsPerPageOptions = [5, 10, 20], initialItemsPerPage = 500, initialPage = 1, sort) {
+export function usePagination(data, itemsPerPageOptions = [20, 30, 40, 50, 60, 70, 100, 150, 200, 300, 500, 600, 1000, 1500, 2000], initialItemsPerPage = 500, initialPage = 1, sort) {
     const [currentPage, setCurrentPage] = useState(initialPage);
     const [itemsPerPage, setItemsPerPage] = useState(initialItemsPerPage);
     const [totalPages, setTotalPages] = useState(1);

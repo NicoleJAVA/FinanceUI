@@ -191,7 +191,7 @@ export const MainTable = ({ id, columns = [], data, localePrefix, settings,
                 <tbody>
                     {paginatedData && paginatedData.length > 0 ? renderRows() : (
                         <tr>
-                            <td colSpan={columns.length}>No data available</td>
+                            <td colSpan={columns.length} className="theme-text">No data available</td>
                         </tr>
                     )}
                 </tbody>

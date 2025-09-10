@@ -29,6 +29,8 @@
 
 
 .theme-table-footer {
+    border-top: 40px;
+
     [data-theme='dark'] & {
         background-color: $dark-theme-bg;
         color: $dark-theme-table-text;

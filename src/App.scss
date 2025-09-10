@@ -39,6 +39,12 @@
     overflow-x: scroll;
     width: calc(100vw - 260px);
     min-height: 100dvh;
+
+    [data-theme='dark'] & {
+        --background-color: #{$dark-mode-main-bg-gray};
+    }
+
+    background-color: var(--background-color);
 }
 
 // .app-content::-webkit-scrollbar {

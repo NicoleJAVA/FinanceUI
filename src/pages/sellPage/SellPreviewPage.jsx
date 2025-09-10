@@ -21,6 +21,7 @@ const SellPreviewPage = () => {
     const [submitError, setSubmitError] = useState('');
     const [success, setSuccess] = useState(false);
     const [successMsg, setSuccessMsg] = useState('');
+    const [showConfirm, setShowConfirm] = useState(false);
 
     // ===== A 表欄位（只做預覽表格顯示用）=====
     const aTableColumns = [
@@ -113,7 +114,7 @@ const SellPreviewPage = () => {
     }, [sellRecord, bAfterRows, transactionDraft]);
 
     // ===== 送出 offset（把 B 的 before/after 一併送給後端）=====
-    const handleSubmitOffset = async () => {
+    const handleSubmitOffset = async (confirmed = false) => {
         // 需要沖銷的列（含 before/after 欄位）
         const edited = Array.isArray(transactionDraft)
             ? transactionDraft
@@ -152,8 +153,11 @@ const SellPreviewPage = () => {
             window.alert('資料不足：請確認 A 表與 B 表（有輸入沖銷股數）。');
             return;
         }
-        if (!window.confirm('確定要送出本次沖銷嗎？')) return;
 
+        if (!confirmed) {
+            setShowConfirm(true);
+            return;
+        }
         const totals = {
             total_amortized_cost: sumBy(edited, 'amortized_cost'),
             total_amortized_income: sumBy(edited, 'amortized_income'),
@@ -246,21 +250,9 @@ const SellPreviewPage = () => {
             ) : (
                 <>
                     <div className='card-table-wrapper mb-5'>
-                        <div className='theme-subtitle mt-24 mb-36'>Table A 原始交易</div>
-                        <div className="card-table-header-divider"></div>
-                        <MainTable id="atable-section" data={aTableData || []} columns={aTableColumns} localePrefix="sell" settings={{}} />
-                    </div>
-
-                    <div className='card-table-wrapper mb-5'>
-                        <div className='theme-subtitle mt-24 mb-36'>攤提預覽結果（B after）</div>
-                        <div className="card-table-header-divider"></div>
-                        <MainTable id="preview-table" data={bAfterRows} columns={bAfterColumns} localePrefix="sell_detail" settings={{}} />
-                    </div>
-
-                    <div className='card-table-wrapper mb-5'>
                         {aPreviewRow && (
                             <>
-                                <div className='theme-subtitle mt-24 mb-36'>SellHistory 預覽（A 匯總，不落庫）</div>
+                                <div className='theme-subtitle mt-24 mb-36'>即將寫入 SellHistory 主檔的預覽（表格 A ，匯總）</div>
                                 <div className="card-table-header-divider"></div>
                                 <MainTable id="sellhistory-preview-table" data={[aPreviewRow]} columns={[...aTableColumns, { key: 'profit_loss', name: '損益', selector: (r) => r.profit_loss }]} localePrefix="sell" settings={{}} />
                             </>
@@ -268,7 +260,15 @@ const SellPreviewPage = () => {
                     </div>
 
                     <div className='card-table-wrapper mb-5'>
-                        <div className='theme-subtitle mt-24 mb-36'>B 沖前快照（before）</div>
+                        <div className='theme-subtitle mt-24 mb-36'>即將寫入 SellHistory 明細檔的預覽（表格 B 的 after）</div>
+                        <div className="card-table-header-divider"></div>
+                        <MainTable id="preview-table" data={bAfterRows} columns={bAfterColumns} localePrefix="sell_detail" settings={{}} />
+                    </div>
+
+
+
+                    <div className='card-table-wrapper mb-5'>
+                        <div className='theme-subtitle mt-24 mb-36'>表格 B 的沖前快照（表格 B 的 before）</div>
                         <div className="card-table-header-divider"></div>
                         <MainTable id="sellhistory-preview-b-before" data={bBeforeRows} columns={bBeforeColumns} localePrefix="sell_detail" settings={{}} />
                     </div>
@@ -277,13 +277,44 @@ const SellPreviewPage = () => {
                         <button className='btn btn-danger' onClick={() => navigate(-1)} style={{ marginRight: 8 }}>
                             取消
                         </button>
-                        <button className='btn btn-primary' onClick={handleSubmitOffset} disabled={submitting}>
+                        <button className='btn btn-primary' onClick={() => handleSubmitOffset()} disabled={submitting}>
                             {submitting ? '送出中…' : '正式送出沖銷'}
                         </button>
                         {submitError && <span style={{ color: 'red', marginLeft: 8 }}>{submitError}</span>}
                     </div>
 
                     <div className="theme-divider"></div>
+                </>
+            )}
+
+            {/* Bootstrap Modal：確認送出 */}
+            {showConfirm && (
+                <>
+                    <div className="modal fade show" tabIndex="-1" role="dialog" aria-modal="true" style={{ display: 'block' }}>
+                        <div className="modal-dialog" role="document">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h5 className="modal-title">送出確認</h5>
+                                    <button type="button" className="btn-close" aria-label="Close" onClick={() => setShowConfirm(false)}></button>
+                                </div>
+                                <div className="modal-body">
+                                    <p>確定要送出本次沖銷嗎？</p>
+                                </div>
+                                <div className="modal-footer">
+                                    <button type="button" className="btn btn-secondary" onClick={() => setShowConfirm(false)}>取消</button>
+                                    <button
+                                        type="button"
+                                        className="btn btn-primary"
+                                        onClick={() => { setShowConfirm(false); handleSubmitOffset(true); }}
+                                    >
+                                        確定送出
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="modal-backdrop fade show"></div>
+
                 </>
             )}
         </div>

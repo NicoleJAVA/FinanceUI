@@ -16,7 +16,7 @@ const ThemeToggleVar = () => {
     }, [theme]);
 
     return (
-        <button className='btn btn-secondary ms-5' onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
+        <button className='btn btn-secondary m-5' onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
             切換主題（目前：{theme}）
         </button>
     );

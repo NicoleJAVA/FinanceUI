@@ -27,6 +27,11 @@ $tooltip-triangle-border: 8px;
     padding-top: 40px;
     background-color: var(--background-color);
     color: var(--text-color);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
 }
 
 
@@ -35,7 +40,7 @@ $tooltip-triangle-border: 8px;
     position: relative;
     font-family: $theme-font, sans-serif;
     font-weight: $theme-font-weight;
-    margin-bottom: 34px;
+    margin-bottom: 10px;
 }
 
 
@@ -73,7 +78,7 @@ $tooltip-triangle-border: 8px;
 
 .selected-bar {
     opacity: 0;
-    height: 52px;
+    height: 62px;
     width: 3px;
     border-radius: 20px;
     background: $theme-color;
