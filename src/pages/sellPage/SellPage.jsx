@@ -8,7 +8,7 @@ import {
   previewWriteOff, setAStockCode
 } from '../../redux/transaction/slice';
 import { Table, Button, Modal } from 'react-bootstrap';
-import './TransactionPage.scss';
+import './SellPage.scss';
 import { useDate } from '../../context/DateContext';
 import moment from 'moment';
 // import DataTable, { createTheme } from 'react-data-table-component'; todo dele
@@ -25,7 +25,7 @@ import exDividendsIcon from '../../img/ex-dividends-icon.svg'
 // 手續費折扣率
 const FEE_DISCOUNT = 0.003;
 
-export const TransactionPage = () => {
+export const SellPage = () => {
   const dispatch = useDispatch();
 
 

@@ -6,7 +6,7 @@ import {
 } from "react-router-dom";
 import { useSelector, useAppDispatch } from "./redux/hooks";
 import {
-  DemoPage, MyPage, TransactionPage, InventoryPage,
+  DemoPage, MyPage, SellPage, InventoryPage,
   SellHistoryPage, SellHistoryDetail, AllHistoryPage, BuyPage
 } from "./pages";
 import { Sidebar } from "./component/Sidebar/Sidebar";
@@ -14,13 +14,10 @@ import { ToastStack } from "./ToastStack/ToastStack";
 import "./App.scss";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./helpers/fontawesome";
-// import TransactionPage from "./pages/transactionPage/TransactionPage"; todo stday
-// import InventoryPage from "./pages/inventoryPage/InventoryPage"; todo stday
 
-// import { TranslationProvider, useTranslationContext } from '../src/locales/TranslationContext'; todo dele
 
 import { useTranslation } from 'react-i18next';
-import SellPreviewPage from "./pages/transactionPage/SellPreviewPage";
+import SellPreviewPage from "./pages/sellPage/SellPreviewPage";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -40,7 +37,7 @@ function App() {
             <Routes>
               <Route path="/demo" element={<DemoPage />} />
               <Route path="/my-page" element={<MyPage t={t} />} />
-              <Route path="/transaction" element={<TransactionPage />} />
+              <Route path="/transaction" element={<SellPage />} />
               <Route path="/buy" element={<BuyPage />} />
               <Route path="/inventory" element={<InventoryPage />} />
               <Route path="/sell-history" element={<SellHistoryPage />} />
@@ -49,7 +46,7 @@ function App() {
               <Route path="/sell-preview" element={<SellPreviewPage />} />
 
 
-              <Route path="*" element={<TransactionPage />} />
+              <Route path="*" element={<SellPage />} />
 
               <Route path="*" element={<h1>Not Found</h1>} />
             </Routes>
