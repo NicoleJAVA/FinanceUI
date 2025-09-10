@@ -130,7 +130,7 @@ export const SellHistoryDetail = () => {
 
 
             <div className='card-table-wrapper mb-5'>
-                <div className='theme-subtitle' >Table A（賣出單主檔）</div>
+                <div className='theme-subtitle mt-24 mb-36' >Table A（賣出單主檔）</div>
                 <div className="card-table-header-divider"></div>
 
                 <MainTable
@@ -143,7 +143,7 @@ export const SellHistoryDetail = () => {
             </div>
 
             <div className='card-table-wrapper mb-5'>
-                <div className='theme-subtitle'>B（沖後結果）</div>
+                <div className='theme-subtitle mt-24 mb-36'>B（沖後結果）</div>
                 <div className="card-table-header-divider"></div>
                 <MainTable
                     id="history-detail-B-after"
@@ -156,7 +156,7 @@ export const SellHistoryDetail = () => {
 
 
             <div className='card-table-wrapper mb-5'>
-                <div className='theme-subtitle' >B（沖前快照）</div>
+                <div className='theme-subtitle mt-24 mb-36' >B（沖前快照）</div>
                 <div className="card-table-header-divider"></div>
 
                 <MainTable

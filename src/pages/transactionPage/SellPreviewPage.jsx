@@ -245,27 +245,33 @@ const SellPreviewPage = () => {
                 </div>
             ) : (
                 <>
-                    <div className='theme-subtitle'>Table A 原始交易</div>
-                    <MainTable id="atable-section" data={aTableData || []} columns={aTableColumns} localePrefix="transaction" settings={{}} />
+                    <div className='card-table-wrapper mb-5'>
+                        <div className='theme-subtitle mt-24 mb-36'>Table A 原始交易</div>
+                        <div className="card-table-header-divider"></div>
+                        <MainTable id="atable-section" data={aTableData || []} columns={aTableColumns} localePrefix="sell" settings={{}} />
+                    </div>
 
-                    <div className="theme-divider"></div>
+                    <div className='card-table-wrapper mb-5'>
+                        <div className='theme-subtitle mt-24 mb-36'>攤提預覽結果（B after）</div>
+                        <div className="card-table-header-divider"></div>
+                        <MainTable id="preview-table" data={bAfterRows} columns={bAfterColumns} localePrefix="sell_detail" settings={{}} />
+                    </div>
 
-                    <div className='theme-subtitle' style={{ marginTop: 28 }}>攤提預覽結果（B after）</div>
-                    <MainTable id="preview-table" data={bAfterRows} columns={bAfterColumns} localePrefix="transaction" settings={{}} />
+                    <div className='card-table-wrapper mb-5'>
+                        {aPreviewRow && (
+                            <>
+                                <div className='theme-subtitle mt-24 mb-36'>SellHistory 預覽（A 匯總，不落庫）</div>
+                                <div className="card-table-header-divider"></div>
+                                <MainTable id="sellhistory-preview-table" data={[aPreviewRow]} columns={[...aTableColumns, { key: 'profit_loss', name: '損益', selector: (r) => r.profit_loss }]} localePrefix="sell" settings={{}} />
+                            </>
+                        )}
+                    </div>
 
-                    <div className="theme-divider"></div>
-
-                    {aPreviewRow && (
-                        <>
-                            <div className='theme-subtitle' style={{ marginTop: 28 }}>SellHistory 預覽（A 匯總，不落庫）</div>
-                            <MainTable id="sellhistory-preview-table" data={[aPreviewRow]} columns={[...aTableColumns, { key: 'profit_loss', name: '損益', selector: (r) => r.profit_loss }]} localePrefix="transaction" settings={{}} />
-                        </>
-                    )}
-
-                    <div className="theme-divider"></div>
-
-                    <div className='theme-subtitle' style={{ marginTop: 28 }}>B 沖前快照（before）</div>
-                    <MainTable id="sellhistory-preview-b-before" data={bBeforeRows} columns={bBeforeColumns} localePrefix="transaction" settings={{}} />
+                    <div className='card-table-wrapper mb-5'>
+                        <div className='theme-subtitle mt-24 mb-36'>B 沖前快照（before）</div>
+                        <div className="card-table-header-divider"></div>
+                        <MainTable id="sellhistory-preview-b-before" data={bBeforeRows} columns={bBeforeColumns} localePrefix="sell_detail" settings={{}} />
+                    </div>
 
                     <div className='d-flex' style={{ marginTop: 20, marginBottom: 60 }}>
                         <button className='btn btn-danger' onClick={() => navigate(-1)} style={{ marginRight: 8 }}>
@@ -283,5 +289,7 @@ const SellPreviewPage = () => {
         </div>
     );
 };
+
+
 
 export default SellPreviewPage;

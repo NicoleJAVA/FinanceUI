@@ -85,7 +85,7 @@ export const SellHistoryPage = () => {
         data={rows}
         columns={columns}
         onRowClick={handleRowClick}
-        localePrefix="transaction"
+        localePrefix="history_page"
         settings={tableSettings}
         loading={loading}
       />

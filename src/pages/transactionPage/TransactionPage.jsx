@@ -525,7 +525,7 @@ export const TransactionPage = () => {
           <div className='theme-text'>請輸入股票代號</div>
           <input
             autoFocus
-            className='table-A-input'
+            className='table-A-input theme-text'
             type="text"
             placeholder="例如：2330"
             value={pendingStockCode}

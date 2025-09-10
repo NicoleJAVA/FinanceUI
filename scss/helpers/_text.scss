@@ -73,7 +73,7 @@ $theme-font-size: 14px;
 .theme-subtitle {
   font-family: $theme-font;
   font-weight: 200;
-  margin-bottom: 20px;
+
 
   [data-theme='light'] & {
     // --text-color: #{$light-mode-highlight-white};
@@ -89,10 +89,11 @@ $theme-font-size: 14px;
 
 .theme-title {
   font-size: 26px;
+  margin-bottom: 20px;
 }
 
 .theme-subtitle {
-  font-size: 20px;
+  font-size: 18px;
 }
 
 
