@@ -7,7 +7,7 @@ import {
 import { useSelector, useAppDispatch } from "./redux/hooks";
 import {
   DemoPage, MyPage, SellPage, InventoryPage,
-  SellHistoryPage, SellHistoryDetail, AllHistoryPage, BuyPage
+  SellHistoryPage, SellHistoryDetail, AllHistoryPage
 } from "./pages";
 import { Sidebar } from "./component/Sidebar/Sidebar";
 import { ToastStack } from "./ToastStack/ToastStack";
@@ -38,7 +38,7 @@ function App() {
               <Route path="/demo" element={<DemoPage />} />
               <Route path="/my-page" element={<MyPage t={t} />} />
               <Route path="/transaction" element={<SellPage />} />
-              <Route path="/buy" element={<BuyPage />} />
+              {/* <Route path="/buy" element={<BuyPage />} /> */}
               <Route path="/inventory" element={<InventoryPage />} />
               <Route path="/sell-history" element={<SellHistoryPage />} />
               <Route path="/sell-history/:id" element={<SellHistoryDetail />} />
