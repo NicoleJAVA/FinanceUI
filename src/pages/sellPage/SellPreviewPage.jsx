@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { MainTable } from '../../component/MainTable/MainTable';
+import previewArrow from '../../img/preview-arrow.svg';
 
 const toInt = (v) => (v === '' || v == null ? 0 : parseInt(v, 10));
 const toNum = (v) => (v === '' || v == null ? 0 : Number(v));
@@ -259,19 +260,43 @@ const SellPreviewPage = () => {
                         )}
                     </div>
 
-                    <div className='card-table-wrapper mb-5'>
+                    {/* @begin: ver. 2 */}
+                    {/* <div className='card-table-wrapper mb-5'>
                         <div className='theme-subtitle mt-24 mb-36'>即將寫入 SellHistory 明細檔的預覽（表格 B 的 after）</div>
+                        <div className="card-table-header-divider"></div>
+                        <MainTable id="preview-table" data={bAfterRows} columns={bAfterColumns} localePrefix="sell_detail" settings={{}} />
+
+
+                        <div className="preview-arrow-container">
+                            <img className="preview-arrow" src={previewArrow} alt="previewArrow" />
+                        </div>
+
+
+                        <div className='theme-subtitle mt-24 mb-36'>表格 B 的沖前快照（表格 B 的 before）</div>
+                        <div className="card-table-header-divider"></div>
+                        <MainTable id="sellhistory-preview-b-before" data={bBeforeRows} columns={bBeforeColumns} localePrefix="sell_detail" settings={{}} />
+                    </div> */}
+                    {/* @end: ver. 2 */}
+
+                    {/* @begin: ver. 1 */}
+                    <div className='card-table-wrapper mb-5'>
+                        <div className='theme-subtitle mt-24 mb-36'>即將寫入 SellHistory 明細檔的沖後結果（表格 B 的 after）</div>
                         <div className="card-table-header-divider"></div>
                         <MainTable id="preview-table" data={bAfterRows} columns={bAfterColumns} localePrefix="sell_detail" settings={{}} />
                     </div>
 
-
+                    <div className="preview-arrow-container">
+                        <img className="preview-arrow" src={previewArrow} alt="previewArrow" />
+                    </div>
 
                     <div className='card-table-wrapper mb-5'>
-                        <div className='theme-subtitle mt-24 mb-36'>表格 B 的沖前快照（表格 B 的 before）</div>
+                        <div className='theme-subtitle mt-24 mb-36'>即將寫入 SellHistory 明細檔的沖前快照（表格 B 的 before）</div>
                         <div className="card-table-header-divider"></div>
                         <MainTable id="sellhistory-preview-b-before" data={bBeforeRows} columns={bBeforeColumns} localePrefix="sell_detail" settings={{}} />
                     </div>
+
+                    {/* @end: ver. 1 */}
+
 
                     <div className='d-flex' style={{ marginTop: 20, marginBottom: 60 }}>
                         <button className='btn btn-danger' onClick={() => navigate(-1)} style={{ marginRight: 8 }}>
