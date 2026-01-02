@@ -20,6 +20,7 @@ import cartIcon from '../../img/cart-icon.svg'
 import sellIcon from '../../img/sell-icon.svg'
 import exRightsIcon from '../../img/ex-rights-icon.svg'
 import exDividendsIcon from '../../img/ex-dividends-icon.svg'
+import TransactionTab from '../../component/TransactionTab/TransactionTab';
 
 
 // 手續費折扣率
@@ -597,27 +598,8 @@ export const SellPage = () => {
         <div className="title-group">
           <div className="title-stock-name">TSMC</div>
         </div>
-        <div className="tab-section">
-          <div className="tab-item">
-            <div className="tab-item-text">買進</div>
-            <img className="tab-item-icon" src={cartIcon} alt="buy" />
-            <div className="tab-item-side-decor-bar"></div>
-          </div>
-          <div className="tab-item">
-            <div className="tab-item-text">賣出</div>
-            <img className="tab-item-icon" src={sellIcon} alt="buy" />
-            <div className="tab-item-side-decor-bar"></div>
-          </div>
-          <div className="tab-item">
-            <div className="tab-item-text">除權</div>
-            <img className="tab-item-icon" src={exRightsIcon} alt="buy" />
-            <div className="tab-item-side-decor-bar"></div>
-          </div>
-          <div className="tab-item">
-            <div className="tab-item-text">除息</div>
-            <img className="tab-item-icon" src={exDividendsIcon} alt="buy" />
-          </div>
-        </div>
+
+        <TransactionTab active="sell" />
 
       </div>
       <div className="table-card-wrapper mb-40">

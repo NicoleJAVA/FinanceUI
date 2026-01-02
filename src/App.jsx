@@ -7,7 +7,7 @@ import {
 import { useSelector, useAppDispatch } from "./redux/hooks";
 import {
   DemoPage, MyPage, SellPage, InventoryPage,
-  SellHistoryPage, SellHistoryDetail, AllHistoryPage
+  SellHistoryPage, SellHistoryDetail, AllHistoryPage, BuyPage
 } from "./pages";
 import { Sidebar } from "./component/Sidebar/Sidebar";
 import { ToastStack } from "./ToastStack/ToastStack";
@@ -25,6 +25,12 @@ function App() {
 
 
   const { t } = useTranslation();
+
+  useEffect(() => {
+    fetch("http://localhost:7007/init_db", {
+      method: "POST"
+    });
+  }, []);
 
   return (
     <div>
@@ -44,6 +50,7 @@ function App() {
               <Route path="/sell-history/:id" element={<SellHistoryDetail />} />
               <Route path="/all-history" element={<AllHistoryPage />} />
               <Route path="/sell-preview" element={<SellPreviewPage />} />
+              <Route path="/buy" element={<BuyPage />} />
 
 
               <Route path="*" element={<SellPage />} />

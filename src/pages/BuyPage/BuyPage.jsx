@@ -104,15 +104,15 @@ export const BuyPage = () => {
           <tbody>
             {aTableData && aTableData.length > 0 && (
               <tr>
-                <td><input type="date" value={aTableData[0].transaction_date} onChange={(e) => handleInputChangeA('transaction_date', e.target.value)} /></td>
-                <td><input type="text" value={aTableData[0].stock_code} onChange={(e) => handleInputChangeA('stock_code', e.target.value)} /></td>
-                <td><input type="text" value={aTableData[0].product_name} onChange={(e) => handleInputChangeA('product_name', e.target.value)} /></td>
-                <td><input type="number" value={aTableData[0].unit_price} onChange={(e) => handleInputChangeA('unit_price', parseFloat(e.target.value))} /></td>
-                <td><input type="number" value={aTableData[0].transaction_quantity} onChange={(e) => handleInputChangeA('transaction_quantity', parseInt(e.target.value))} /></td>
-                <td><input type="number" value={aTableData[0].fee} onChange={(e) => handleInputChangeA('fee', parseFloat(e.target.value))} /></td>
-                <td><input type="number" value={aTableData[0].tax} onChange={(e) => handleInputChangeA('tax', parseFloat(e.target.value))} /></td>
-                <td><input type="number" value={aTableData[0].net_amount} onChange={(e) => handleInputChangeA('net_amount', parseFloat(e.target.value))} /></td>
-                <td><input type="text" value={aTableData[0].remarks} onChange={(e) => handleInputChangeA('remarks', e.target.value)} /></td>
+                <td><input className='table-A-input' type="date" value={aTableData[0].transaction_date} onChange={(e) => handleInputChangeA('transaction_date', e.target.value)} /></td>
+                <td><input className='table-A-input' type="text" value={aTableData[0].stock_code} onChange={(e) => handleInputChangeA('stock_code', e.target.value)} /></td>
+                <td><input className='table-A-input' type="text" value={aTableData[0].product_name} onChange={(e) => handleInputChangeA('product_name', e.target.value)} /></td>
+                <td><input className='table-A-input' type="number" value={aTableData[0].unit_price} onChange={(e) => handleInputChangeA('unit_price', parseFloat(e.target.value))} /></td>
+                <td><input className='table-A-input' type="number" value={aTableData[0].transaction_quantity} onChange={(e) => handleInputChangeA('transaction_quantity', parseInt(e.target.value))} /></td>
+                <td><input className='table-A-input' type="number" value={aTableData[0].fee} onChange={(e) => handleInputChangeA('fee', parseFloat(e.target.value))} /></td>
+                <td><input className='table-A-input' type="number" value={aTableData[0].tax} onChange={(e) => handleInputChangeA('tax', parseFloat(e.target.value))} /></td>
+                <td><input className='table-A-input' type="number" value={aTableData[0].net_amount} onChange={(e) => handleInputChangeA('net_amount', parseFloat(e.target.value))} /></td>
+                <td><input className='table-A-input' type="text" value={aTableData[0].remarks} onChange={(e) => handleInputChangeA('remarks', e.target.value)} /></td>
               </tr>
             )}
           </tbody>

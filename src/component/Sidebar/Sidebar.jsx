@@ -21,6 +21,7 @@ export const Sidebar = () => {
         // { path: "/buy", label: "Buy", subtitle: "測試" },
         // { path: "/inventory", label: "Inventory", subtitle: "測試" },
         { path: "/sell-history", label: "SellHistory", subtitle: "賣出歷史" },
+        { path: "/buy", label: "Buy", subtitle: "買進" },
         // { path: "/another-link", label: "Another Link", subtitle: "測試" },
     ];
 
