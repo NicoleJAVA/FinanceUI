@@ -10,6 +10,7 @@ import {
 import { Table, Button, Modal } from 'react-bootstrap';
 import './BuyPage.scss';
 import { useDate } from '../../context/DateContext';
+import TransactionTab from '../../component/TransactionTab/TransactionTab';
 
 export const BuyPage = () => {
   const dispatch = useDispatch();
@@ -86,6 +87,11 @@ export const BuyPage = () => {
         </div>
       )}
 
+      <div className="top-section">
+
+        <TransactionTab active="buy" />
+
+      </div>
       <div className="table-card-wrapper">
         <Table id="table-A">
           <thead>
@@ -119,7 +125,7 @@ export const BuyPage = () => {
         </Table>
       </div>
 
-      <Button className="btn btn-success" onClick={handleBuySubmit}>存檔</Button>
+      <Button className="btn btn-primary mt-5" onClick={handleBuySubmit}>存檔</Button>
 
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
