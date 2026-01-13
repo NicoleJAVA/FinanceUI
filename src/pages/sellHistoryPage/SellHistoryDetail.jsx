@@ -61,6 +61,7 @@ export const SellHistoryDetail = () => {
         { key: 'tax', name: '交易稅', selector: r => r.tax },
         { key: 'net_amount', name: '淨收付金額', selector: r => r.net_amount },
         { key: 'profit_loss', name: '損益', selector: r => r.profit_loss },
+        { key: 'remarks', name: '備註', selector: r => r.remarks },
     ];
 
     const bAfterColumns = [
@@ -70,6 +71,7 @@ export const SellHistoryDetail = () => {
         { key: 'amortized_income', name: '攤提收入', selector: r => r.amortized_income },
         { key: 'profit_loss', name: '損益試算', selector: r => r.profit_loss },
         { key: 'profit_loss_2', name: '損益試算之二', selector: r => r.profit_loss_2 },
+        { key: 'remarks', name: '來源備註', selector: r => r.remarks }
     ];
 
     const bBeforeColumns = [
@@ -96,6 +98,7 @@ export const SellHistoryDetail = () => {
             tax: sellEntry.tax,
             net_amount: sellEntry.net_amount,
             profit_loss: sellEntry.profit_loss,
+            remarks: sellEntry.remarks,
         }];
     }, [sellEntry]);
 
@@ -121,6 +124,7 @@ export const SellHistoryDetail = () => {
             unit_price_before: r.unit_price_before,
             net_amount_before: r.net_amount_before,
             write_off_quantity: r.write_off_quantity,
+            remarks: r.remarks,
         }));
     }, [thRows]);
 
@@ -163,7 +167,7 @@ export const SellHistoryDetail = () => {
                     id="history-detail-B-before"
                     data={bBeforeData}
                     columns={bBeforeColumns}
-                    localePrefix="transaction"
+                    localePrefix="sell_detail"
                     settings={{}}
                 />
             </div>

@@ -80,7 +80,7 @@ const SellPreviewPage = () => {
                 .filter((r) => toInt(r.writeOffQuantity) > 0)
                 .map((r) => ({
                     uuid: r.uuid,
-                    transaction_quantity_before: toInt(r.transaction_quantity),
+                    transaction_quantity_before: toInt(r.available_quantity),
                     unit_price_before: toNum(r.unit_price),
                     net_amount_before: toNum(r.net_amount),
                     writeOffQuantity: toInt(r.writeOffQuantity),
@@ -280,7 +280,7 @@ const SellPreviewPage = () => {
 
                     {/* @begin: ver. 1 */}
                     <div className='card-table-wrapper mb-5'>
-                        <div className='theme-subtitle mt-24 mb-36'>即將寫入 SellHistory 明細檔的沖後結果（表格 B 的 after）</div>
+                        <div className='theme-subtitle mt-24 mb-36'>即將寫入 SellDetailHistory 明細檔的沖後結果（表格 B 的 after）</div>
                         <div className="card-table-header-divider"></div>
                         <MainTable id="preview-table" data={bAfterRows} columns={bAfterColumns} localePrefix="sell_detail" settings={{}} />
                     </div>
@@ -290,7 +290,7 @@ const SellPreviewPage = () => {
                     </div>
 
                     <div className='card-table-wrapper mb-5'>
-                        <div className='theme-subtitle mt-24 mb-36'>即將寫入 SellHistory 明細檔的沖前快照（表格 B 的 before）</div>
+                        <div className='theme-subtitle mt-24 mb-36'>即將寫入 SellDetailHistory 明細檔的沖前快照（表格 B 的 before）</div>
                         <div className="card-table-header-divider"></div>
                         <MainTable id="sellhistory-preview-b-before" data={bBeforeRows} columns={bBeforeColumns} localePrefix="sell_detail" settings={{}} />
                     </div>

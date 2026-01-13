@@ -158,7 +158,7 @@ export const transactionSlice = createSlice({
 
         state.transactionDraft = data.map(transaction => ({
           ...transaction,
-          remaining_quantity: 0,
+          // remaining_quantity: 0,
           amortized_cost: 0,
           amortized_income: 0,
           profit_loss: calculateProfitLoss(transaction, state),
@@ -219,8 +219,12 @@ const chainingCalc = (state) => {
     const B_R = toNum(B.net_amount);             // R11（淨收付金額，表內已有）
     const B_S = toNum(B.writeOffQuantity);       // S11
 
-    // 剩餘股數（Excel：F11 - S11）
-    B.remaining_quantity = B_F - B_S;
+    // # 舊版
+    // // 剩餘股數（Excel：F11 - S11）
+    // B.remaining_quantity = B_F - B_S;
+
+    // 新版 正確版 （Inventory 新增 available_quantity 後就要改成如下計算）
+    B.remaining_quantity = toNum(B.available_quantity) - B_S;
 
     // (1) 攤提成本（Excel：round(R11*(S11/F11),0)）
     B.amortized_cost = Math.round(B_R * safeRatio(B_S, B_F));
