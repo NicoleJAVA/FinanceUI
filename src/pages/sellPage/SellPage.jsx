@@ -16,10 +16,10 @@ import moment from 'moment';
 import { MainTable } from '../../component/MainTable/MainTable';
 import DefaultExpandRow from '../../component/MainTable/DefaultExpandRow';
 
-import cartIcon from '../../img/cart-icon.svg'
-import sellIcon from '../../img/sell-icon.svg'
-import exRightsIcon from '../../img/ex-rights-icon.svg'
-import exDividendsIcon from '../../img/ex-dividends-icon.svg'
+// import cartIcon from '../../img/cart-icon.svg'
+// import sellIcon from '../../img/sell-icon.svg'
+// import exRightsIcon from '../../img/ex-rights-icon.svg'
+// import exDividendsIcon from '../../img/ex-dividends-icon.svg'
 import TransactionTab from '../../component/TransactionTab/TransactionTab';
 
 
@@ -227,6 +227,7 @@ export const SellPage = () => {
     { key: 'transaction_type', sortable: true },
     { key: 'unit_price', sortable: true },
     { key: 'transaction_quantity', sortable: true },
+    { key: 'available_quantity', sortable: true },
     { key: 'transaction_value', sortable: true },
     { key: 'estimated_fee', sortable: true },
     { key: 'estimated_tax', sortable: true },
@@ -636,23 +637,27 @@ export const SellPage = () => {
                   type="number"
                   placeholder="成交單價"
                   value={aTableData[0].unit_price}
+                  onFocus={e => e.target.select()}
                   onChange={(e) => handleInputChangeA('unit_price', parseFloat(e.target.value))}
                 /></td>
                 <td><input className='table-A-input'
                   type="number"
                   value={aTableData[0].transaction_quantity}
+                  onFocus={e => e.target.select()}
                   onChange={(e) => handleInputChangeA('transaction_quantity', parseInt(e.target.value, 10))}
                 /></td>
                 <td>{aTableData[0].transaction_price}</td>
                 <td><input className='table-A-input'
                   type="number"
                   value={aTableData[0].fee}
+                  onFocus={e => e.target.select()}
                   onChange={(e) => handleInputChangeA('fee', parseFloat(e.target.value))}
                 />
                 </td>
                 <td><input className='table-A-input'
                   type="number"
                   value={aTableData[0].tax}
+                  onFocus={e => e.target.select()}
                   onChange={(e) => handleInputChangeA('tax', parseFloat(e.target.value))}
                 />
                 </td>

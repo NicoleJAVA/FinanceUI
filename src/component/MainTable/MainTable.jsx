@@ -81,6 +81,7 @@ export const MainTable = ({ id, columns = [], data, localePrefix, settings,
                                 <button>Expand</button>
                             ) : column.isInput ? (
                                 <input
+
                                     className="main-table-input"
                                     type={column.inputType === 'string' ? 'text' : 'number'}
                                     min={column.inputType === 'positive-int' ? '1' : undefined}
@@ -125,7 +126,8 @@ export const MainTable = ({ id, columns = [], data, localePrefix, settings,
                                             ["e", "E", "+"].includes(e.key) && e.preventDefault();
                                         }
                                     }}
-                                    onFocus={() => {
+                                    onFocus={(e) => {
+                                        e.target.select();
                                         // 範例：
                                         // 假設欄位是 "transaction_price"
                                         // column.key === "transaction_price"
