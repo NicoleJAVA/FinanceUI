@@ -33,10 +33,10 @@ export const SellHistoryPage = () => {
   const columns = useMemo(() => ([
     { key: 'transaction_date', name: '交易日期', selector: r => r.transaction_date },
     { key: 'stock_code', name: '股票代號', selector: r => r.stock_code },
-    { key: 'inventory_uuid', name: '來源UUID', selector: r => r.inventory_uuid },
-    { key: 'write_off_quantity', name: '沖銷股數', selector: r => r.write_off_quantity },
-    { key: 'transaction_uuid', name: '歷史UUID', selector: r => r.transaction_uuid },
-    { key: 'sell_record_uuid', name: 'Sell UUID', selector: r => r.sell_record_uuid },
+    // { key: 'inventory_uuid', name: '來源UUID', selector: r => r.inventory_uuid },
+    // { key: 'write_off_quantity', name: '沖銷股數', selector: r => r.write_off_quantity },
+    // { key: 'transaction_uuid', name: '歷史UUID', selector: r => r.transaction_uuid },
+    // { key: 'sell_record_uuid', name: 'Sell UUID', selector: r => r.sell_record_uuid },
   ]), []);
 
 
