@@ -51,7 +51,8 @@ export const SellHistoryDetail = () => {
 
     // ====== 欄位 ======
     const aColumns = [
-        { key: 'transaction_date', name: '交易日期', selector: r => r.transaction_date },
+        { key: 'transaction_date', name: '交易日期', selector: r => new Date(r.transaction_date).toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' }) },
+        { key: 'created_at', name: '建立時間', selector: r => new Date(r.created_at).toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' }) },
         { key: 'stock_code', name: '股票代號', selector: r => r.stock_code },
         { key: 'product_name', name: '商品名稱', selector: r => r.product_name },
         { key: 'unit_price', name: '成交單價', selector: r => r.unit_price },
@@ -88,7 +89,8 @@ export const SellHistoryDetail = () => {
     const aData = useMemo(() => {
         if (!sellEntry) return [];
         return [{
-            transaction_date: sellEntry.transaction_date,
+            transaction_date: new Date(sellEntry.transaction_date).toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' }),
+            created_at: new Date(sellEntry.created_at).toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' }),
             stock_code: sellEntry.stock_code,
             product_name: sellEntry.product_name,
             unit_price: sellEntry.unit_price,

@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MainTable } from '../../component/MainTable/MainTable';
+import moment from 'moment'
 
 const HISTORY_LIST_API = '/sellHistory/all'; // ← 依你後端實際路徑調整
 
@@ -19,7 +20,16 @@ export const SellHistoryPage = () => {
         if (!alive) return;
         // 後端若直接回傳 TransactionHistory 的陣列：
         // [{transaction_uuid, inventory_uuid, write_off_quantity, stock_code, transaction_date, sell_record_uuid}, ...]
+        // const t1 = new Date(r.transaction_date).toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' });
+        // const t2 = new Date(r.created_at).toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' });
         setRows(Array.isArray(data) ? data : (data?.items || []));
+        const list = Array.isArray(data) ? data : (data?.items || [])
+
+        setRows(list.map(r => ({
+          ...r,
+          transaction_date: new Date(r.transaction_date).toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' }),
+          created_at: new Date(r.created_at).toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' }),
+        })))
       } catch (e) {
         console.error('[TransactionHistory list] fetch error:', e);
         setRows([]);
@@ -31,7 +41,9 @@ export const SellHistoryPage = () => {
   }, []);
 
   const columns = useMemo(() => ([
-    { key: 'transaction_date', name: '交易日期', selector: r => r.transaction_date },
+    // { key: 'transaction_date', name: '交易日期', selector: r => r.transaction_date },
+    { key: 'transaction_date', name: '交易日期', selector: r => new Date(r.transaction_date).toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' }) },
+    { key: 'created_at', name: '建立時間', selector: r => new Date(r.created_at).toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' }) },
     { key: 'stock_code', name: '股票代號', selector: r => r.stock_code },
     // { key: 'inventory_uuid', name: '來源UUID', selector: r => r.inventory_uuid },
     // { key: 'write_off_quantity', name: '沖銷股數', selector: r => r.write_off_quantity },
