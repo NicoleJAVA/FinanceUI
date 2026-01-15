@@ -19,7 +19,7 @@ export const SellHistoryDetail = () => {
     const sellUuid = idFromParams || sp.get('sell') || '';
 
     const [sellEntry, setSellEntry] = useState(null); // SellHistory 主檔（A）
-    const [thRows, setThRows] = useState([]);         // TransactionHistory 明細（B）
+    const [thRows, setThRows] = useState([]);         // 明細（B）
 
     // 取 SellHistory（主檔）
     useEffect(() => {
@@ -35,13 +35,14 @@ export const SellHistoryDetail = () => {
         return () => { alive = false; };
     }, [sellUuid]);
 
-    // 取 TransactionHistory（明細）
+    //（明細）
     useEffect(() => {
         let alive = true;
         (async () => {
             if (!sellUuid) return;
             const res = await fetch(TRANS_HISTORY_BY_SELL_API(sellUuid));
             const data = await res.json();
+            console.log('HISTORY', data);
             if (!alive) return;
             // 後端可能回陣列或 { items: [...] }
             setThRows(Array.isArray(data) ? data : (Array.isArray(data?.items) ? data.items : []));
@@ -49,86 +50,55 @@ export const SellHistoryDetail = () => {
         return () => { alive = false; };
     }, [sellUuid]);
 
-    // ====== 欄位 ======
     const aColumns = [
-        { key: 'transaction_date', name: '交易日期', selector: r => new Date(r.transaction_date).toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' }) },
-        { key: 'created_at', name: '建立時間', selector: r => new Date(r.created_at).toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' }) },
-        { key: 'stock_code', name: '股票代號', selector: r => r.stock_code },
-        { key: 'product_name', name: '商品名稱', selector: r => r.product_name },
-        { key: 'unit_price', name: '成交單價', selector: r => r.unit_price },
-        { key: 'transaction_quantity', name: '成交股數', selector: r => r.transaction_quantity },
-        { key: 'transaction_value', name: '成交價金', selector: r => r.transaction_value },
-        { key: 'fee', name: '手續費', selector: r => r.fee },
-        { key: 'tax', name: '交易稅', selector: r => r.tax },
-        { key: 'net_amount', name: '淨收付金額', selector: r => r.net_amount },
-        { key: 'profit_loss', name: '損益', selector: r => r.profit_loss },
-        { key: 'remarks', name: '備註', selector: r => r.remarks },
+        { key: 'transaction_date', name: '交易日期' },
+        { key: 'created_at', name: '建立時間' },
+        { key: 'stock_code', name: '股票代號' },
+        { key: 'product_name', name: '商品名稱' },
+        { key: 'unit_price', name: '成交單價' },
+        { key: 'transaction_quantity', name: '成交股數' },
+        { key: 'transaction_value', name: '成交價金' },
+        { key: 'fee', name: '手續費' },
+        { key: 'tax', name: '交易稅' },
+        { key: 'net_amount', name: '淨收付金額' },
+        { key: 'profit_loss', name: '損益' },
+        { key: 'remarks', name: '備註' },
     ];
 
     const bAfterColumns = [
-        { key: 'uuid', name: 'UUID', selector: r => r.uuid },
-        { key: 'remaining_quantity', name: '剩餘股數', selector: r => r.remaining_quantity },
-        { key: 'amortized_cost', name: '攤提成本', selector: r => r.amortized_cost },
-        { key: 'amortized_income', name: '攤提收入', selector: r => r.amortized_income },
-        { key: 'profit_loss', name: '損益試算', selector: r => r.profit_loss },
-        { key: 'profit_loss_2', name: '損益試算之二', selector: r => r.profit_loss_2 },
-        { key: 'remarks', name: '來源備註', selector: r => r.remarks }
+        { key: 'uuid', name: 'UUID' },
+        { key: 'remaining_quantity', name: '剩餘股數' },
+        { key: 'amortized_cost', name: '攤提成本' },
+        { key: 'amortized_income', name: '攤提收入' },
+        { key: 'profit_loss', name: '損益試算' },
+        { key: 'profit_loss_2', name: '損益試算之二' },
+        { key: 'remarks', name: '來源備註' },
     ];
 
     const bBeforeColumns = [
-        { key: 'uuid', name: 'UUID', selector: r => r.uuid },
-        { key: 'transaction_quantity_before', name: '沖前股數', selector: r => r.transaction_quantity_before },
-        { key: 'unit_price_before', name: '來源單價', selector: r => r.unit_price_before },
-        { key: 'net_amount_before', name: '來源淨額', selector: r => r.net_amount_before },
-        { key: 'write_off_quantity', name: '本次沖銷股數', selector: r => r.write_off_quantity },
+        { key: 'uuid', name: 'UUID' },
+        { key: 'transaction_quantity_before', name: '沖前股數' },
+        { key: 'unit_price_before', name: '來源單價' },
+        { key: 'net_amount_before', name: '來源淨額' },
+        { key: 'write_off_quantity', name: '本次沖銷股數' },
     ];
 
     // ====== 資料組裝（完全不使用 snapshot） ======
 
     // A（主檔）
-    const aData = useMemo(() => {
-        if (!sellEntry) return [];
-        return [{
-            transaction_date: new Date(sellEntry.transaction_date).toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' }),
-            created_at: new Date(sellEntry.created_at).toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' }),
-            stock_code: sellEntry.stock_code,
-            product_name: sellEntry.product_name,
-            unit_price: sellEntry.unit_price,
-            transaction_quantity: sellEntry.quantity,
-            transaction_value: sellEntry.transaction_value,
-            fee: sellEntry.fee,
-            tax: sellEntry.tax,
-            net_amount: sellEntry.net_amount,
-            profit_loss: sellEntry.profit_loss,
-            remarks: sellEntry.remarks,
-        }];
-    }, [sellEntry]);
+    const aData = sellEntry ? [{
+        uuid: sellEntry.data_uuid || sellEntry.uuid,
+        ...sellEntry
+    }] : [];
 
-    // B after（由 TransactionHistory 明細映射）
-    const bAfterData = useMemo(() => {
-        if (!Array.isArray(thRows)) return [];
-        return thRows.map(r => ({
-            uuid: r.inventory_uuid || r.uuid,
-            remaining_quantity: r.remaining_quantity,
-            amortized_cost: r.amortized_cost,
-            amortized_income: r.amortized_income,
-            profit_loss: r.profit_loss,
-            profit_loss_2: r.profit_loss_2,
-        }));
-    }, [thRows]);
+    // B before / B after
+    const bData = Array.isArray(thRows)
+        ? thRows.map(r => ({
+            uuid: r.uuid || r.inventory_uuid,
+            ...r
+        }))
+        : [];
 
-    // B before（由 TransactionHistory 明細映射）
-    const bBeforeData = useMemo(() => {
-        if (!Array.isArray(thRows)) return [];
-        return thRows.map(r => ({
-            uuid: r.inventory_uuid || r.uuid,
-            transaction_quantity_before: r.quantity_before,
-            unit_price_before: r.unit_price_before,
-            net_amount_before: r.net_amount_before,
-            write_off_quantity: r.write_off_quantity,
-            remarks: r.remarks,
-        }));
-    }, [thRows]);
 
     return (
         <div className="page-container">
@@ -153,7 +123,7 @@ export const SellHistoryDetail = () => {
                 <div className="card-table-header-divider"></div>
                 <MainTable
                     id="history-detail-B-after"
-                    data={bAfterData}
+                    data={bData}
                     columns={bAfterColumns}
                     localePrefix="transaction"
                     settings={{}}
@@ -167,7 +137,7 @@ export const SellHistoryDetail = () => {
 
                 <MainTable
                     id="history-detail-B-before"
-                    data={bBeforeData}
+                    data={bData}
                     columns={bBeforeColumns}
                     localePrefix="sell_detail"
                     settings={{}}
