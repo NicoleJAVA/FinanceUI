@@ -25,7 +25,7 @@ const SellPreviewPage = () => {
     const [showConfirm, setShowConfirm] = useState(false);
 
     // ===== A 表欄位（只做預覽表格顯示用）=====
-    const aTableColumns = [
+    const aTableColumns = [ // 賣出 - 新增欄位 SOP
         { key: 'transaction_date', name: '交易日期', selector: (row) => row.transaction_date },
         { key: 'stock_code', name: '股票代號', selector: (row) => row.stock_code },
         { key: 'product_name', name: '商品名稱', selector: (row) => row.product_name },
@@ -35,6 +35,7 @@ const SellPreviewPage = () => {
         { key: 'estimated_fee', name: '手續費', selector: (row) => row.estimated_fee },
         { key: 'estimated_tax', name: '交易稅', selector: (row) => row.estimated_tax },
         { key: 'net_amount', name: '淨收付金額', selector: (row) => row.net_amount },
+        { key: 'remarks', name: '備註', selector: (row) => row.remarks },
     ];
 
     // ===== B after（預覽用欄位）=====
@@ -101,6 +102,7 @@ const SellPreviewPage = () => {
             '';
 
         return {
+            // 賣出 - 新增欄位 SOP
             transaction_date: sellRecord.transaction_date,
             stock_code: stockCode,
             product_name: sellRecord.product_name,
@@ -111,6 +113,7 @@ const SellPreviewPage = () => {
             estimated_tax: sellRecord.estimated_tax,
             net_amount: sellRecord.net_amount,
             profit_loss: pl2Sum,
+            remarks: sellRecord.remarks,
         };
     }, [sellRecord, bAfterRows, transactionDraft]);
 

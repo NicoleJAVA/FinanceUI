@@ -41,10 +41,14 @@ export const SellHistoryPage = () => {
   }, []);
 
   const columns = useMemo(() => ([
+
+    // 賣出 - 新增欄位 SOP(翻譯記得也要加)
+
     // { key: 'transaction_date', name: '交易日期', selector: r => r.transaction_date },
     { key: 'transaction_date', name: '交易日期', selector: r => new Date(r.transaction_date).toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' }) },
     { key: 'created_at', name: '建立時間', selector: r => new Date(r.created_at).toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' }) },
     { key: 'stock_code', name: '股票代號', selector: r => r.stock_code },
+    { key: 'remarks', name: '註解', selector: r => r.remarks },
     // { key: 'inventory_uuid', name: '來源UUID', selector: r => r.inventory_uuid },
     // { key: 'write_off_quantity', name: '沖銷股數', selector: r => r.write_off_quantity },
     // { key: 'transaction_uuid', name: '歷史UUID', selector: r => r.transaction_uuid },

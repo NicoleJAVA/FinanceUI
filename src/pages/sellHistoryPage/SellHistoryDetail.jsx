@@ -105,6 +105,7 @@ export const SellHistoryDetail = () => {
         return () => { alive = false; };
     }, [sellUuid]);
 
+    // 賣出 - 新增欄位 SOP
     const aColumns = [
         { key: 'transaction_date', name: '交易日期' },
         { key: 'created_at', name: '建立時間' },

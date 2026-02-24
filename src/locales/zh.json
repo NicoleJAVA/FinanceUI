@@ -87,6 +87,7 @@
         "inventory_uuid": "UUID",
         "write_off_quantity": "沖銷股數",
         "transaction_uuid": "交易 UUID",
-        "sell_record_uuid": "交易紀錄 UUID"
+        "sell_record_uuid": "交易紀錄 UUID",
+        "remarks": "備註"
     }
 }
