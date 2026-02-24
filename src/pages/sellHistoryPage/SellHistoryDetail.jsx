@@ -1,6 +1,61 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import { MainTable } from '../../component/MainTable/MainTable';
+
+
+
+// 一句話總結（你現在該做的）
+
+// ✅ aData / bData：資料唯一轉換點，只放 key/name ✅
+// ✅ aColumns / bColumns：只負責資料只描述欄位，不做邏輯
+// ❌ selector 在這頁 全部刪掉
+
+// 你剛剛會一直被時區搞到，就是因為這個「責任分裂」
+// 不是你笨，是這個寫法本來就會害人。
+
+// 正確理解一句話
+
+// name = UI 標籤
+// key = 對應資料
+// selector = 邏輯（這頁不該有）
+
+// 結論
+
+// ✅ name 留著（乾淨、語意清楚）
+
+// ❌ selector 全刪（你已經處理完資料）
+
+// 🧠 不要把 name 當成邏輯的一部分
+
+
+// ✅ Columns
+
+// 全部只有 key + name
+
+// 沒有 selector
+
+// 職責單一
+// → 正確
+
+// ✅ aData
+
+// 時區只在這裡轉
+
+// 欄位對齊 columns
+
+// 沒有混入邏輯
+// → 正確
+
+// ✅ bAfterData / bBeforeData
+
+// 明確拆成兩份
+
+// 各自只放自己需要的欄位
+
+// 不共用一個 bData
+// → 正確
+
+
 
 // 單筆 SellHistory（主檔）
 const SELL_HISTORY_ONE_API = (sellUuid) =>
@@ -86,18 +141,49 @@ export const SellHistoryDetail = () => {
     // ====== 資料組裝（完全不使用 snapshot） ======
 
     // A（主檔）
-    const aData = sellEntry ? [{
-        uuid: sellEntry.data_uuid || sellEntry.uuid,
-        ...sellEntry
-    }] : [];
+    const aData = sellEntry
+        ? [{
+            transaction_date: sellEntry.transaction_date
+                ? new Date(sellEntry.transaction_date).toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' })
+                : '',
+            created_at: sellEntry.created_at
+                ? new Date(sellEntry.created_at).toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' })
+                : '',
+            stock_code: sellEntry.stock_code,
+            product_name: sellEntry.product_name,
+            unit_price: sellEntry.unit_price,
+            transaction_quantity: sellEntry.quantity,
+            transaction_value: sellEntry.transaction_value,
+            fee: sellEntry.fee,
+            tax: sellEntry.tax,
+            net_amount: sellEntry.net_amount,
+            profit_loss: sellEntry.profit_loss,
+            remarks: sellEntry.remarks,
+        }]
+        : [];
 
-    // B before / B after
-    const bData = Array.isArray(thRows)
+    const bAfterData = Array.isArray(thRows)
         ? thRows.map(r => ({
             uuid: r.uuid || r.inventory_uuid,
-            ...r
+            remaining_quantity: r.remaining_quantity,
+            amortized_cost: r.amortized_cost,
+            amortized_income: r.amortized_income,
+            profit_loss: r.profit_loss,
+            profit_loss_2: r.profit_loss_2,
+            remarks: r.remarks,
         }))
         : [];
+
+    const bBeforeData = Array.isArray(thRows)
+        ? thRows.map(r => ({
+            uuid: r.uuid || r.inventory_uuid,
+            transaction_quantity_before: r.quantity_before,
+            unit_price_before: r.unit_price_before,
+            net_amount_before: r.net_amount_before,
+            write_off_quantity: r.write_off_quantity,
+        }))
+        : [];
+
 
 
     return (
@@ -123,7 +209,7 @@ export const SellHistoryDetail = () => {
                 <div className="card-table-header-divider"></div>
                 <MainTable
                     id="history-detail-B-after"
-                    data={bData}
+                    data={bAfterData}
                     columns={bAfterColumns}
                     localePrefix="transaction"
                     settings={{}}
@@ -137,7 +223,7 @@ export const SellHistoryDetail = () => {
 
                 <MainTable
                     id="history-detail-B-before"
-                    data={bData}
+                    data={bBeforeData}
                     columns={bBeforeColumns}
                     localePrefix="sell_detail"
                     settings={{}}
