@@ -319,7 +319,7 @@ export const SellPage = () => {
   useEffect(() => {
     if (!hasFetchedData.current && stockCode) {
       console.log("Fetching transactionSource...");
-      dispatch(getTransactions({ stockCode: "2330", page: 1, limit: 10 }));
+      dispatch(getTransactions({ stockCode, page, limit }));
       hasFetchedData.current = true;
 
       // 清空 A 表格，才不會有上次留著的資料
