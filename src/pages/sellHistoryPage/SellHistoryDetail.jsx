@@ -145,7 +145,7 @@ export const SellHistoryDetail = () => {
     const aData = sellEntry
         ? [{
             transaction_date: sellEntry.transaction_date
-                ? new Date(sellEntry.transaction_date).toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' })
+                ? sellEntry.transaction_date
                 : '',
             created_at: sellEntry.created_at
                 ? new Date(sellEntry.created_at).toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' })

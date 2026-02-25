@@ -27,7 +27,8 @@ export const SellHistoryPage = () => {
 
         setRows(list.map(r => ({
           ...r,
-          transaction_date: new Date(r.transaction_date).toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' }),
+          // transaction_date: new Date(r.transaction_date).toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' }),
+          transaction_date: r.transaction_date,
           created_at: new Date(r.created_at).toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' }),
         })))
       } catch (e) {
@@ -44,8 +45,8 @@ export const SellHistoryPage = () => {
 
     // 賣出 - 新增欄位 SOP(翻譯記得也要加)
 
-    // { key: 'transaction_date', name: '交易日期', selector: r => r.transaction_date },
-    { key: 'transaction_date', name: '交易日期', selector: r => new Date(r.transaction_date).toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' }) },
+    // { key: 'transaction_date', name: '交易日期', selector: r => new Date(r.transaction_date).toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' }) },
+    { key: 'transaction_date', name: '交易日期', selector: r => r.transaction_date },
     { key: 'created_at', name: '建立時間', selector: r => new Date(r.created_at).toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' }) },
     { key: 'stock_code', name: '股票代號', selector: r => r.stock_code },
     { key: 'remarks', name: '註解', selector: r => r.remarks },
