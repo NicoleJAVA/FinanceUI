@@ -43,6 +43,9 @@ export const SellPage = () => {
   const [showConfirmClearModal, setShowConfirmClearModal] = useState(false);
   const [hasLocalDraft, setHasLocalDraft] = useState(false);
   const [draftLoaded, setDraftLoaded] = useState(false);
+  const [showValidateModal, setShowValidateModal] = useState(false);
+  const [validateModalTitle, setValidateModalTitle] = useState('');
+  const [validateModalMsg, setValidateModalMsg] = useState('');
   // (1). transactionSource: 交易資料的來源，是從 API 得到
   // (2). transactionDraftRef: 正在編輯中的草稿，是 user 在動態更新
   const transactionSource = useSelector((state) => state.transactions.transactionSource);
@@ -500,7 +503,30 @@ export const SellPage = () => {
 
   }
 
+  const validateBeforeSubmit = () => {
+    const aQty = parseFloat(aTableData?.[0]?.transaction_quantity) || 0
+    const sumWriteOff = transactionDraft.reduce((sum, tx) => sum + (parseFloat(tx.writeOffQuantity) || 0), 0)
+
+    if (aQty !== sumWriteOff) {
+      return {
+        ok: false,
+        title: '股數不一致',
+        message: `成交股數(${aQty}) 必須等於 下方沖銷股數總和(${sumWriteOff})`
+      }
+    }
+
+    return { ok: true }
+  }
+
   const handlePreview = () => {
+    const v = validateBeforeSubmit()
+    if (!v.ok) {
+      setValidateModalTitle(v.title || '資料檢查未通過')
+      setValidateModalMsg(v.message || '')
+      setShowValidateModal(true)
+      return
+    }
+
     dispatch(previewWriteOff({
       stockCode: aTableData[0].stock_code,
       inventory: transactionDraft.map(tx => ({
@@ -583,6 +609,18 @@ export const SellPage = () => {
             onClick={finalConfirmClearModal}
           >
             確認清空
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal show={showValidateModal} onHide={() => setShowValidateModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>{validateModalTitle}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>{validateModalMsg}</Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={() => setShowValidateModal(false)}>
+            知道了
           </Button>
         </Modal.Footer>
       </Modal>
